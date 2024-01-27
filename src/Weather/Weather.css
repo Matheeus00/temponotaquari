@@ -1,0 +1,27 @@
+.weather-container {
+    height: 350px;
+    width: 350px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.weather-container .weather-header, .weather-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.weather-container .weather-temp {
+    display: flex;
+    font-size: 55px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.weather-condition {
+    height: 150px;
+}
+
+.sunset-icon, .sunrise-icon {
+    height: 100px;
+}
