@@ -11,8 +11,11 @@ function App() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`${api.url}?format=${api.format}&key=${api.key}&city_name=${api.location}`)
-      .then((response) => setData(response.data))
+    axios.get(`${api.url}?format=${api.format}&key=${api.key}&city_name=${api.location}`, {
+      headers: {
+      }
+    })
+    .then((response) => setData(response.data))
   }, []);
 
   const json = data.results;
@@ -21,8 +24,6 @@ function App() {
     const hour = dayHour();
     // DO BETTER - GET SUNRISE AND SUNSET
     const time = hour >= 6 && dayHour() <= 18 ? "day" : "night";
-
-    console.log(json);
 
     return (
       <div className="App" style={{backgroundColor: getCurrentTimeColor()}}>
