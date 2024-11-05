@@ -27,7 +27,7 @@ function App() {
 
     return (
       <div className="App" style={{backgroundColor: getCurrentTimeColor()}}>
-        <div style={{display: 'flex', justifyContent: 'space-evenly', height: '100%', alignItems: 'center', flexWrap: 'wrap'}}>
+        <div style={{display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '50px', padding: '50px'}}>
           <Weather 
             code={json.condition_code}
             temp={json.temp}
@@ -36,12 +36,12 @@ function App() {
             sunset={json.sunset}
             description={json.description}
           />
-          <Moon
-            moon={json.moon_phase}
-          />
           <Rose
             rotation={json.wind_direction}
             speed={json.wind_speedy}
+          />
+          <Moon
+            moon={json.moon_phase}
           />
         </div>
       </div>
