@@ -42,27 +42,27 @@ export const getBeaufortIndex = (value) => {
 
     if ( speed >= 2 && speed < 6 ) {
         index = 1;
-    } else if ( speed >= 7 && speed < 12 ) {
+    } else if ( speed >= 6 && speed < 12 ) {
         index = 2;
-    } else if ( speed >= 13 && speed < 18 ) {
+    } else if ( speed >= 12 && speed < 18 ) {
         index = 3;
-    } else if ( speed >= 19 && speed < 29 ) {
+    } else if ( speed >= 18 && speed < 29 ) {
         index = 4;
-    } else if ( speed >= 30 && speed < 38 ) {
+    } else if ( speed >= 20 && speed < 38 ) {
         index = 5;
-    } else if ( speed >= 39 && speed < 49 ) {
+    } else if ( speed >= 38 && speed < 49 ) {
         index = 6;
-    } else if ( speed >= 50 && speed < 61 ) {
+    } else if ( speed >= 49 && speed < 61 ) {
         index = 7;
-    } else if ( speed >= 62 && speed < 74 ) {
+    } else if ( speed >= 61 && speed < 74 ) {
         index = 8;
-    } else if ( speed >= 75 && speed < 88 ) {
+    } else if ( speed >= 74 && speed < 88 ) {
         index = 9;
-    } else if ( speed >= 89 && speed < 102 ) {
+    } else if ( speed >= 88 && speed < 102 ) {
         index = 10;
-    } else if ( speed >= 103 && speed < 117 ) {
+    } else if ( speed >= 101 && speed < 117 ) {
         index = 11;
-    } else if ( speed >= 118 ) {
+    } else if ( speed >= 117 ) {
         index = 12;
     }
 
