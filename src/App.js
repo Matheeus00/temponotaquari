@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './App.css';
+import api from './data.json';
+import { Forecast } from './Forecast/Forecast';
 import Moon from './Moon';
 import Rose from './Rose';
 import { dayHour, getCurrentTimeColor } from './Util';
 import Weather from './Weather';
-import api from './data.json';
 
 function App() {
   const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ function App() {
 
     return (
       <div className="App" style={{backgroundColor: getCurrentTimeColor()}}>
-        <div style={{display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '50px', padding: '50px'}}>
+        <div className='current-data'>
           <Weather 
             code={json.condition_code}
             temp={json.temp}
@@ -35,6 +36,9 @@ function App() {
             sunrise={json.sunrise}
             sunset={json.sunset}
             description={json.description}
+            humidty={json.humidity}
+            rain={json.rain}
+            cloudiness={json.cloudiness}
           />
           <Rose
             rotation={json.wind_direction}
@@ -42,6 +46,11 @@ function App() {
           />
           <Moon
             moon={json.moon_phase}
+          />
+        </div>
+        <div>
+          <Forecast 
+            data={json.forecast}
           />
         </div>
       </div>

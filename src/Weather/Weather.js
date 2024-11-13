@@ -1,7 +1,7 @@
 import { getImageSource, to24Hours } from '../Util';
 import './Weather.css';
 
-export const Weather = ({code, temp, time, sunrise, sunset, description}) => {
+export const Weather = ({code, temp, time, sunrise, sunset, description, humidty, rain, cloudiness}) => {
     return (
         <div className="weather-container">
             <div className='weather-header'>
@@ -14,6 +14,34 @@ export const Weather = ({code, temp, time, sunrise, sunset, description}) => {
             <p className='weather-description'>
                 {description}
             </p>
+            <hr />
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Umidade</td>
+                            <td>
+                                <img className='humidity-icon' src={`./condition/humidity.svg`} alt='Humidity'/>
+                            </td>
+                            <td>{humidty}%</td>
+                        </tr>
+                        <tr>
+                            <td>Volume de Chuva</td>
+                            <td>
+                                <img className='rain-icon' src={`./condition/raindrop-measure.svg`} alt='Rain'/>
+                            </td>
+                            <td>{rain}mm</td>
+                        </tr>
+                        <tr>
+                            <td>Nebulosidade</td>
+                            <td>
+                                <img className='cloudiness-icon' src={`./condition/cloudy.svg`} alt='Cloudiness'/>
+                            </td>
+                            <td>{cloudiness}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <hr />
             <div className='weather-body'>
                 <div className='sunrise' title='Nascer do Sol'>

@@ -1,9 +1,8 @@
 .weather-container {
-    height: 350px;
-    width: 350px;
     background-color: white;
     border-radius: 20px;
     padding: 20px;
+    grid-area: 1 / 1 / 4 / 2
 }
 
 .weather-container .weather-header, .weather-body {
@@ -24,4 +23,15 @@
 
 .sunset-icon, .sunrise-icon {
     height: 100px;
+}
+
+.humidity-icon, .rain-icon, .cloudiness-icon {
+    height: 70px;
+}
+
+.humidty-container, .rain-container, .cloudiness-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
 }

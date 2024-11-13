@@ -1,13 +1,12 @@
 .rose-container {
-    height: 350px;
-    width: 350px;
     background-color: white;
     border-radius: 20px;
     padding: 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
+    grid-area: 1 / 2 / 3 / 3;
 }
 
 .rose {

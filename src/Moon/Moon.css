@@ -1,6 +1,4 @@
 .moon-container {
-    height: 350px;
-    width: 350px;
     background-color: white;
     border-radius: 20px;
     padding: 20px;
@@ -8,10 +6,11 @@
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
+    grid-area: 3 / 2 / 4 / 3;
 }
 
 .moon {
-    height: 200px;
+    height: 120px;
 }
 
 .moon-container .moon-type {
