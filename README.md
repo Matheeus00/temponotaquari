@@ -8,7 +8,7 @@ Nesse projeto estou utilizando:\
 [Meteocons](https://bas.dev/work/meteocons) - Ícones SVG com animações
 
 # O que ainda será feito :rocket:
-- [ ] Completar o mapeamento das **Condições do Tempo**
+- [-] Completar o mapeamento das **Condições do Tempo**
 - [ ] Migrar as **Condições do Tempo** para um **JSON**
 - [ ] Melhorar a disposição do itens na tela
 - [ ] Implementar os a previsão do tempo utilizando os dados da **HG Brasil**
