@@ -8,11 +8,11 @@ Nesse projeto estou utilizando:\
 [Meteocons](https://bas.dev/work/meteocons) - Ícones SVG com animações
 
 # O que ainda será feito :rocket:
-- [-] Completar o mapeamento das **Condições do Tempo**
+- [x] Completar o mapeamento das **Condições do Tempo**
 - [ ] Migrar as **Condições do Tempo** para um **JSON**
 - [ ] Melhorar a disposição do itens na tela
 - [ ] Implementar os a previsão do tempo utilizando os dados da **HG Brasil**
 - [ ] Criar uma persistência que armazena os dados por alguns dias
 - [ ] Criar uma **API** bem completa para retorno dos dados armazenados e coletados
-- [ ] Coleta dos dados da [OccuWeather API](https://developer.accuweather.com/) para compor a aplicação
+- [ ] Coleta dos dados da [OccuWeather API](https://developer.accuweather.com/) e [OpenWeather](https://openweathermap.org/) para compor a aplicação
 - [ ] Adaptar para que funciona nos smartphones e dispositivos menores
