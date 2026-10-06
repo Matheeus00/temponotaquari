@@ -1,6 +1,0 @@
-{
-    "url": "https://api.hgbrasil.com/weather",
-    "format": "json-cors",
-    "key": "77101b88",
-    "location": "Lajeado,RS"
-}

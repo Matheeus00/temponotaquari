@@ -1,4 +1,4 @@
-export const Colors = [
+export const Colors: readonly string[] = [
     '#00204f',
     '#003468',
     '#003468',

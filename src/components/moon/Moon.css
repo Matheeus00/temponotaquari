@@ -1,0 +1,114 @@
+.moon-container {
+  display: flex;
+  grid-column: 2;
+  grid-row: 2;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 22px;
+}
+
+.moon-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 30px);
+}
+
+.moon {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.moon-content > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.moon-widget-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #7185a0;
+  border-radius: 12px;
+  background: #f0f2f8;
+  font-size: 20px;
+}
+
+.moon-type {
+  color: #294762;
+  font-size: 21px;
+  font-weight: 650;
+}
+
+.moon-caption {
+  max-width: 140px;
+  color: #77899a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .moon-container {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 250px;
+  }
+
+  .moon-content {
+    flex-direction: column;
+    gap: 3px;
+    text-align: left;
+    height: 100%;
+  }
+
+  .moon {
+    width: 75px;
+    height: 75px;
+  }
+
+  .moon-caption {
+    display: none;
+  }
+
+  .moon-type {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .moon-container {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 185px;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .moon-container .widget-heading {
+    align-self: flex-start;
+  }
+
+  .moon-content {
+    flex-direction: row;
+    gap: 18px;
+    text-align: left;
+  }
+
+  .moon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .moon-type {
+    font-size: 19px;
+  }
+
+  .moon-caption {
+    display: block;
+  }
+}

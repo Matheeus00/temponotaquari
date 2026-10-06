@@ -1,0 +1,276 @@
+.rose-container {
+  position: relative;
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px 18px 12px;
+}
+
+.widget-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.widget-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #287d8a;
+  border-radius: 12px;
+  background: #e7f3f4;
+  font-size: 20px;
+}
+
+.widget-heading h2 {
+  margin: 0;
+  color: #294762;
+  font-size: 14px;
+  font-weight: 650;
+  text-align: left;
+}
+
+.widget-label {
+  margin-bottom: 3px;
+  font-size: 9px;
+}
+
+.rose {
+  position: relative;
+  width: 126px;
+  aspect-ratio: 1;
+  margin: 10px auto 12px;
+  border: 1px solid #e1ebef;
+  border-radius: 50%;
+  background:
+    linear-gradient(#e5edf1, #e5edf1) center / 1px 74% no-repeat,
+    linear-gradient(90deg, #e5edf1, #e5edf1) center / 74% 1px no-repeat,
+    #f7fafb;
+  color: #547087;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.rose-direction {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+}
+
+.rose-north {
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.rose-south {
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.rose-west {
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+}
+
+.rose-east {
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+}
+
+.rose-northwest {
+  top: 23%;
+  left: 19%;
+}
+
+.rose-northeast {
+  top: 23%;
+  right: 19%;
+}
+
+.rose-southwest {
+  bottom: 23%;
+  left: 19%;
+}
+
+.rose-southeast {
+  right: 19%;
+  bottom: 23%;
+}
+
+.rose .compass {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  transform-origin: center;
+  transition: transform 250ms ease;
+}
+
+.rose-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #e8edf2;
+}
+
+.rose-footer .beaufort {
+  width: 52px;
+  height: 52px !important;
+  padding: 2px;
+  border-radius: 12px;
+  background: #f1f6f8;
+  object-fit: contain;
+}
+
+.rose-footer p {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.rose-footer strong {
+  color: #304d68;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.rose-footer span {
+  color: #77899a;
+  font-size: 10px;
+}
+
+.beaufort-guide {
+  margin-top: 8px;
+  color: #547087;
+  font-size: 11px;
+}
+
+.rose-container:has(.beaufort-guide[open]) {
+  z-index: 2;
+}
+
+.beaufort-guide summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.beaufort-guide-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -18px;
+  left: -18px;
+  z-index: 3;
+  width: auto;
+  padding: 14px;
+  border: 1px solid #dce6ed;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(28 52 77 / 22%);
+}
+
+.beaufort-guide-content > p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.beaufort-guide-content ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  max-height: 190px;
+  margin: 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.beaufort-guide-content li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #f2f6f8;
+  text-align: left;
+}
+
+.beaufort-guide-content li strong {
+  color: #304d68;
+  font-size: 10px;
+}
+
+.beaufort-guide-content li span {
+  color: #77899a;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .rose-container {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rose-container {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 210px;
+    padding: 16px;
+  }
+
+  .widget-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .rose {
+    width: 136px;
+    margin-top: 12px;
+    margin-bottom: 14px;
+  }
+
+  .rose .compass {
+    width: 56px;
+    height: 56px;
+  }
+
+  .rose-footer .beaufort {
+    width: 44px;
+    height: 44px !important;
+  }
+
+  .beaufort-guide-content {
+    top: calc(100% + 8px);
+    right: -16px;
+    left: -16px;
+    width: auto;
+  }
+
+  .beaufort-guide-content ul {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 160px;
+  }
+}
