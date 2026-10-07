@@ -164,6 +164,22 @@
   font-weight: 550;
 }
 
+.location-select {
+  max-width: min(240px, 45vw);
+  padding: 0;
+  color: inherit;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.location-badge:focus-within {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
 .location-pin {
   display: grid;
   width: 19px;
@@ -199,7 +215,76 @@
 }
 
 .dashboard-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 4px;
   margin-bottom: 18px;
+}
+
+.dashboard-heading > .eyebrow {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+
+.dashboard-heading > h1 {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.dashboard-heading > .dashboard-date {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.unit-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.unit-controls label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #3c5872;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.unit-controls select {
+  min-height: 32px;
+  padding: 5px 26px 5px 9px;
+  color: #294762;
+  border: 1px solid rgb(255 255 255 / 75%);
+  border-radius: 9px;
+  background-color: rgb(255 255 255 / 72%);
+  font: inherit;
+  cursor: pointer;
+}
+
+.unit-controls select:focus-visible {
+  outline: 2px solid #287d8a;
+  outline-offset: 2px;
+}
+
+.App--dark-background .unit-controls label {
+  color: #f0f4fa;
+}
+
+.App--dark-background .unit-controls select {
+  color: #f5f8fc;
+  border-color: rgb(255 255 255 / 55%);
+  background-color: rgb(255 255 255 / 22%);
+}
+
+.App--dark-background .unit-controls option {
+  color: #20354e;
 }
 
 .eyebrow,
@@ -237,10 +322,14 @@
 .current-data {
   display: grid;
   width: min(1120px, 100%);
-  grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(230px, 0.72fr);
   grid-template-rows: minmax(215px, auto) minmax(185px, auto);
   gap: 18px;
   margin: 0 auto;
+}
+
+.current-data:has(.beaufort-guide[open], .outdoor-guide[open], .moon-guide[open]) {
+  z-index: 2;
 }
 
 .App--dark-background .brand,
@@ -276,7 +365,8 @@
 
 .weather-container,
 .rose-container,
-.moon-container {
+.moon-container,
+.outdoor-section {
   min-width: 0;
   border: 1px solid rgb(255 255 255 / 70%);
   border-radius: 20px;
@@ -415,6 +505,34 @@
   color: #f0f4fa;
 }
 
+@media (min-width: 721px) and (max-width: 900px) {
+  .current-data {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(330px, auto) minmax(220px, auto) auto;
+  }
+
+  .current-data .weather-container {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .current-data .rose-container {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .current-data .moon-container {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .current-data .outdoor-section {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-height: 160px;
+  }
+}
+
 .app-message {
   display: flex;
   min-height: 50vh;
@@ -480,7 +598,7 @@
 
   .current-data {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(350px, auto) minmax(220px, auto);
+    grid-template-rows: minmax(350px, auto) minmax(220px, auto) auto;
     gap: 14px;
   }
 
@@ -497,6 +615,11 @@
   .moon-container {
     grid-column: 2;
     grid-row: 2;
+  }
+
+  .outdoor-section {
+    grid-column: 1 / -1;
+    grid-row: 3;
   }
 
   .section-caption {
@@ -534,18 +657,40 @@
   }
 
   .dashboard-heading {
-    align-items: flex-end;
+    column-gap: 10px;
   }
 
   .dashboard-date {
-    max-width: 120px;
+    max-width: 160px;
     text-align: right;
     font-size: 11px;
   }
 
+  .dashboard-heading > h1 {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 24px;
+  }
+
+  .unit-controls {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    gap: 6px;
+  }
+
+  .unit-controls label {
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  .unit-controls select {
+    min-height: 30px;
+    padding: 4px 20px 4px 6px;
+  }
+
   .current-data {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     gap: 12px;
   }
 
@@ -562,6 +707,11 @@
   .moon-container {
     grid-column: 1;
     grid-row: 3;
+  }
+
+  .outdoor-section {
+    grid-column: 1;
+    grid-row: 4;
   }
 
   .forecast-section {

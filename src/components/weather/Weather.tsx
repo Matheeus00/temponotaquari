@@ -1,9 +1,16 @@
-import { getImageSource, to24Hours } from '../../utils/utils';
+import {
+    formatTemperature,
+    getImageSource,
+    getTemperatureUnitLabel,
+    to24Hours,
+    type TemperatureUnit,
+} from '../../utils/utils';
 import './Weather.css';
 
 interface WeatherProps {
     code: number;
     temp: number | string;
+    temperatureUnit: TemperatureUnit;
     time: 'day' | 'night';
     sunrise: string;
     sunset: string;
@@ -16,6 +23,7 @@ interface WeatherProps {
 export const Weather = ({
     code,
     temp,
+    temperatureUnit,
     time,
     sunrise,
     sunset,
@@ -31,8 +39,8 @@ export const Weather = ({
                 <div className="temperature-block">
                     <p className="weather-kicker">AGORA</p>
                     <div className="temperature">
-                        <span className='weather-temp'>{temp}</span>
-                        <span className="temperature-unit">°</span>
+                        <span className='weather-temp'>{formatTemperature(temp, temperatureUnit)}</span>
+                        <span className="temperature-unit">{getTemperatureUnitLabel(temperatureUnit)}</span>
                     </div>
                     <p className='weather-description'>{description}</p>
                 </div>

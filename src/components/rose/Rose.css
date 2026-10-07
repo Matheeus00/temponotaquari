@@ -131,6 +131,7 @@
   width: 52px;
   height: 52px !important;
   padding: 2px;
+  border: 1px solid #d4e2e8;
   border-radius: 12px;
   background: #f1f6f8;
   object-fit: contain;
@@ -180,7 +181,9 @@
   left: -18px;
   z-index: 3;
   width: auto;
+  max-height: min(70vh, 460px);
   padding: 14px;
+  overflow-y: auto;
   border: 1px solid #dce6ed;
   border-radius: 14px;
   background: #fff;
@@ -193,15 +196,42 @@
   text-align: left;
 }
 
+.beaufort-guide-content > .beaufort-extended-note {
+  color: #745e47;
+}
+
+.beaufort-guide-content h3 {
+  margin: 0 0 8px;
+  color: #294762;
+  font-size: 11px;
+  font-weight: 750;
+  text-align: left;
+}
+
 .beaufort-guide-content ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px 12px;
-  max-height: 190px;
-  margin: 0;
+  margin: 0 0 12px;
   padding: 0 4px 0 0;
-  overflow-y: auto;
   list-style: none;
+}
+
+.beaufort-guide-content .beaufort-extreme-levels {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.beaufort-extreme-levels li {
+  border: 1px solid #f3d9ad;
+  background: #fff7e9;
+}
+
+.beaufort-extreme-levels li strong {
+  color: #89531d;
+}
+
+.beaufort-extreme-levels li span {
+  color: #745e47;
 }
 
 .beaufort-guide-content li {
@@ -263,7 +293,6 @@
   }
 
   .beaufort-guide-content {
-    top: calc(100% + 8px);
     right: -16px;
     left: -16px;
     width: auto;
@@ -271,6 +300,5 @@
 
   .beaufort-guide-content ul {
     grid-template-columns: minmax(0, 1fr);
-    max-height: 160px;
   }
 }

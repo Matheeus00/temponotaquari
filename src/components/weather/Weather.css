@@ -80,15 +80,14 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 11px;
-  border: 1px solid #d4e7ef;
-  background: #e7f3f8;
+  border: 1px solid #ccdde5;
+  background: #dce9ee;
 }
 
 .metric-icon img {
   width: 33px;
   height: 33px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(36%) sepia(26%) saturate(1196%) hue-rotate(151deg) brightness(91%) contrast(91%);
 }
 
 .metric-copy {

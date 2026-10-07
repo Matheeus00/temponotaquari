@@ -1,10 +1,15 @@
 .moon-container {
+  position: relative;
   display: flex;
-  grid-column: 2;
+  grid-column: 2 / 4;
   grid-row: 2;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px 22px;
+}
+
+.moon-container:has(.moon-guide[open]) {
+  z-index: 4;
 }
 
 .moon-content {
@@ -52,6 +57,92 @@
   line-height: 1.5;
 }
 
+.moon-guide {
+  position: relative;
+  width: fit-content;
+  color: #547087;
+  font-size: 10px;
+}
+
+.moon-guide summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.moon-guide-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: min(460px, calc(100vw - 48px));
+  max-height: min(65vh, 460px);
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid #dce6ed;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(28 52 77 / 22%);
+  text-align: left;
+}
+
+.moon-guide-content h3 {
+  margin: 0 0 8px;
+  color: #294762;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.moon-guide-content > p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.moon-guide-content ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.moon-guide-content li {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  padding: 7px;
+  border-radius: 8px;
+  background: #f2f6f8;
+}
+
+.moon-guide-content li > img {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.moon-guide-content li > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.moon-guide-content li strong {
+  color: #304d68;
+  font-size: 10px;
+}
+
+.moon-guide-content li > span > span {
+  color: #77899a;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
 @media (max-width: 720px) {
   .moon-container {
     grid-column: 2;
@@ -78,6 +169,7 @@
   .moon-type {
     font-size: 15px;
   }
+
 }
 
 @media (max-width: 480px) {
@@ -111,4 +203,9 @@
   .moon-caption {
     display: block;
   }
+
+  .moon-guide-content ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
 }

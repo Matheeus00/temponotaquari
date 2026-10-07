@@ -1,15 +1,21 @@
 import './Rose.css';
+import { DismissibleDetails } from '../common/DismissibleDetails';
 import { getBeaufortIndex } from '../../utils/utils';
-import { BEAUFORT_SCALE, getBeaufortLevel } from '../../constants/beaufort';
+import {
+    BEAUFORT_EXTENDED_SCALE,
+    BEAUFORT_SCALE,
+    getBeaufortLevel,
+} from '../../constants/beaufort';
 
 interface RoseProps {
     rotation: number;
     speed: string;
+    displaySpeed?: string;
 }
 
-export const Rose = ({ rotation, speed }: RoseProps) => {
+export const Rose = ({ rotation, speed, displaySpeed = speed }: RoseProps) => {
     const beaufortIndex = getBeaufortIndex(speed);
-    const beaufortLevel = getBeaufortLevel(Number.parseFloat(speed));
+    const beaufortLevel = getBeaufortLevel(Number.parseFloat(speed.replace(',', '.')));
 
     return (
         <div className='rose-container'>
@@ -30,13 +36,13 @@ export const Rose = ({ rotation, speed }: RoseProps) => {
             </div>
             <div className='rose-footer'>
                 <img className='beaufort' src={`/wind/wind-beaufort-${beaufortIndex}.svg`} alt=''/>
-                <p><strong>{speed}</strong><span>km/h · força {beaufortIndex} — {beaufortLevel.description}</span></p>
+                <p><strong>{displaySpeed}</strong><span>{beaufortLevel.description}</span></p>
             </div>
-            <details className="beaufort-guide">
-                <summary>Como funciona a escala Beaufort?</summary>
+            <DismissibleDetails className="beaufort-guide" summary="Como funciona a escala Beaufort?">
                 <div className="beaufort-guide-content">
-                    <p>A escala classifica a intensidade do vento de 0 (calmaria) a 12 (furacão), relacionando a velocidade em km/h com seus efeitos observáveis.</p>
-                    <ul>
+                    <h3>Escala Beaufort tradicional · graus 0 a 12</h3>
+                    <p>A versão mais difundida da escala Beaufort vai de 0 a 12. As faixas abaixo estão em km/h.</p>
+                    <ul className="beaufort-regular-levels">
                         {BEAUFORT_SCALE.map((level) => (
                             <li key={level.force}>
                                 <strong>{level.force} · {level.description}</strong>
@@ -47,8 +53,23 @@ export const Rose = ({ rotation, speed }: RoseProps) => {
                             </li>
                         ))}
                     </ul>
+                    <h3>Escala estendida · graus 13 a 17</h3>
+                    <p className="beaufort-extended-note">
+                        Essa extensão é menos comum. Alguns países asiáticos, como China e Vietnã, adotam classificações ampliadas para ventos extremos.
+                    </p>
+                    <ul className="beaufort-extreme-levels">
+                        {BEAUFORT_EXTENDED_SCALE.map((level) => (
+                            <li key={level.force}>
+                                <strong>{level.force} · {level.description}</strong>
+                                <span>
+                                    {level.minSpeed === 0 ? '0–0,9' : `${level.minSpeed}–${level.maxSpeed ?? '+'}`} km/h
+                                    {' — '}{level.effect}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-            </details>
+            </DismissibleDetails>
         </div>
     );
 };

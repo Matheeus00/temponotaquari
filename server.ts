@@ -3,6 +3,7 @@ import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getTaquariValleyCity } from './src/constants/cities.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
@@ -18,6 +19,14 @@ app.use('/api', rateLimit({
 }));
 
 app.get('/api/weather', async (request, response) => {
+  const city = getTaquariValleyCity(
+    typeof request.query.city === 'string' ? request.query.city : 'lajeado',
+  );
+  if (!city) {
+    response.status(400).json({ error: 'A cidade selecionada não está disponível.' });
+    return;
+  }
+
   const apiKey = process.env.WEATHER_API_KEY;
 
   if (!apiKey) {
@@ -28,7 +37,7 @@ app.get('/api/weather', async (request, response) => {
   const weatherUrl = new URL('https://api.hgbrasil.com/weather');
   weatherUrl.searchParams.set('format', 'json-cors');
   weatherUrl.searchParams.set('key', apiKey);
-  weatherUrl.searchParams.set('city_name', 'Lajeado,RS');
+  weatherUrl.searchParams.set('city_name', `${city.name},RS`);
 
   try {
     const upstreamResponse = await fetch(weatherUrl, {
@@ -55,5 +64,5 @@ app.get('/api/weather', async (request, response) => {
 app.use(express.static(distDirectory));
 
 app.listen(port, () => {
-  console.log(`Lajeado no Tempo server listening on port ${port}.`);
+  console.log(`Taquari no Tempo server listening on port ${port}.`);
 });

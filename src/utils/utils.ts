@@ -4,6 +4,54 @@ import { getBeaufortLevel } from '../constants/beaufort';
 
 export type TimeOfDay = 'day' | 'night';
 export type WeatherEffect = 'rain' | 'snow' | 'heat';
+export type TemperatureUnit = 'C' | 'F' | 'K';
+export type WindSpeedUnit = 'km/h' | 'mph' | 'm/s' | 'kn';
+
+const parseWeatherNumber = (value: number | string): number =>
+    Number.parseFloat(String(value).trim().replace(',', '.'));
+
+const formatWeatherNumber = (value: number): string =>
+    new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 }).format(value);
+
+export const formatTemperature = (
+    value: number | string,
+    unit: TemperatureUnit,
+): string => {
+    const temperature = parseWeatherNumber(value);
+    if (!Number.isFinite(temperature)) {
+        return String(value);
+    }
+
+    const convertedTemperature = {
+        C: temperature,
+        F: Math.round((temperature * 9) / 5 + 32),
+        K: temperature + 273.15,
+    }[unit];
+
+    return formatWeatherNumber(convertedTemperature);
+}
+
+export const getTemperatureUnitLabel = (unit: TemperatureUnit): string =>
+    unit === 'K' ? 'K' : `°${unit}`;
+
+export const formatWindSpeed = (
+    value: number | string,
+    unit: WindSpeedUnit,
+): string => {
+    const speedInKmh = parseWeatherNumber(value);
+    if (!Number.isFinite(speedInKmh)) {
+        return String(value);
+    }
+
+    const convertedSpeed = {
+        'km/h': speedInKmh,
+        mph: speedInKmh / 1.609344,
+        'm/s': speedInKmh / 3.6,
+        kn: speedInKmh / 1.852,
+    }[unit];
+
+    return `${formatWeatherNumber(convertedSpeed)} ${unit === 'kn' ? 'nós' : unit}`;
+}
 
 const timeSpecificIcons = new Set([
     'clear',
@@ -142,6 +190,6 @@ export const to24Hours = (value: string): string => {
 }
 
 export const getBeaufortIndex = (value: string): number => {
-    const speed = Number.parseFloat(value);
+    const speed = parseWeatherNumber(value);
     return Number.isFinite(speed) ? getBeaufortLevel(speed).force : 0;
 }

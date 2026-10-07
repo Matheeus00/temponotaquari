@@ -73,10 +73,20 @@
   color: #547a9a;
 }
 
+.forecast-temperature > span {
+  white-space: nowrap;
+}
+
+.forecast-temperature > span small {
+  font-size: 10px;
+  font-weight: 650;
+}
+
 .max-icon,
 .min-icon {
-  width: 18px;
-  height: 21px;
+  width: 24px;
+  height: 27px;
+  flex: 0 0 auto;
   object-fit: contain;
 }
 

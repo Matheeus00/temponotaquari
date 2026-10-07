@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { getTaquariValleyCity } from '../src/constants/cities.js';
 
 const sendJson = (response: ServerResponse, statusCode: number, data: unknown) => {
   response.statusCode = statusCode;
@@ -16,6 +17,13 @@ export default async function handler(
     return;
   }
 
+  const cityId = new URL(request.url ?? '/', 'http://localhost').searchParams.get('city') ?? 'lajeado';
+  const city = getTaquariValleyCity(cityId);
+  if (!city) {
+    sendJson(response, 400, { error: 'A cidade selecionada não está disponível.' });
+    return;
+  }
+
   const apiKey = process.env.WEATHER_API_KEY;
   if (!apiKey) {
     sendJson(response, 503, { error: 'A API do clima não está configurada no servidor.' });
@@ -25,7 +33,7 @@ export default async function handler(
   const weatherUrl = new URL('https://api.hgbrasil.com/weather');
   weatherUrl.searchParams.set('format', 'json-cors');
   weatherUrl.searchParams.set('key', apiKey);
-  weatherUrl.searchParams.set('city_name', 'Lajeado,RS');
+  weatherUrl.searchParams.set('city_name', `${city.name},RS`);
 
   try {
     const upstreamResponse = await fetch(weatherUrl, {

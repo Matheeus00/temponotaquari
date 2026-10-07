@@ -1,15 +1,21 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './App.css';
+import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
+import { EclipseAlert } from './components/eclipse/EclipseAlert';
 import { Moon } from './components/moon/Moon';
+import { OutdoorConditions } from './components/outdoor/OutdoorConditions';
 import { Rose } from './components/rose/Rose';
 import {
   dayHour,
   getCurrentTimeColor,
   getRainDropCount,
   getWeatherEffect,
+  formatWindSpeed,
   isDarkColor,
+  type TemperatureUnit,
+  type WindSpeedUnit,
 } from './utils/utils';
 import { Weather } from './components/weather/Weather';
 import type { WeatherConditions, WeatherResponse } from './types';
@@ -17,11 +23,17 @@ import type { WeatherConditions, WeatherResponse } from './types';
 function App() {
   const [weather, setWeather] = useState<WeatherConditions | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCityId, setSelectedCityId] = useState<string>('lajeado');
+  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('C');
+  const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('km/h');
 
   useEffect(() => {
     const controller = new AbortController();
 
+    setWeather(null);
+    setError(null);
     axios.get<WeatherResponse>('/api/weather', {
+      params: { city: selectedCityId },
       signal: controller.signal,
     })
       .then(({ data }) => {
@@ -43,7 +55,7 @@ function App() {
       });
 
     return () => controller.abort();
-  }, []);
+  }, [selectedCityId]);
 
   const backgroundColor = getCurrentTimeColor();
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
@@ -99,29 +111,37 @@ function App() {
         </div>
       )}
       <header className="app-header">
-        <a className="brand" href="/" aria-label="Lajeado no Tempo, início">
+        <a className="brand" href="/" aria-label="Taquari no Tempo, início">
           <span className="brand-icon" aria-hidden="true">
             <img src="/condition/day-partly-cloudy.svg" alt="" />
           </span>
-          <span className="brand-name">Lajeado <span>no Tempo</span></span>
+          <span className="brand-name">Taquari <span>no Tempo</span></span>
         </a>
-        <div className="location-badge">
+        <label className="location-badge">
           <span className="location-pin" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
               <circle cx="12" cy="10" r="2.5" />
             </svg>
           </span>
-          <span>Lajeado, RS</span>
+          <select
+            className="location-select"
+            aria-label="Selecionar cidade"
+            value={selectedCityId}
+            onChange={(event) => setSelectedCityId(event.target.value)}
+          >
+            {TAQUARI_VALLEY_CITIES.map((city) => (
+              <option key={city.id} value={city.id}>{city.name}, RS</option>
+            ))}
+          </select>
           <span className="live-dot" aria-label="Dados atuais" />
-        </div>
+        </label>
       </header>
 
+      <EclipseAlert />
+
       <section className="dashboard-heading" aria-labelledby="page-title">
-        <div>
-          <p className="eyebrow">PAINEL DO TEMPO</p>
-          <h1 id="page-title">O céu de hoje</h1>
-        </div>
+        <p className="eyebrow">PAINEL DO TEMPO</p>
         <p className="dashboard-date">
           {new Intl.DateTimeFormat('pt-BR', {
             weekday: 'long',
@@ -129,12 +149,50 @@ function App() {
             month: 'long',
           }).format(new Date())}
         </p>
+        <h1 id="page-title">O céu de hoje</h1>
+        <div className="unit-controls" aria-label="Unidades de medida">
+          <label>
+            <span>Temperatura</span>
+            <select
+              value={temperatureUnit}
+              onChange={(event) => {
+                if (event.target.value === 'C' || event.target.value === 'F' || event.target.value === 'K') {
+                  setTemperatureUnit(event.target.value);
+                }
+              }}
+              aria-label="Unidade de temperatura"
+            >
+              <option value="C">°C</option>
+              <option value="F">°F</option>
+              <option value="K">K</option>
+            </select>
+          </label>
+          <label>
+            <span>Vento</span>
+            <select
+              value={windSpeedUnit}
+              onChange={(event) => {
+                const unit = event.target.value;
+                if (unit === 'km/h' || unit === 'mph' || unit === 'm/s' || unit === 'kn') {
+                  setWindSpeedUnit(unit);
+                }
+              }}
+              aria-label="Unidade de velocidade do vento"
+            >
+              <option value="km/h">km/h</option>
+              <option value="mph">mph</option>
+              <option value="m/s">m/s</option>
+              <option value="kn">nós</option>
+            </select>
+          </label>
+        </div>
       </section>
 
       <section className="current-data" aria-label="Condições atuais">
         <Weather
           code={weather.condition_code}
           temp={weather.temp}
+          temperatureUnit={temperatureUnit}
           time={time}
           sunrise={weather.sunrise}
           sunset={weather.sunset}
@@ -143,8 +201,13 @@ function App() {
           rain={weather.rain}
           cloudiness={weather.cloudiness}
         />
-        <Rose rotation={weather.wind_direction} speed={weather.wind_speedy} />
+        <Rose
+          rotation={weather.wind_direction}
+          speed={weather.wind_speedy}
+          displaySpeed={formatWindSpeed(weather.wind_speedy, windSpeedUnit)}
+        />
         <Moon moon={weather.moon_phase} />
+        <OutdoorConditions data={weather.outdoorConditions} />
       </section>
 
       <section className="forecast-section" aria-labelledby="forecast-title">
@@ -155,7 +218,7 @@ function App() {
           </div>
           <span className="section-caption">Acompanhe o que vem por aí</span>
         </div>
-        <Forecast data={weather.forecast} />
+        <Forecast data={weather.forecast} temperatureUnit={temperatureUnit} />
       </section>
 
       <footer className="app-footer">
@@ -168,8 +231,8 @@ function App() {
             </svg>
           </span>
           <span className="footer-copy">
-            <strong>Lajeado no Tempo</strong>
-            <span>O tempo da nossa cidade, de um jeito simples.</span>
+            <strong>Taquari no Tempo</strong>
+            <span>O tempo do Vale do Taquari, de um jeito simples.</span>
           </span>
         </div>
         <div className="footer-meta">
@@ -179,7 +242,7 @@ function App() {
               <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
             </svg>
           </a>
-          <span>© {new Date().getFullYear()} Lajeado no Tempo</span>
+          <span>© {new Date().getFullYear()} Taquari no Tempo</span>
         </div>
       </footer>
     </main>

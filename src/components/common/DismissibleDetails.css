@@ -1,0 +1,23 @@
+.dismissible-details[data-side='above'] > :not(summary) {
+  box-sizing: border-box;
+  position: fixed;
+  width: var(--dialog-width);
+  top: var(--dialog-top);
+  right: auto;
+  bottom: auto;
+  left: var(--dialog-left, 0);
+  max-height: var(--dialog-max-height, min(65vh, 460px));
+  transform: none;
+}
+
+.dismissible-details[data-side='below'] > :not(summary) {
+  box-sizing: border-box;
+  position: fixed;
+  width: var(--dialog-width);
+  top: var(--dialog-top);
+  right: auto;
+  bottom: auto;
+  left: var(--dialog-left, 0);
+  max-height: var(--dialog-max-height, min(65vh, 460px));
+  transform: none;
+}

@@ -22,6 +22,14 @@ export const BEAUFORT_SCALE: BeaufortLevel[] = [
   { force: 12, minSpeed: 118, maxSpeed: null, description: 'Furacão', effect: 'Ventos extremamente destrutivos.' },
 ];
 
+export const BEAUFORT_EXTENDED_SCALE: BeaufortLevel[] = [
+  { force: 13, minSpeed: 134, maxSpeed: 149, description: 'Grau 13', effect: 'Equivalente a um Furacão de Categoria 1' },
+  { force: 14, minSpeed: 150, maxSpeed: 166, description: 'Grau 14', effect: 'Equivalente a um Furacão de Categoria 2' },
+  { force: 15, minSpeed: 167, maxSpeed: 183, description: 'Grau 15', effect: 'Equivalente a um Furacão de Categoria 3' },
+  { force: 16, minSpeed: 184, maxSpeed: 201, description: 'Grau 16', effect: 'Equivalente a um Furacão de Categoria 4' },
+  { force: 17, minSpeed: 202, maxSpeed: null, description: 'Grau 17', effect: 'Equivalente aos limites máximos da escala Saffir-Simpson' },
+];
+
 export const getBeaufortLevel = (speed: number): BeaufortLevel => (
   [...BEAUFORT_SCALE].reverse().find((level) => speed >= level.minSpeed) ?? BEAUFORT_SCALE[0]
 );

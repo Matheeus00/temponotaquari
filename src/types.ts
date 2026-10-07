@@ -6,6 +6,22 @@ export interface ForecastDay {
   rain_probability: number | string;
 }
 
+export interface OutdoorConditionsData {
+  uv?: {
+    index: number;
+    level: string;
+  };
+  pollen?: {
+    level: string;
+    description: string;
+  };
+  airQuality?: {
+    index: number;
+    level: string;
+    description?: string;
+  };
+}
+
 export interface WeatherConditions {
   condition_code: number;
   temp: number | string;
@@ -19,6 +35,7 @@ export interface WeatherConditions {
   wind_speedy: string;
   moon_phase: string;
   forecast: ForecastDay[];
+  outdoorConditions?: OutdoorConditionsData;
 }
 
 export interface WeatherResponse {
