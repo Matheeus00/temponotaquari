@@ -236,6 +236,13 @@ function App() {
           </span>
         </div>
         <div className="footer-meta">
+          <a href="mailto:contato@temponotaquari.com.br">
+            contato@temponotaquari.com.br
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="3.5" width="12" height="9" rx="1.5" />
+              <path d="m3 5 5 4 5-4" />
+            </svg>
+          </a>
           <a href="https://hgbrasil.com/status/weather" target="_blank" rel="noreferrer">
             Dados meteorológicos por HG Brasil
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
