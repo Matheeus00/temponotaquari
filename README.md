@@ -1,4 +1,4 @@
-# Taquari no Tempo :sunny: :cloud:
+# Tempo no Taquari :sunny: :cloud:
 
 WebApp de previsão do tempo para Lajeado e outras 24 cidades principais do Vale do Taquari, no Rio Grande do Sul.
 

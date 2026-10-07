@@ -64,5 +64,5 @@ app.get('/api/weather', async (request, response) => {
 app.use(express.static(distDirectory));
 
 app.listen(port, () => {
-  console.log(`Taquari no Tempo server listening on port ${port}.`);
+  console.log(`Tempo no Taquari server listening on port ${port}.`);
 });

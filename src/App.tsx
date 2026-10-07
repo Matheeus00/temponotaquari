@@ -111,11 +111,11 @@ function App() {
         </div>
       )}
       <header className="app-header">
-        <a className="brand" href="/" aria-label="Taquari no Tempo, início">
+        <a className="brand" href="/" aria-label="Tempo no Taquari, início">
           <span className="brand-icon" aria-hidden="true">
             <img src="/condition/day-partly-cloudy.svg" alt="" />
           </span>
-          <span className="brand-name">Taquari <span>no Tempo</span></span>
+          <span className="brand-name">Tempo <span>no Taquari</span></span>
         </a>
         <label className="location-badge">
           <span className="location-pin" aria-hidden="true">
@@ -231,7 +231,7 @@ function App() {
             </svg>
           </span>
           <span className="footer-copy">
-            <strong>Taquari no Tempo</strong>
+            <strong>Tempo no Taquari</strong>
             <span>O tempo do Vale do Taquari, de um jeito simples.</span>
           </span>
         </div>
@@ -242,7 +242,7 @@ function App() {
               <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
             </svg>
           </a>
-          <span>© {new Date().getFullYear()} Taquari no Tempo</span>
+          <span>© {new Date().getFullYear()} Tempo no Taquari</span>
         </div>
       </footer>
     </main>
