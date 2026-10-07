@@ -33,6 +33,7 @@ O servidor local aplica um limite de 60 consultas por IP a cada 15 minutos. Para
 - [ ] Criar uma **API** bem completa para retorno dos dados armazenados e coletados
 - [ ] Coleta dos dados da [OccuWeather API](https://developer.accuweather.com/) e [OpenWeather](https://openweathermap.org/) para compor a aplicação
 - [x] Adaptar para que funcione nos smartphones e dispositivos menores
+- [ ] Adicionar temas com base em datas comemorativas, tanto da região, quanto do estado e do país, bem como "salientar" na previsão os dias com tal feriado
 
 ## Saúde
 - [ ] Churrasco
