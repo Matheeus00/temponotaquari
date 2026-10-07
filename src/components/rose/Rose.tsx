@@ -23,20 +23,22 @@ export const Rose = ({ rotation, speed, displaySpeed = speed }: RoseProps) => {
                 <span className="widget-icon" aria-hidden="true">↗</span>
                 <div><p className="widget-label">VENTO</p><h2>Direção e velocidade</h2></div>
             </div>
-            <div className="rose" role="img" aria-label={`Rosa dos ventos, direção ${rotation} graus`}>
-                <span className="rose-direction rose-north">N</span>
-                <span className="rose-direction rose-northwest">NO</span>
-                <span className="rose-direction rose-northeast">NE</span>
-                <span className="rose-direction rose-west">O</span>
-                <span className="rose-direction rose-east">L</span>
-                <span className="rose-direction rose-southwest">SO</span>
-                <span className="rose-direction rose-southeast">SE</span>
-                <span className="rose-direction rose-south">S</span>
-                <img className='compass' src='/rose/compass.svg' alt='' style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}/>
-            </div>
-            <div className='rose-footer'>
-                <img className='beaufort' src={`/wind/wind-beaufort-${beaufortIndex}.svg`} alt=''/>
-                <p><strong>{displaySpeed}</strong><span>{beaufortLevel.description}</span></p>
+            <div className="rose-display">
+                <div className="rose" role="img" aria-label={`Rosa dos ventos, direção ${rotation} graus`}>
+                    <span className="rose-direction rose-north">N</span>
+                    <span className="rose-direction rose-northwest">NO</span>
+                    <span className="rose-direction rose-northeast">NE</span>
+                    <span className="rose-direction rose-west">O</span>
+                    <span className="rose-direction rose-east">L</span>
+                    <span className="rose-direction rose-southwest">SO</span>
+                    <span className="rose-direction rose-southeast">SE</span>
+                    <span className="rose-direction rose-south">S</span>
+                    <img className='compass' src='/rose/compass.svg' alt='' style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}/>
+                </div>
+                <div className='rose-footer'>
+                    <img className='beaufort' src={`/wind/wind-beaufort-${beaufortIndex}.svg`} alt=''/>
+                    <p><strong>{displaySpeed}</strong><span>{beaufortLevel.description}</span></p>
+                </div>
             </div>
             <DismissibleDetails className="beaufort-guide" summary="Como funciona a escala Beaufort?">
                 <div className="beaufort-guide-content">
