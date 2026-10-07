@@ -39,11 +39,21 @@
   font-size: 9px;
 }
 
+.rose-display {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+}
+
 .rose {
   position: relative;
-  width: 126px;
+  width: min(126px, 45%);
+  flex: 0 0 auto;
   aspect-ratio: 1;
-  margin: 10px auto 12px;
+  margin: 0;
   border: 1px solid #e1ebef;
   border-radius: 50%;
   background:
@@ -120,16 +130,18 @@
 
 .rose-footer {
   display: flex;
+  min-width: 0;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding-top: 8px;
-  border-top: 1px solid #e8edf2;
+  gap: 7px;
+  padding-left: 14px;
+  border-left: 1px solid #e8edf2;
 }
 
 .rose-footer .beaufort {
-  width: 52px;
-  height: 52px !important;
+  width: 60px;
+  height: 60px !important;
   padding: 2px;
   border: 1px solid #d4e2e8;
   border-radius: 12px;
@@ -261,6 +273,29 @@
     grid-row: 2;
     min-height: 220px;
   }
+
+  .rose-display {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .rose {
+    width: 126px;
+  }
+
+  .rose-footer {
+    flex-direction: row;
+    gap: 12px;
+    padding-top: 8px;
+    padding-left: 0;
+    border-top: 1px solid #e8edf2;
+    border-left: 0;
+  }
+
+  .rose-footer .beaufort {
+    width: 52px;
+    height: 52px !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -278,8 +313,6 @@
 
   .rose {
     width: 136px;
-    margin-top: 12px;
-    margin-bottom: 14px;
   }
 
   .rose .compass {
