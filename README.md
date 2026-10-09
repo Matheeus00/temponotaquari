@@ -41,7 +41,7 @@ O servidor local aplica um limite de 60 consultas por IP a cada 15 minutos. Para
 - [x] Frizz
 - [x] Ressecamento de pele
 - [x] Gripe/Resfriado
-- [-] Vitamina D
+- [ ] Vitamina D
 
 ## Astronomia
 - [ ] Chuva de meteoros

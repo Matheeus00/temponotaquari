@@ -3,6 +3,10 @@
   margin: 32px auto 0;
 }
 
+.weather-indices-section:has(.weather-index-guide[open]) {
+  z-index: 4;
+}
+
 .weather-indices-section .section-heading {
   margin-bottom: 14px;
 }
