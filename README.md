@@ -36,16 +36,16 @@ O servidor local aplica um limite de 60 consultas por IP a cada 15 minutos. Para
 - [ ] Adicionar temas com base em datas comemorativas, tanto da região, quanto do estado e do país, bem como "salientar" na previsão os dias com tal feriado
 
 ## Saúde
-- [ ] Churrasco
-- [ ] Mosquito
-- [ ] Frizz
-- [ ] Ressecamento de pele
-- [ ] Gripe/Resfriado
-- [ ] Vitamina D
+- [x] Churrasco
+- [x] Mosquito
+- [x] Frizz
+- [x] Ressecamento de pele
+- [x] Gripe/Resfriado
+- [-] Vitamina D
 
 ## Astronomia
 - [ ] Chuva de meteoros
-- [ ] Estação do ano + contagem regressiva (tabela de equinócios/solstícios em UTC)
+- [x] Estação do ano
 - [ ] Próxima lua cheia/nova (ciclo sinódico)
 
 ## Dados regionais
@@ -53,6 +53,3 @@ O servidor local aplica um limite de 60 consultas por IP a cada 15 minutos. Para
 - [ ] Nível do Rio Taquari
 - [ ] Qualidade do ar (AQI)
 - [ ] Risco de incêndio
-
-## Fenômenos luminosos
-- [ ] Golden hour / blue hour (a partir do sunrise/sunset)
