@@ -1,0 +1,585 @@
+.weather-indices-section {
+  max-width: 1120px;
+  margin: 32px auto 0;
+}
+
+.weather-indices-section .section-heading {
+  margin-bottom: 14px;
+}
+
+.weather-indices-section .section-heading h2 {
+  font-size: 22px;
+}
+
+.weather-indices-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.weather-index-card {
+  display: flex;
+  min-width: 0;
+  min-height: 112px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 16px;
+  background: rgb(255 255 255 / 82%);
+  box-shadow: 0 8px 22px rgb(28 52 77 / 8%);
+}
+
+.weather-index-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #287d8a;
+  border: 1px solid #ccdde5;
+  border-radius: 10px;
+  background: #dce9ee;
+}
+
+.weather-index-icon svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.weather-index-icon-mosquito,
+.weather-index-icon-skin-dryness {
+  color: #66845b;
+}
+
+.weather-index-icon-cold {
+  color: #6481a0;
+}
+
+.weather-index-icon-vitamin-d {
+  color: #397b8b;
+  border-color: #ccdde5;
+  background: #dce9ee;
+}
+
+.weather-index-card-frizz-very-low {
+  --frizz-color: #287a52;
+  --frizz-border: #c4e4d1;
+  --frizz-background: #eaf6ef;
+}
+
+.weather-index-card-frizz-low {
+  --frizz-color: #648638;
+  --frizz-border: #d9e7bd;
+  --frizz-background: #f2f7e8;
+}
+
+.weather-index-card-frizz-moderate {
+  --frizz-color: #98751d;
+  --frizz-border: #eee0a8;
+  --frizz-background: #fbf6df;
+}
+
+.weather-index-card-frizz-high {
+  --frizz-color: #b36525;
+  --frizz-border: #f0d1ac;
+  --frizz-background: #fcf0e3;
+}
+
+.weather-index-card-frizz-very-high {
+  --frizz-color: #b34b4b;
+  --frizz-border: #edc5c5;
+  --frizz-background: #faeaea;
+}
+
+.weather-index-icon[class*='weather-index-icon-frizz-'] {
+  color: var(--frizz-color);
+  border-color: var(--frizz-border);
+  background: var(--frizz-background);
+}
+
+.weather-index-card-mosquito-low {
+  --mosquito-color: #287a52;
+  --mosquito-border: #c4e4d1;
+  --mosquito-background: #eaf6ef;
+}
+
+.weather-index-card-mosquito-moderate {
+  --mosquito-color: #98751d;
+  --mosquito-border: #eee0a8;
+  --mosquito-background: #fbf6df;
+}
+
+.weather-index-card-mosquito-high {
+  --mosquito-color: #b34b4b;
+  --mosquito-border: #edc5c5;
+  --mosquito-background: #faeaea;
+}
+
+.weather-index-card-skin-dryness-low {
+  --skin-dryness-color: #287a52;
+  --skin-dryness-border: #c4e4d1;
+  --skin-dryness-background: #eaf6ef;
+}
+
+.weather-index-card-skin-dryness-moderate {
+  --skin-dryness-color: #98751d;
+  --skin-dryness-border: #eee0a8;
+  --skin-dryness-background: #fbf6df;
+}
+
+.weather-index-card-skin-dryness-high {
+  --skin-dryness-color: #b34b4b;
+  --skin-dryness-border: #edc5c5;
+  --skin-dryness-background: #faeaea;
+}
+
+.weather-index-card-cold-low {
+  --cold-color: #287a52;
+  --cold-border: #c4e4d1;
+  --cold-background: #eaf6ef;
+}
+
+.weather-index-card-cold-moderate {
+  --cold-color: #98751d;
+  --cold-border: #eee0a8;
+  --cold-background: #fbf6df;
+}
+
+.weather-index-card-cold-high {
+  --cold-color: #b34b4b;
+  --cold-border: #edc5c5;
+  --cold-background: #faeaea;
+}
+
+.weather-index-card-vitamin-d-low {
+  --vitamin-d-color: #648638;
+  --vitamin-d-border: #d9e7bd;
+  --vitamin-d-background: #f2f7e8;
+}
+
+.weather-index-card-vitamin-d-moderate {
+  --vitamin-d-color: #98751d;
+  --vitamin-d-border: #eee0a8;
+  --vitamin-d-background: #fbf6df;
+}
+
+.weather-index-card-vitamin-d-high {
+  --vitamin-d-color: #b36525;
+  --vitamin-d-border: #f0d1ac;
+  --vitamin-d-background: #fcf0e3;
+}
+
+.weather-index-card-barbecue-0 {
+  --barbecue-color: #b34b4b;
+  --barbecue-border: #edc5c5;
+  --barbecue-background: #faeaea;
+}
+
+.weather-index-card-barbecue-1 {
+  --barbecue-color: #b36525;
+  --barbecue-border: #f0d1ac;
+  --barbecue-background: #fcf0e3;
+}
+
+.weather-index-card-barbecue-2 {
+  --barbecue-color: #98751d;
+  --barbecue-border: #eee0a8;
+  --barbecue-background: #fbf6df;
+}
+
+.weather-index-card-barbecue-3 {
+  --barbecue-color: #648638;
+  --barbecue-border: #d9e7bd;
+  --barbecue-background: #f2f7e8;
+}
+
+.weather-index-card-barbecue-4 {
+  --barbecue-color: #287a52;
+  --barbecue-border: #c4e4d1;
+  --barbecue-background: #eaf6ef;
+}
+
+.weather-index-icon[class*='weather-index-icon-mosquito-'] {
+  color: var(--mosquito-color);
+  border-color: var(--mosquito-border);
+  background: var(--mosquito-background);
+}
+
+.weather-index-icon[class*='weather-index-icon-skin-dryness-'] {
+  color: var(--skin-dryness-color);
+  border-color: var(--skin-dryness-border);
+  background: var(--skin-dryness-background);
+}
+
+.weather-index-icon[class*='weather-index-icon-cold-'] {
+  color: var(--cold-color);
+  border-color: var(--cold-border);
+  background: var(--cold-background);
+}
+
+.weather-index-icon[class*='weather-index-icon-vitamin-d-'] {
+  color: #397b8b;
+  border-color: #ccdde5;
+  background: #dce9ee;
+}
+
+.weather-index-icon[class*='weather-index-icon-barbecue-'] {
+  color: var(--barbecue-color);
+  border-color: var(--barbecue-border);
+  background: var(--barbecue-background);
+}
+
+.weather-index-card[class*='weather-index-card-mosquito-'] .weather-index-value {
+  color: var(--mosquito-color);
+}
+
+.weather-index-card[class*='weather-index-card-skin-dryness-'] .weather-index-value {
+  color: var(--skin-dryness-color);
+}
+
+.weather-index-card[class*='weather-index-card-cold-'] .weather-index-value {
+  color: var(--cold-color);
+}
+
+.weather-index-card[class*='weather-index-card-vitamin-d-'] .weather-index-value {
+  color: var(--vitamin-d-color);
+}
+
+.weather-index-card[class*='weather-index-card-barbecue-'] .weather-index-value {
+  color: var(--barbecue-color);
+}
+
+.weather-index-card[class*='weather-index-card-frizz-'] .weather-index-value {
+  color: var(--frizz-color);
+}
+
+.weather-index-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.weather-index-copy > strong {
+  color: #304d68;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.weather-index-pending,
+.weather-index-description {
+  color: #77899a;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.weather-index-value {
+  color: #526e88;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.weather-index-guide {
+  position: relative;
+  width: fit-content;
+  color: #547087;
+  font-size: 10px;
+}
+
+.weather-index-guide summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.weather-index-guide-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: min(330px, calc(100vw - 48px));
+  max-height: min(65vh, 420px);
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid #dce6ed;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(28 52 77 / 22%);
+  text-align: left;
+}
+
+.weather-index-guide-content h3 {
+  margin: 0 0 8px;
+  color: #294762;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.weather-index-guide-content p {
+  margin: 0 0 10px;
+  color: #547087;
+  line-height: 1.5;
+}
+
+.weather-index-guide-note {
+  margin: 10px 0 0 !important;
+  font-size: 9px;
+}
+
+.weather-index-guide-content ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weather-index-guide-content li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  background: #f2f6f8;
+}
+
+.weather-index-guide-content li[class^='weather-frizz-level-'] {
+  border: 1px solid var(--frizz-border);
+  background: var(--frizz-background);
+}
+
+.weather-index-guide-content li[class^='weather-mosquito-level-'] {
+  border: 1px solid var(--mosquito-border);
+  background: var(--mosquito-background);
+}
+
+.weather-index-guide-content li[class^='weather-skin-dryness-level-'] {
+  border: 1px solid var(--skin-dryness-border);
+  background: var(--skin-dryness-background);
+}
+
+.weather-index-guide-content li[class^='weather-cold-level-'] {
+  border: 1px solid var(--cold-border);
+  background: var(--cold-background);
+}
+
+.weather-index-guide-content li[class^='weather-vitamin-d-level-'] {
+  border: 1px solid var(--vitamin-d-border);
+  background: var(--vitamin-d-background);
+}
+
+.weather-index-guide-content li[class^='weather-barbecue-level-'] {
+  border: 1px solid var(--barbecue-border);
+  background: var(--barbecue-background);
+}
+
+.weather-index-guide-content .weather-frizz-level-very-low {
+  --frizz-color: #287a52;
+  --frizz-border: #c4e4d1;
+  --frizz-background: #eaf6ef;
+}
+
+.weather-index-guide-content .weather-frizz-level-low {
+  --frizz-color: #648638;
+  --frizz-border: #d9e7bd;
+  --frizz-background: #f2f7e8;
+}
+
+.weather-index-guide-content .weather-frizz-level-moderate {
+  --frizz-color: #98751d;
+  --frizz-border: #eee0a8;
+  --frizz-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-frizz-level-high {
+  --frizz-color: #b36525;
+  --frizz-border: #f0d1ac;
+  --frizz-background: #fcf0e3;
+}
+
+.weather-index-guide-content .weather-frizz-level-very-high {
+  --frizz-color: #b34b4b;
+  --frizz-border: #edc5c5;
+  --frizz-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-mosquito-level-low {
+  --mosquito-color: #287a52;
+  --mosquito-border: #c4e4d1;
+  --mosquito-background: #eaf6ef;
+}
+
+.weather-index-guide-content .weather-mosquito-level-moderate {
+  --mosquito-color: #98751d;
+  --mosquito-border: #eee0a8;
+  --mosquito-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-mosquito-level-high {
+  --mosquito-color: #b34b4b;
+  --mosquito-border: #edc5c5;
+  --mosquito-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-skin-dryness-level-low {
+  --skin-dryness-color: #287a52;
+  --skin-dryness-border: #c4e4d1;
+  --skin-dryness-background: #eaf6ef;
+}
+
+.weather-index-guide-content .weather-skin-dryness-level-moderate {
+  --skin-dryness-color: #98751d;
+  --skin-dryness-border: #eee0a8;
+  --skin-dryness-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-skin-dryness-level-high {
+  --skin-dryness-color: #b34b4b;
+  --skin-dryness-border: #edc5c5;
+  --skin-dryness-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-cold-level-low {
+  --cold-color: #287a52;
+  --cold-border: #c4e4d1;
+  --cold-background: #eaf6ef;
+}
+
+.weather-index-guide-content .weather-cold-level-moderate {
+  --cold-color: #98751d;
+  --cold-border: #eee0a8;
+  --cold-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-cold-level-high {
+  --cold-color: #b34b4b;
+  --cold-border: #edc5c5;
+  --cold-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-vitamin-d-level-low {
+  --vitamin-d-color: #648638;
+  --vitamin-d-border: #d9e7bd;
+  --vitamin-d-background: #f2f7e8;
+}
+
+.weather-index-guide-content .weather-vitamin-d-level-moderate {
+  --vitamin-d-color: #98751d;
+  --vitamin-d-border: #eee0a8;
+  --vitamin-d-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-vitamin-d-level-high {
+  --vitamin-d-color: #b36525;
+  --vitamin-d-border: #f0d1ac;
+  --vitamin-d-background: #fcf0e3;
+}
+
+.weather-index-guide-content .weather-barbecue-level-0 {
+  --barbecue-color: #b34b4b;
+  --barbecue-border: #edc5c5;
+  --barbecue-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-barbecue-level-1 {
+  --barbecue-color: #b36525;
+  --barbecue-border: #f0d1ac;
+  --barbecue-background: #fcf0e3;
+}
+
+.weather-index-guide-content .weather-barbecue-level-2 {
+  --barbecue-color: #98751d;
+  --barbecue-border: #eee0a8;
+  --barbecue-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-barbecue-level-3 {
+  --barbecue-color: #648638;
+  --barbecue-border: #d9e7bd;
+  --barbecue-background: #f2f7e8;
+}
+
+.weather-index-guide-content .weather-barbecue-level-4 {
+  --barbecue-color: #287a52;
+  --barbecue-border: #c4e4d1;
+  --barbecue-background: #eaf6ef;
+}
+
+.weather-index-guide-content li[class^='weather-frizz-level-'] strong {
+  color: var(--frizz-color);
+}
+
+.weather-index-guide-content li[class^='weather-mosquito-level-'] strong {
+  color: var(--mosquito-color);
+}
+
+.weather-index-guide-content li[class^='weather-skin-dryness-level-'] strong {
+  color: var(--skin-dryness-color);
+}
+
+.weather-index-guide-content li[class^='weather-cold-level-'] strong {
+  color: var(--cold-color);
+}
+
+.weather-index-guide-content li[class^='weather-vitamin-d-level-'] strong {
+  color: var(--vitamin-d-color);
+}
+
+.weather-index-guide-content li[class^='weather-barbecue-level-'] strong {
+  color: var(--barbecue-color);
+}
+
+.weather-index-guide-content li strong {
+  color: #304d68;
+  font-size: 10px;
+}
+
+.weather-index-guide-content li span {
+  color: #77899a;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.App--dark-background .weather-index-card {
+  border-color: rgb(255 255 255 / 45%);
+  background: rgb(255 255 255 / 88%);
+}
+
+@media (max-width: 900px) {
+  .weather-indices-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .weather-indices-section {
+    margin-top: 26px;
+  }
+
+  .weather-indices-section .section-heading h2 {
+    font-size: 19px;
+  }
+
+  .weather-indices-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .weather-index-card {
+    min-height: 104px;
+    padding: 12px;
+  }
+
+  .weather-index-guide-content {
+    width: min(330px, calc(100vw - 32px));
+  }
+}

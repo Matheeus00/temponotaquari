@@ -22,6 +22,21 @@ export interface OutdoorConditionsData {
   };
 }
 
+export interface WeatherIndexData {
+  value: number | string;
+  description?: string;
+}
+
+export type WeatherIndexId =
+  | 'barbecue'
+  | 'mosquito'
+  | 'frizz'
+  | 'skin-dryness'
+  | 'cold'
+  | 'vitamin-d';
+
+export type WeatherIndicesData = Partial<Record<WeatherIndexId, WeatherIndexData>>;
+
 export interface WeatherConditions {
   condition_code: number;
   temp: number | string;
@@ -36,6 +51,7 @@ export interface WeatherConditions {
   moon_phase: string;
   forecast: ForecastDay[];
   outdoorConditions?: OutdoorConditionsData;
+  weatherIndices?: WeatherIndicesData;
 }
 
 export interface WeatherResponse {

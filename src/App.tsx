@@ -3,15 +3,15 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
+import { BackToTop } from './components/common/BackToTop';
 import { EclipseAlert } from './components/eclipse/EclipseAlert';
+import { WeatherIndices } from './components/indices/WeatherIndices';
 import { Moon } from './components/moon/Moon';
 import { OutdoorConditions } from './components/outdoor/OutdoorConditions';
 import { Rose } from './components/rose/Rose';
 import {
   dayHour,
   getCurrentTimeColor,
-  getRainDropCount,
-  getWeatherEffect,
   formatWindSpeed,
   isDarkColor,
   type TemperatureUnit,
@@ -19,6 +19,14 @@ import {
 } from './utils/utils';
 import { Weather } from './components/weather/Weather';
 import type { WeatherConditions, WeatherResponse } from './types';
+
+const getSeason = (date: Date): string => {
+  const monthDay = (date.getMonth() + 1) * 100 + date.getDate();
+  if (monthDay >= 1221 || monthDay < 320) return 'verão';
+  if (monthDay < 621) return 'outono';
+  if (monthDay < 922) return 'inverno';
+  return 'primavera';
+};
 
 function App() {
   const [weather, setWeather] = useState<WeatherConditions | null>(null);
@@ -60,6 +68,7 @@ function App() {
   const backgroundColor = getCurrentTimeColor();
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
+  const currentDate = new Date();
 
   if (error) {
     return (
@@ -88,28 +97,9 @@ function App() {
 
   const hour = dayHour();
   const time = hour >= 6 && hour <= 18 ? 'day' : 'night';
-  const weatherEffect = getWeatherEffect(weather.condition_code, weather.temp);
 
   return (
-    <main className={`${appClassName} weather-${weatherEffect ?? 'clear'}`} style={{ backgroundColor }}>
-      {weatherEffect && (
-        <div className="weather-effects" aria-hidden="true">
-          {weatherEffect === 'rain' && Array.from(
-            { length: getRainDropCount(weather.condition_code, weather.rain) },
-            (_, index) => (
-              <span
-                className="rain-drop"
-                key={index}
-                style={{
-                  left: `${(index * 37) % 100}%`,
-                  animationDelay: `${-((index * 0.37) % 2.8)}s`,
-                  animationDuration: `${2.6 + (index % 4) * 0.25}s`,
-                }}
-              />
-            ),
-          )}
-        </div>
-      )}
+    <main className={appClassName} style={{ backgroundColor }}>
       <header className="app-header">
         <a className="brand" href="/" aria-label="Tempo no Taquari, início">
           <span className="brand-icon" aria-hidden="true">
@@ -147,9 +137,16 @@ function App() {
             weekday: 'long',
             day: 'numeric',
             month: 'long',
-          }).format(new Date())}
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+          }).format(currentDate)}
+          {' · '}
+          {getSeason(currentDate)}
         </p>
-        <h1 id="page-title">O céu de hoje</h1>
+        <h1 id="page-title">
+          O céu de hoje em <b>{TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name}, RS</b>
+        </h1>
         <div className="unit-controls" aria-label="Unidades de medida">
           <label>
             <span>Temperatura</span>
@@ -198,6 +195,7 @@ function App() {
           sunset={weather.sunset}
           description={weather.description}
           humidity={weather.humidity}
+          windSpeed={weather.wind_speedy}
           rain={weather.rain}
           cloudiness={weather.cloudiness}
         />
@@ -221,6 +219,15 @@ function App() {
         <Forecast data={weather.forecast} temperatureUnit={temperatureUnit} />
       </section>
 
+      <WeatherIndices
+        data={weather.weatherIndices}
+        humidity={weather.humidity}
+        temperature={weather.temp}
+        cloudiness={weather.cloudiness}
+        forecast={weather.forecast.slice(1, 4)}
+        uvIndex={weather.outdoorConditions?.uv?.index}
+      />
+
       <footer className="app-footer">
         <div className="footer-brand">
           <span className="footer-weather-icon" aria-hidden="true">
@@ -243,6 +250,12 @@ function App() {
               <path d="m3 5 5 4 5-4" />
             </svg>
           </a>
+          <a href="https://forms.gle/Qdpy1CjZKuJyub6X7" target="_blank" rel="noreferrer">
+            Enviar feedback
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
+            </svg>
+          </a>
           <a href="https://hgbrasil.com/status/weather" target="_blank" rel="noreferrer">
             Dados meteorológicos por HG Brasil
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -252,6 +265,7 @@ function App() {
           <span>© {new Date().getFullYear()} Tempo no Taquari</span>
         </div>
       </footer>
+      <BackToTop />
     </main>
   );
 }

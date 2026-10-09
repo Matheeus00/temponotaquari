@@ -10,91 +10,12 @@
   isolation: isolate;
   width: 100%;
   min-height: 100vh;
-  padding: 28px clamp(16px, 4vw, 50px) 30px;
+  padding: 28px clamp(16px, 4vw, 50px) 88px;
 }
 
-.page-shell > :not(.weather-effects) {
+.page-shell > :not(.back-to-top) {
   position: relative;
   z-index: 1;
-}
-
-.weather-effects {
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.weather-effects::before {
-  position: absolute;
-  inset: 0;
-  content: '';
-  will-change: transform;
-}
-
-.weather-rain .weather-effects::before {
-  content: none;
-}
-
-.rain-drop {
-  position: absolute;
-  top: -18px;
-  width: 2px;
-  height: 15px;
-  border-radius: 999px;
-  background: linear-gradient(to bottom, transparent, rgb(245 250 255 / 90%));
-  opacity: 0;
-  animation-name: rain-fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.weather-snow .weather-effects::before {
-  background-image:
-    radial-gradient(2px 2px at 22px 30px, rgb(255 255 255 / 75%) 50%, transparent 100%),
-    radial-gradient(3px 3px at 102px 92px, rgb(255 255 255 / 70%) 50%, transparent 100%),
-    radial-gradient(2px 2px at 62px 154px, rgb(255 255 255 / 75%) 50%, transparent 100%);
-  background-size: 160px 180px;
-  opacity: 0.48;
-  animation: snow-fall 18s linear infinite;
-}
-
-.weather-heat .weather-effects::before {
-  background:
-    radial-gradient(ellipse at 15% 85%, rgb(255 190 95 / 20%), transparent 32%),
-    radial-gradient(ellipse at 85% 80%, rgb(255 146 86 / 16%), transparent 34%);
-  opacity: 0.55;
-}
-
-@keyframes rain-fall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-
-  12% {
-    opacity: 0.75;
-  }
-
-  82% {
-    opacity: 0.65;
-  }
-
-  to {
-    opacity: 0;
-    transform: translate3d(0, calc(100vh + 40px), 0);
-  }
-}
-
-.weather-snow .weather-effects::before {
-  inset: -180px 0;
-}
-
-@keyframes snow-fall {
-  to {
-    transform: translate3d(0, 180px, 0);
-  }
 }
 
 .app-header,
@@ -311,6 +232,13 @@
   margin: 0;
   color: #3c5872;
   font-size: 13px;
+}
+
+.dashboard-date {
+  text-transform: none;
+}
+
+.section-caption {
   text-transform: capitalize;
 }
 
@@ -487,6 +415,48 @@
   stroke-width: 1.6;
 }
 
+.back-to-top {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 20;
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 50%;
+  background: #287d8a;
+  box-shadow: 0 5px 18px rgb(28 52 77 / 24%);
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.back-to-top[hidden] {
+  display: none;
+}
+
+.back-to-top:hover {
+  transform: translate(-50%, -3px);
+  background: #206a76;
+}
+
+.back-to-top:focus-visible {
+  outline: 3px solid #193550;
+  outline-offset: 3px;
+}
+
+.back-to-top svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 .App--dark-background .app-footer {
   border-color: rgb(255 255 255 / 34%);
   background: rgb(255 255 255 / 12%);
@@ -593,7 +563,7 @@
 
 @media (max-width: 720px) {
   .page-shell {
-    padding: 20px 18px 24px;
+    padding: 20px 18px 88px;
   }
 
   .current-data {
@@ -629,7 +599,7 @@
 
 @media (max-width: 480px) {
   .page-shell {
-    padding: 15px 12px 20px;
+    padding: 15px 12px 88px;
   }
 
   .app-header {
@@ -759,12 +729,18 @@
   .footer-meta > span {
     font-size: 10px;
   }
+
+  .back-to-top {
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: 42px;
+    height: 42px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .weather-effects::before {
-    animation: none !important;
-    will-change: auto;
+  .back-to-top {
+    transition: none;
   }
 
   *,

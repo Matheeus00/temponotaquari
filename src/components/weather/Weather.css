@@ -13,7 +13,6 @@
   align-items: center;
   justify-content: center;
   gap: clamp(14px, 4vw, 42px);
-  padding-bottom: 20px;
 }
 
 .weather-condition {
@@ -55,6 +54,13 @@
   color: #52708a;
   font-size: 15px;
   text-transform: capitalize;
+}
+
+.apparent-temperature {
+  margin: 7px 0 0;
+  color: #6d849a;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .weather-metrics {
@@ -185,6 +191,11 @@
   .weather-description {
     margin-top: 7px;
     font-size: 13px;
+  }
+
+  .apparent-temperature {
+    margin-top: 5px;
+    font-size: 11px;
   }
 
   .weather-metrics {

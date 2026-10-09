@@ -1,5 +1,6 @@
 import {
     formatTemperature,
+    calculateApparentTemperature,
     getImageSource,
     getTemperatureUnitLabel,
     to24Hours,
@@ -16,6 +17,7 @@ interface WeatherProps {
     sunset: string;
     description: string;
     humidity: number | string;
+    windSpeed: string;
     rain: number | string;
     cloudiness: number | string;
 }
@@ -29,9 +31,12 @@ export const Weather = ({
     sunset,
     description,
     humidity,
+    windSpeed,
     rain,
     cloudiness,
 }: WeatherProps) => {
+    const apparentTemperature = calculateApparentTemperature(temp, humidity, windSpeed);
+
     return (
         <div className="weather-container">
             <div className='weather-header'>
@@ -43,6 +48,12 @@ export const Weather = ({
                         <span className="temperature-unit">{getTemperatureUnitLabel(temperatureUnit)}</span>
                     </div>
                     <p className='weather-description'>{description}</p>
+                    {apparentTemperature !== null && (
+                        <p className="apparent-temperature">
+                            Sensação térmica: {formatTemperature(apparentTemperature, temperatureUnit)}
+                            {getTemperatureUnitLabel(temperatureUnit)}
+                        </p>
+                    )}
                 </div>
             </div>
             <div className="weather-metrics">

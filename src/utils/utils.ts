@@ -3,7 +3,6 @@ import { Condition } from '../constants/conditions';
 import { getBeaufortLevel } from '../constants/beaufort';
 
 export type TimeOfDay = 'day' | 'night';
-export type WeatherEffect = 'rain' | 'snow' | 'heat';
 export type TemperatureUnit = 'C' | 'F' | 'K';
 export type WindSpeedUnit = 'km/h' | 'mph' | 'm/s' | 'kn';
 
@@ -33,6 +32,38 @@ export const formatTemperature = (
 
 export const getTemperatureUnitLabel = (unit: TemperatureUnit): string =>
     unit === 'K' ? 'K' : `°${unit}`;
+
+export const calculateApparentTemperature = (
+    temperature: number | string,
+    humidity: number | string,
+    windSpeedKmh: number | string,
+): number | null => {
+    const temperatureC = parseWeatherNumber(temperature);
+    const humidityPercent = parseWeatherNumber(humidity);
+    const windSpeed = parseWeatherNumber(windSpeedKmh);
+
+    if (
+        !Number.isFinite(temperatureC)
+        || !Number.isFinite(humidityPercent)
+        || !Number.isFinite(windSpeed)
+        || temperatureC <= -50
+        || temperatureC > 60
+        || humidityPercent < 0
+        || humidityPercent > 100
+        || windSpeed < 0
+    ) {
+        return null;
+    }
+
+    const vaporPressure = (humidityPercent / 100) * 6.105
+        * Math.exp((17.27 * temperatureC) / (237.7 + temperatureC));
+    const apparentTemperature = temperatureC
+        + 0.33 * vaporPressure
+        - 0.7 * (windSpeed / 3.6)
+        - 4;
+
+    return Math.round(apparentTemperature);
+};
 
 export const formatWindSpeed = (
     value: number | string,
@@ -123,54 +154,6 @@ export const getImageSource = (time: TimeOfDay, code: number): string => {
     }
 
     return `/condition/${genericIcons.has(icon) ? icon : 'not-available'}.svg`;
-}
-
-export const getWeatherEffect = (
-    code: number,
-    temperature: number | string,
-): WeatherEffect | null => {
-    const icon = Condition[code]?.icon ?? '';
-    const label = Condition[code]?.label.toLocaleLowerCase('pt-BR') ?? '';
-
-    if (icon.includes('snow') || icon.includes('sleet') || label.includes('neve')) {
-        return 'snow';
-    }
-
-    if (
-        icon.includes('rain')
-        || icon.includes('drizzle')
-        || icon.includes('thunderstorms')
-        || icon.includes('hail')
-        || icon === 'hurricane'
-        || label.includes('chuva')
-        || label.includes('tempestade')
-    ) {
-        return 'rain';
-    }
-
-    const temperatureValue = Number.parseFloat(String(temperature).replace(',', '.'));
-    if (
-        temperatureValue >= 33
-        || icon === 'thermometer-warmer'
-        || label.includes('quente')
-        || label.includes('calor')
-    ) {
-        return 'heat';
-    }
-
-    return null;
-}
-
-export const getRainDropCount = (code: number, rainfall: number | string): number => {
-    const label = Condition[code]?.label.toLocaleLowerCase('pt-BR') ?? '';
-    const rainfallAmount = Number.parseFloat(String(rainfall).replace(',', '.'));
-
-    return label.includes('forte')
-        || label.includes('severa')
-        || label.includes('pesada')
-        || rainfallAmount >= 5
-        ? 24
-        : 14;
 }
 
 export const to24Hours = (value: string): string => {
