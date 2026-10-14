@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { getTaquariValleyCity } from '../src/constants/cities.js';
+import { fetchHgBrasilWeather, HgBrasilHttpError } from '../src/services/hgBrasil.js';
 
 const sendJson = (response: ServerResponse, statusCode: number, data: unknown) => {
   response.statusCode = statusCode;
@@ -30,30 +31,20 @@ export default async function handler(
     return;
   }
 
-  const weatherUrl = new URL('https://api.hgbrasil.com/weather');
-  weatherUrl.searchParams.set('format', 'json-cors');
-  weatherUrl.searchParams.set('key', apiKey);
-  weatherUrl.searchParams.set('city_name', `${city.name},RS`);
-
   try {
-    const upstreamResponse = await fetch(weatherUrl, {
-      signal: AbortSignal.timeout(10_000),
-    });
-
-    if (!upstreamResponse.ok) {
-      console.error(`Weather provider returned HTTP ${upstreamResponse.status}.`);
-      sendJson(response, 502, { error: 'O serviço de clima não conseguiu atender à solicitação.' });
-      return;
-    }
-
-    const weatherData: unknown = await upstreamResponse.json();
+    const weatherData = await fetchHgBrasilWeather(city.name, apiKey);
     response.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1200');
     sendJson(response, 200, weatherData);
   } catch (error: unknown) {
-    console.error(
-      'Weather provider request failed:',
-      error instanceof Error ? error.name : 'Unknown error',
-    );
-    sendJson(response, 502, { error: 'Não foi possível consultar o serviço de clima.' });
+    if (error instanceof HgBrasilHttpError) {
+      console.error(`Weather provider returned HTTP ${error.status}.`);
+      sendJson(response, 502, { error: 'O serviço de clima não conseguiu atender à solicitação.' });
+    } else {
+      console.error(
+        'Weather provider request failed:',
+        error instanceof Error ? error.name : 'Unknown error',
+      );
+      sendJson(response, 502, { error: 'Não foi possível consultar o serviço de clima.' });
+    }
   }
 }

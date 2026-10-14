@@ -1,46 +1,79 @@
 import type { OutdoorConditionsData } from '../../types';
+import {
+  calculateDewPointCelsius,
+  dayHour,
+  formatTemperature,
+  getTemperatureUnitLabel,
+  type TemperatureUnit,
+} from '../../utils/utils';
 import { DismissibleDetails } from '../common/DismissibleDetails';
 import './OutdoorConditions.css';
 
 interface OutdoorConditionsProps {
   data?: OutdoorConditionsData;
+  temperatureUnit: TemperatureUnit;
+  temperature: number | string;
+  humidity: number | string;
+  airQualityError?: string | null;
+  isAirQualityLoading?: boolean;
+  uvIndexError?: string | null;
+  isUvIndexLoading?: boolean;
 }
 
 const getUvIconSource = (index: number): string | null => {
-  if (!Number.isFinite(index) || index <= 0) {
+  if (!Number.isFinite(index) || index < 0) {
     return null;
   }
 
-  if (index > 11) {
+  if (index < 0.5) {
+    return '/uv/uv-index-0.svg';
+  }
+
+  if (index >= 11) {
     return '/uv/uv-index-11-plus.svg';
   }
 
-  return `/uv/uv-index-${Math.round(index)}.svg`;
+  return `/uv/uv-index-${Math.max(1, Math.round(index))}.svg`;
 };
 
-const getPollenIconSource = (level: string): string | null => {
-  const normalizedLevel = level
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('pt-BR')
-    .replace(/[_\s]+/g, '-');
-  const iconLevel = {
-    low: 'low',
-    baixo: 'low',
-    moderate: 'moderate',
-    moderado: 'moderate',
-    high: 'high',
-    alto: 'high',
-    'very-high': 'very-high',
-    'muito-alto': 'very-high',
-  }[normalizedLevel];
-
-  return iconLevel ? `/pollen/pollen-weed-${iconLevel}.svg` : null;
+const getDewPointLevel = (dewPointCelsius: number) => {
+  if (dewPointCelsius < 10) {
+    return { className: 'dry', label: 'Ar seco · confortável' };
+  }
+  if (dewPointCelsius < 16) {
+    return { className: 'pleasant', label: 'Agradável' };
+  }
+  if (dewPointCelsius < 21) {
+    return { className: 'humid', label: 'Perceptivelmente úmido' };
+  }
+  if (dewPointCelsius < 25) {
+    return { className: 'uncomfortable', label: 'Desconfortável · abafado' };
+  }
+  return { className: 'oppressive', label: 'Opressivo · tropical' };
 };
 
-export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
+export const OutdoorConditions = ({
+  data,
+  temperatureUnit,
+  temperature,
+  humidity,
+  airQualityError,
+  isAirQualityLoading = false,
+  uvIndexError,
+  isUvIndexLoading = false,
+}: OutdoorConditionsProps) => {
   const uvIconSource = data?.uv ? getUvIconSource(data.uv.index) : null;
-  const pollenIconSource = data?.pollen ? getPollenIconSource(data.pollen.level) : null;
+  const openMeteoDewPoint = data?.uv?.dewPointCelsius;
+  const fallbackDewPoint = calculateDewPointCelsius(temperature, humidity);
+  const hasOpenMeteoDewPoint =
+    typeof openMeteoDewPoint === 'number' && Number.isFinite(openMeteoDewPoint);
+  const dewPoint = hasOpenMeteoDewPoint ? openMeteoDewPoint : fallbackDewPoint;
+  const hasDewPoint = typeof dewPoint === 'number' && Number.isFinite(dewPoint);
+  const dewPointLevel = hasDewPoint ? getDewPointLevel(dewPoint) : null;
+  const formatDewPointGuideTemperature = (value: number) =>
+    `${formatTemperature(value, temperatureUnit)} ${getTemperatureUnitLabel(temperatureUnit)}`;
+  const hour = dayHour();
+  const isNight = hour < 6 || hour > 18;
 
   return (
     <section className="outdoor-section" aria-labelledby="outdoor-title">
@@ -54,7 +87,7 @@ export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
         </span>
         <span className="outdoor-heading-copy">
           <span className="widget-label">AMBIENTE</span>
-          <h2 id="outdoor-title">Índice UV, pólen e qualidade do ar</h2>
+          <h2 id="outdoor-title">Condições ambientais</h2>
         </span>
       </div>
       <div className="outdoor-metrics">
@@ -70,9 +103,22 @@ export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
           <span className="outdoor-copy">
             <span>Índice UV</span>
             {data?.uv ? (
-              <strong>{data.uv.index} <small>{data.uv.level}</small></strong>
+              <>
+                <strong>
+                  {data.uv.index.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
+                  {' '}<small>{data.uv.level}</small>
+                </strong>
+                {data.uv.index < 0.5 && isNight && (
+                  <span className="outdoor-uv-night">Noite</span>
+                )}
+              </>
             ) : (
-              <strong className="outdoor-pending">Dados em breve</strong>
+              <>
+                <strong className="outdoor-pending">
+                  {uvIndexError ? 'Indisponível' : isUvIndexLoading ? 'Carregando...' : 'Sem dados'}
+                </strong>
+                {uvIndexError && <small>{uvIndexError}</small>}
+              </>
             )}
             <DismissibleDetails className="outdoor-guide" summary="Entenda o índice UV">
               <div className="outdoor-guide-content">
@@ -92,6 +138,63 @@ export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
             </DismissibleDetails>
           </span>
         </article>
+        <article className="outdoor-card outdoor-card-dew-point">
+          <span className="outdoor-icon outdoor-icon-dew-point" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3c-2.5 3.1-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.5-7.9-6-11Z" />
+              <path d="M9 15a3 3 0 0 0 3 3" />
+            </svg>
+          </span>
+          <span className="outdoor-copy">
+            <span>Ponto de orvalho</span>
+            {hasDewPoint ? (
+              <>
+                <strong>
+                  {formatTemperature(dewPoint, temperatureUnit)}
+                  {' '}<small>{getTemperatureUnitLabel(temperatureUnit)}</small>
+                </strong>
+                {!hasOpenMeteoDewPoint && (
+                  <small className="outdoor-dew-point-source">Estimado com dados da HG Brasil</small>
+                )}
+                {dewPointLevel && (
+                  <span className={`outdoor-dew-point-level outdoor-dew-point-level-${dewPointLevel.className}`}>
+                    {dewPointLevel.label}
+                  </span>
+                )}
+              </>
+            ) : (
+              <strong className="outdoor-pending">
+                {uvIndexError ? 'Indisponível' : isUvIndexLoading ? 'Carregando...' : 'Sem dados'}
+              </strong>
+            )}
+            <DismissibleDetails className="outdoor-guide" summary="Entenda o ponto de orvalho">
+              <div className="outdoor-guide-content">
+                <h3>O que é o ponto de orvalho?</h3>
+                <p>
+                  É a temperatura até a qual o ar precisaria esfriar, mantendo a mesma quantidade
+                  de vapor d’água, para ficar saturado e começar a condensar. Quanto mais alto,
+                  maior costuma ser a sensação de umidade e abafamento.
+                </p>
+                <p>
+                  Quando o ponto de orvalho do Open-Meteo não estiver disponível, ele é estimado
+                  pela fórmula de Magnus-Tetens usando temperatura e umidade relativa da HG Brasil.
+                </p>
+                <ul>
+                  <li className="outdoor-dew-point-guide-dry"><strong>Abaixo de {formatDewPointGuideTemperature(10)} · Ar seco e confortável</strong></li>
+                  <li className="outdoor-dew-point-guide-pleasant"><strong>{formatDewPointGuideTemperature(10)}–{formatDewPointGuideTemperature(15)} · Agradável</strong></li>
+                  <li className="outdoor-dew-point-guide-humid"><strong>{formatDewPointGuideTemperature(16)}–{formatDewPointGuideTemperature(20)} · Perceptivelmente úmido</strong></li>
+                  <li className="outdoor-dew-point-guide-uncomfortable"><strong>{formatDewPointGuideTemperature(21)}–{formatDewPointGuideTemperature(24)} · Desconfortável e abafado</strong></li>
+                  <li className="outdoor-dew-point-guide-oppressive"><strong>{formatDewPointGuideTemperature(25)} ou mais · Opressivo (tropical)</strong></li>
+                </ul>
+                <p className="outdoor-guide-note">
+                  São faixas de referência; a sensação também varia conforme as condições e a
+                  sensibilidade de cada pessoa.
+                </p>
+              </div>
+            </DismissibleDetails>
+          </span>
+        </article>
+        {/*
         <article className="outdoor-card outdoor-card-pollen">
           <span className="outdoor-icon outdoor-icon-pollen" aria-hidden="true">
             {pollenIconSource ? <img src={pollenIconSource} alt="" /> : (
@@ -127,6 +230,7 @@ export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
             </DismissibleDetails>
           </span>
         </article>
+        */}
         <article className="outdoor-card outdoor-card-air">
           <span className="outdoor-icon outdoor-icon-air" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
@@ -137,8 +241,22 @@ export const OutdoorConditions = ({ data }: OutdoorConditionsProps) => {
             <span>Qualidade do ar</span>
             {data?.airQuality ? (
               <>
-                <strong>{data.airQuality.index} <small>{data.airQuality.level}</small></strong>
-                {data.airQuality.description && <small>{data.airQuality.description}</small>}
+                <strong>{data.airQuality.index} <small>AQI</small></strong>
+                <span
+                  className={`outdoor-air-level${data.airQuality.index <= 50 ? ' outdoor-air-level-good' : ''}`}
+                >
+                  {data.airQuality.level}
+                </span>
+                {data.airQuality.pollutants.length > 0 && (
+                  <span className="outdoor-air-pollutants">
+                    {data.airQuality.pollutants.map((pollutant) => (
+                      <span key={pollutant.name}>
+                        <strong>{pollutant.name}</strong>
+                        {pollutant.value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} μg/m³
+                      </span>
+                    ))}
+                  </span>
+                )}
               </>
             ) : (
               <strong className="outdoor-pending">Dados em breve</strong>

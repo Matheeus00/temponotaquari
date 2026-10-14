@@ -162,9 +162,9 @@
 }
 
 .weather-index-card-vitamin-d-low {
-  --vitamin-d-color: #648638;
-  --vitamin-d-border: #d9e7bd;
-  --vitamin-d-background: #f2f7e8;
+  --vitamin-d-color: #b36525;
+  --vitamin-d-border: #f0d1ac;
+  --vitamin-d-background: #fcf0e3;
 }
 
 .weather-index-card-vitamin-d-moderate {
@@ -174,9 +174,9 @@
 }
 
 .weather-index-card-vitamin-d-high {
-  --vitamin-d-color: #b36525;
-  --vitamin-d-border: #f0d1ac;
-  --vitamin-d-background: #fcf0e3;
+  --vitamin-d-color: #287a52;
+  --vitamin-d-border: #c4e4d1;
+  --vitamin-d-background: #eaf6ef;
 }
 
 .weather-index-card-barbecue-0 {
@@ -228,9 +228,9 @@
 }
 
 .weather-index-icon[class*='weather-index-icon-vitamin-d-'] {
-  color: #397b8b;
-  border-color: #ccdde5;
-  background: #dce9ee;
+  color: var(--vitamin-d-color);
+  border-color: var(--vitamin-d-border);
+  background: var(--vitamin-d-background);
 }
 
 .weather-index-icon[class*='weather-index-icon-barbecue-'] {
@@ -471,9 +471,9 @@
 }
 
 .weather-index-guide-content .weather-vitamin-d-level-low {
-  --vitamin-d-color: #648638;
-  --vitamin-d-border: #d9e7bd;
-  --vitamin-d-background: #f2f7e8;
+  --vitamin-d-color: #b36525;
+  --vitamin-d-border: #f0d1ac;
+  --vitamin-d-background: #fcf0e3;
 }
 
 .weather-index-guide-content .weather-vitamin-d-level-moderate {
@@ -483,9 +483,9 @@
 }
 
 .weather-index-guide-content .weather-vitamin-d-level-high {
-  --vitamin-d-color: #b36525;
-  --vitamin-d-border: #f0d1ac;
-  --vitamin-d-background: #fcf0e3;
+  --vitamin-d-color: #287a52;
+  --vitamin-d-border: #c4e4d1;
+  --vitamin-d-background: #eaf6ef;
 }
 
 .weather-index-guide-content .weather-barbecue-level-0 {

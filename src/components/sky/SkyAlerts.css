@@ -1,0 +1,146 @@
+.sky-alerts {
+  display: grid;
+  width: min(1120px, 100%);
+  gap: 10px;
+  margin: 0 auto 20px;
+}
+
+.sky-alert {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border: 1px solid rgb(255 255 255 / 72%);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgb(28 52 77 / 7%);
+}
+
+.sky-alert-rainbow {
+  background: linear-gradient(110deg, rgb(255 255 255 / 78%), rgb(237 247 255 / 82%));
+}
+
+.sky-alert-rainbow-unfavorable {
+  background: linear-gradient(110deg, rgb(255 255 255 / 68%), rgb(240 244 247 / 76%));
+}
+
+.sky-alert-meteor {
+  background: linear-gradient(110deg, rgb(255 255 255 / 72%), rgb(255 248 230 / 78%));
+}
+
+.sky-alert-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(201 185 142 / 45%);
+  border-radius: 13px;
+  background: rgb(255 255 255 / 50%);
+}
+
+.sky-alert-icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.sky-alert-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sky-alert-label {
+  color: #8a7041;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+}
+
+.sky-alert-copy strong {
+  color: #344b62;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sky-alert-description {
+  color: #667b8d;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.sky-alert-badge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  color: #806536;
+  border: 1px solid rgb(181 150 91 / 30%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 48%);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.6px;
+}
+
+.App--dark-background .sky-alert {
+  border-color: rgb(255 255 255 / 42%);
+}
+
+.App--dark-background .sky-alert-rainbow {
+  background: linear-gradient(110deg, rgb(255 255 255 / 15%), rgb(186 222 255 / 18%));
+}
+
+.App--dark-background .sky-alert-rainbow-unfavorable {
+  background: linear-gradient(110deg, rgb(255 255 255 / 12%), rgb(205 216 226 / 14%));
+}
+
+.App--dark-background .sky-alert-meteor {
+  background: linear-gradient(110deg, rgb(255 255 255 / 15%), rgb(255 231 184 / 18%));
+}
+
+.App--dark-background .sky-alert-copy strong,
+.App--dark-background .sky-alert-description,
+.App--dark-background .sky-alert-label,
+.App--dark-background .sky-alert-badge {
+  color: #f5f1e7;
+}
+
+.App--dark-background .sky-alert-icon {
+  border-color: rgb(255 255 255 / 50%);
+  background: rgb(255 255 255 / 12%);
+}
+
+.App--dark-background .sky-alert-badge {
+  border-color: rgb(255 255 255 / 38%);
+}
+
+@media (max-width: 480px) {
+  .sky-alert {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .sky-alert-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sky-alert-icon img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sky-alert-copy strong {
+    font-size: 12px;
+  }
+
+  .sky-alert-description {
+    font-size: 10px;
+  }
+
+  .sky-alert-badge {
+    padding: 5px 7px;
+    font-size: 8px;
+  }
+}

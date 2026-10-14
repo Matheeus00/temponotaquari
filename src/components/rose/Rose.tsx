@@ -1,6 +1,6 @@
 import './Rose.css';
 import { DismissibleDetails } from '../common/DismissibleDetails';
-import { getBeaufortIndex } from '../../utils/utils';
+import { formatWindSpeed, getBeaufortIndex, type WindSpeedUnit } from '../../utils/utils';
 import {
     BEAUFORT_EXTENDED_SCALE,
     BEAUFORT_SCALE,
@@ -11,11 +11,22 @@ interface RoseProps {
     rotation: number;
     speed: string;
     displaySpeed?: string;
+    windSpeedUnit: WindSpeedUnit;
 }
 
-export const Rose = ({ rotation, speed, displaySpeed = speed }: RoseProps) => {
+export const Rose = ({
+    rotation,
+    speed,
+    displaySpeed = speed,
+    windSpeedUnit,
+}: RoseProps) => {
     const beaufortIndex = getBeaufortIndex(speed);
     const beaufortLevel = getBeaufortLevel(Number.parseFloat(speed.replace(',', '.')));
+    const formatSpeedValue = (value: number): string =>
+        formatWindSpeed(value, windSpeedUnit).split(' ')[0];
+    const windSpeedUnitLabel = windSpeedUnit === 'kn' ? 'nós' : windSpeedUnit;
+    const formatWindRange = (minSpeed: number, maxSpeed: number | null): string =>
+        `${formatSpeedValue(minSpeed)}${maxSpeed === null ? '+' : `–${formatSpeedValue(maxSpeed)}`} ${windSpeedUnitLabel}`;
 
     return (
         <div className='rose-container'>
@@ -43,13 +54,15 @@ export const Rose = ({ rotation, speed, displaySpeed = speed }: RoseProps) => {
             <DismissibleDetails className="beaufort-guide" summary="Como funciona a escala Beaufort?">
                 <div className="beaufort-guide-content">
                     <h3>Escala Beaufort tradicional · graus 0 a 12</h3>
-                    <p>A versão mais difundida da escala Beaufort vai de 0 a 12. As faixas abaixo estão em km/h.</p>
+                    <p>A versão mais difundida da escala Beaufort vai de 0 a 12. As faixas abaixo acompanham a unidade selecionada.</p>
                     <ul className="beaufort-regular-levels">
                         {BEAUFORT_SCALE.map((level) => (
                             <li key={level.force}>
                                 <strong>{level.force} · {level.description}</strong>
                                 <span>
-                                    {level.minSpeed === 0 ? '0–0,9' : `${level.minSpeed}–${level.maxSpeed ?? '+'}`} km/h
+                                    {level.force === 0
+                                        ? `0–${formatSpeedValue(0.9)} ${windSpeedUnitLabel}`
+                                        : formatWindRange(level.minSpeed, level.maxSpeed)}
                                     {' — '}{level.effect}
                                 </span>
                             </li>
@@ -64,7 +77,7 @@ export const Rose = ({ rotation, speed, displaySpeed = speed }: RoseProps) => {
                             <li key={level.force}>
                                 <strong>{level.force} · {level.description}</strong>
                                 <span>
-                                    {level.minSpeed === 0 ? '0–0,9' : `${level.minSpeed}–${level.maxSpeed ?? '+'}`} km/h
+                                    {formatWindRange(level.minSpeed, level.maxSpeed)}
                                     {' — '}{level.effect}
                                 </span>
                             </li>

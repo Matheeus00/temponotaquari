@@ -2,11 +2,17 @@ import type { WeatherIndexData } from '../../types';
 import { DismissibleDetails } from '../common/DismissibleDetails';
 import { WeatherIndexCard } from './WeatherIndexCard';
 import { normalizeIndexLabel, parseIndexNumber } from './indexUtils';
+import {
+  formatTemperature,
+  getTemperatureUnitLabel,
+  type TemperatureUnit,
+} from '../../utils/utils';
 
 interface ColdIndexProps {
   data?: WeatherIndexData;
   humidity: number | string;
   temperature: number | string;
+  temperatureUnit: TemperatureUnit;
 }
 
 type ColdLevel = 'low' | 'moderate' | 'high';
@@ -58,10 +64,10 @@ const getDisplayValue = (value: number | string): string => {
     moderate: { score: 1, label: 'Moderado' },
     high: { score: 2, label: 'Alto' },
   };
-  return `${levels[level].score} – ${levels[level].label}`;
+  return `${levels[level].label}`;
 };
 
-export const ColdIndex = ({ data, humidity, temperature }: ColdIndexProps) => {
+export const ColdIndex = ({ data, humidity, temperature, temperatureUnit }: ColdIndexProps) => {
   const metric = data ?? getColdIndex(temperature, humidity);
   const level = metric ? getLevel(metric.value) : undefined;
 
@@ -81,9 +87,9 @@ export const ColdIndex = ({ data, humidity, temperature }: ColdIndexProps) => {
               respiratório; não prevê infecções nem substitui orientação de saúde.
             </p>
             <ul>
-              <li className="weather-cold-level-low"><strong>0 – Baixo</strong><span>Temperatura a partir de 25 °C e umidade de 60% ou mais: tempo quente e úmido.</span></li>
-              <li className="weather-cold-level-moderate"><strong>1 – Moderado</strong><span>Condições intermediárias, incluindo ar mais seco ou temperaturas amenas.</span></li>
-              <li className="weather-cold-level-high"><strong>2 – Alto</strong><span>Temperatura de até 18 °C e umidade abaixo de 60%: tempo frio e seco.</span></li>
+              <li className="weather-cold-level-low"><strong>Baixo</strong><span>Temperatura a partir de {formatTemperature(25, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} e umidade de 60% ou mais: tempo quente e úmido.</span></li>
+              <li className="weather-cold-level-moderate"><strong>Moderado</strong><span>Não se enquadra nos extremos: tempo quente e úmido (a partir de {formatTemperature(25, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} com umidade de 60% ou mais) nem frio e seco (até {formatTemperature(18, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} com umidade abaixo de 60%).</span></li>
+              <li className="weather-cold-level-high"><strong>Alto</strong><span>Temperatura de até {formatTemperature(18, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} e umidade abaixo de 60%: tempo frio e seco.</span></li>
             </ul>
             <p className="weather-index-guide-note">
               Gripe e resfriado são causados por vírus; este índice não estima a chance de infecção.

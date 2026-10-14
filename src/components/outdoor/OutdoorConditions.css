@@ -113,6 +113,10 @@
   stroke: #66845b;
 }
 
+.outdoor-icon-dew-point svg {
+  stroke: #4385a3;
+}
+
 .outdoor-copy {
   display: flex;
   min-width: 0;
@@ -142,6 +146,99 @@
   color: #526e88;
   font-size: 11px;
   font-weight: 550;
+}
+
+.outdoor-copy .outdoor-air-level {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #edf1f4;
+  color: #526879;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.outdoor-copy .outdoor-air-level-good {
+  background: #e2f3e8;
+  color: #236b3b;
+}
+
+.outdoor-copy .outdoor-uv-night {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #edf1f4;
+  color: #526879;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.outdoor-copy .outdoor-dew-point-level {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--dew-point-background);
+  color: var(--dew-point-color);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.outdoor-copy .outdoor-dew-point-level-dry,
+.outdoor-guide-content .outdoor-dew-point-guide-dry {
+  --dew-point-color: #287a52;
+  --dew-point-border: #c4e4d1;
+  --dew-point-background: #eaf6ef;
+}
+
+.outdoor-copy .outdoor-dew-point-level-pleasant,
+.outdoor-guide-content .outdoor-dew-point-guide-pleasant {
+  --dew-point-color: #648638;
+  --dew-point-border: #d9e7bd;
+  --dew-point-background: #f2f7e8;
+}
+
+.outdoor-copy .outdoor-dew-point-level-humid,
+.outdoor-guide-content .outdoor-dew-point-guide-humid {
+  --dew-point-color: #98751d;
+  --dew-point-border: #eee0a8;
+  --dew-point-background: #fbf6df;
+}
+
+.outdoor-copy .outdoor-dew-point-level-uncomfortable,
+.outdoor-guide-content .outdoor-dew-point-guide-uncomfortable {
+  --dew-point-color: #b36525;
+  --dew-point-border: #f0d1ac;
+  --dew-point-background: #fcf0e3;
+}
+
+.outdoor-copy .outdoor-dew-point-level-oppressive,
+.outdoor-guide-content .outdoor-dew-point-guide-oppressive {
+  --dew-point-color: #b34b4b;
+  --dew-point-border: #edc5c5;
+  --dew-point-background: #faeaea;
+}
+
+.outdoor-air-pollutants {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.outdoor-copy .outdoor-air-pollutants > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  color: #526879;
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.4;
+}
+
+.outdoor-copy .outdoor-air-pollutants strong {
+  color: #304d68;
+  font-size: 11px;
+  font-weight: 750;
 }
 
 .outdoor-copy > small {
@@ -190,6 +287,11 @@
   line-height: 1.5;
 }
 
+.outdoor-guide-note {
+  margin: 10px 0 0 !important;
+  font-size: 10px;
+}
+
 .outdoor-guide-content ul {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -206,6 +308,15 @@
   padding: 7px 8px;
   border-radius: 8px;
   background: #f2f6f8;
+}
+
+.outdoor-guide-content li[class^='outdoor-dew-point-guide-'] {
+  border: 1px solid var(--dew-point-border);
+  background: var(--dew-point-background);
+}
+
+.outdoor-guide-content li[class^='outdoor-dew-point-guide-'] strong {
+  color: var(--dew-point-color);
 }
 
 .outdoor-guide-content li strong {

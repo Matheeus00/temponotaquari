@@ -1,4 +1,4 @@
-import { Colors } from '../constants/colors';
+import { BackgroundColors } from '../constants/colors';
 import { Condition } from '../constants/conditions';
 import { getBeaufortLevel } from '../constants/beaufort';
 
@@ -29,6 +29,28 @@ export const formatTemperature = (
 
     return formatWeatherNumber(convertedTemperature);
 }
+
+export const calculateDewPointCelsius = (
+    temperature: number | string,
+    humidity: number | string,
+): number | null => {
+    const temperatureC = parseWeatherNumber(temperature);
+    const humidityPercent = parseWeatherNumber(humidity);
+    if (
+        !Number.isFinite(temperatureC)
+        || !Number.isFinite(humidityPercent)
+        || temperatureC <= -243.12
+        || humidityPercent <= 0
+        || humidityPercent > 100
+    ) {
+        return null;
+    }
+
+    const magnusCoefficient = (17.62 * temperatureC) / (243.12 + temperatureC)
+        + Math.log(humidityPercent / 100);
+    const dewPointCelsius = (243.12 * magnusCoefficient) / (17.62 - magnusCoefficient);
+    return Number.isFinite(dewPointCelsius) ? dewPointCelsius : null;
+};
 
 export const getTemperatureUnitLabel = (unit: TemperatureUnit): string =>
     unit === 'K' ? 'K' : `°${unit}`;
@@ -124,8 +146,71 @@ const genericIcons = new Set([
     'umbrella-wind-alt',
 ]);
 
-export const getCurrentTimeColor = (): string => {
-    return Colors[dayHour()];
+const parseClockMinutes = (time: string): number | null => {
+    const match = time.trim().match(/^(\d{1,2}):(\d{2})(?:\s*(am|pm))?$/i);
+    if (!match) {
+        return null;
+    }
+
+    let hour = Number(match[1]);
+    const minute = Number(match[2]);
+    const meridiem = match[3]?.toLowerCase();
+    if (hour > 23 || minute > 59 || (meridiem && (hour < 1 || hour > 12))) {
+        return null;
+    }
+    if (meridiem) {
+        hour = (hour % 12) + (meridiem === 'pm' ? 12 : 0);
+    }
+
+    return hour * 60 + minute;
+};
+
+const isNearTime = (current: number, target: number, windowMinutes: number): boolean => {
+    const difference = Math.abs(current - target);
+    return Math.min(difference, 1440 - difference) <= windowMinutes;
+};
+
+const getTimePeriod = (
+    currentMinutes: number,
+    sunriseMinutes: number | null,
+    sunsetMinutes: number | null,
+): keyof typeof BackgroundColors => {
+    if (sunriseMinutes === null || sunsetMinutes === null) {
+        const hour = Math.floor(currentMinutes / 60);
+        if (hour >= 5 && hour < 7) return 'dawn';
+        if (hour >= 7 && hour < 17) return 'day';
+        if (hour >= 17 && hour < 19) return 'dusk';
+        return 'night';
+    }
+
+    const sunriseDistance = Math.abs(currentMinutes - sunriseMinutes);
+    const sunsetDistance = Math.abs(currentMinutes - sunsetMinutes);
+    const nearSunrise = isNearTime(currentMinutes, sunriseMinutes, 60);
+    const nearSunset = isNearTime(currentMinutes, sunsetMinutes, 60);
+    if (nearSunrise && (!nearSunset || sunriseDistance <= sunsetDistance)) {
+        return 'dawn';
+    }
+    if (nearSunset) {
+        return 'dusk';
+    }
+
+    return currentMinutes > sunriseMinutes && currentMinutes < sunsetMinutes
+        ? 'day'
+        : 'night';
+};
+
+export const getCurrentTimeColor = (
+    sunrise?: string,
+    sunset?: string,
+    date: Date = new Date(),
+): string => {
+    const currentMinutes = date.getHours() * 60 + date.getMinutes();
+    const period = getTimePeriod(
+        currentMinutes,
+        sunrise ? parseClockMinutes(sunrise) : null,
+        sunset ? parseClockMinutes(sunset) : null,
+    );
+    return BackgroundColors[period];
 }
 
 export const isDarkColor = (color: string): boolean => {

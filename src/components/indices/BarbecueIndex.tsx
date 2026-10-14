@@ -2,11 +2,17 @@ import type { ForecastDay, WeatherIndexData } from '../../types';
 import { DismissibleDetails } from '../common/DismissibleDetails';
 import { WeatherIndexCard } from './WeatherIndexCard';
 import { normalizeIndexLabel, parseIndexNumber } from './indexUtils';
+import {
+  formatTemperature,
+  getTemperatureUnitLabel,
+  type TemperatureUnit,
+} from '../../utils/utils';
 
 interface BarbecueIndexProps {
   data?: WeatherIndexData;
   cloudiness: number | string;
   forecast: ForecastDay[];
+  temperatureUnit: TemperatureUnit;
 }
 
 const levels = [
@@ -96,12 +102,19 @@ const getBarbecueIndex = (cloudiness: number | string, forecast: ForecastDay[]) 
   return { value: level, description: levels[level].description };
 };
 
-export const BarbecueIndex = ({ data, cloudiness, forecast }: BarbecueIndexProps) => {
+export const BarbecueIndex = ({
+  data,
+  cloudiness,
+  forecast,
+  temperatureUnit,
+}: BarbecueIndexProps) => {
   const metric = data ?? getBarbecueIndex(cloudiness, forecast);
   const level = metric ? getBarbecueLevel(metric.value) : undefined;
   const displayValue = level === undefined
     ? metric?.value
     : `${levels[level].label}`;
+  const temperatureRange = (minimum: number, maximum: number) =>
+    `${formatTemperature(minimum, temperatureUnit)}–${formatTemperature(maximum, temperatureUnit)} ${getTemperatureUnitLabel(temperatureUnit)}`;
 
   return (
     <WeatherIndexCard
@@ -121,10 +134,10 @@ export const BarbecueIndex = ({ data, cloudiness, forecast }: BarbecueIndexProps
             </p>
             <ul>
               <li className="weather-barbecue-level-0"><strong>Em área coberta</strong><span>Probabilidade de chuva de 80% ou mais em algum dia, ou de 50% ou mais em pelo menos dois dias.</span></li>
-              <li className="weather-barbecue-level-1"><strong>Melhor em área coberta</strong><span>Chuva provável, nebulosidade atual de 70% ou mais, ou máxima abaixo de 16 °C ou acima de 36 °C.</span></li>
-              <li className="weather-barbecue-level-2"><strong>Tá valendo</strong><span>Condições intermediárias que não se enquadram nos demais níveis.</span></li>
-              <li className="weather-barbecue-level-3"><strong>Dia ideal</strong><span>Chance máxima de chuva abaixo de 30%, nebulosidade atual de até 40% e máxima prevista entre 18 °C e 35 °C.</span></li>
-              <li className="weather-barbecue-level-4"><strong>Perfeito!</strong><span>Chance máxima de chuva de até 10%, nebulosidade atual de até 15% e máxima entre 22 °C e 32 °C.</span></li>
+              <li className="weather-barbecue-level-1"><strong>Melhor em área coberta</strong><span>Chuva provável, nebulosidade atual de 70% ou mais, ou máxima abaixo de {formatTemperature(16, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} ou acima de {formatTemperature(36, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)}.</span></li>
+              <li className="weather-barbecue-level-2"><strong>Tá valendo</strong><span>Sem chuva forte prevista, mas a nebulosidade, a chance de chuva ou a temperatura ficam fora dos critérios de um dia ideal.</span></li>
+              <li className="weather-barbecue-level-3"><strong>Dia ideal</strong><span>Chance máxima de chuva abaixo de 30%, nebulosidade atual de até 40% e máxima prevista entre {temperatureRange(18, 35)}.</span></li>
+              <li className="weather-barbecue-level-4"><strong>Perfeito!</strong><span>Chance máxima de chuva de até 10%, nebulosidade atual de até 15% e máxima entre {temperatureRange(22, 32)}.</span></li>
             </ul>
             <p className="weather-index-guide-note">
               A previsão do tempo pode mudar; confira novamente perto do evento e tenha

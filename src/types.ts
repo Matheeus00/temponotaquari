@@ -7,19 +7,45 @@ export interface ForecastDay {
 }
 
 export interface OutdoorConditionsData {
-  uv?: {
-    index: number;
-    level: string;
-  };
+  uv?: UvIndexData;
   pollen?: {
     level: string;
     description: string;
   };
-  airQuality?: {
-    index: number;
-    level: string;
-    description?: string;
-  };
+  airQuality?: AirQualityData;
+}
+
+export interface UvIndexData {
+  index: number;
+  level: string;
+  dailyMax: number;
+  dewPointCelsius?: number;
+  precipitationMillimeters?: number;
+  cloudCoverPercent?: number;
+  isDay?: boolean;
+}
+
+export interface AirQualityData {
+  index: number;
+  level: string;
+  pollutants: Array<{
+    name: string;
+    value: number;
+  }>;
+}
+
+export interface InmetAlert {
+  id: string;
+  phenomenon: string;
+  severity: string;
+  start: string;
+  end: string;
+  risks: string[];
+  instructions: string[];
+}
+
+export interface InmetAlertsData {
+  alerts: InmetAlert[];
 }
 
 export interface WeatherIndexData {

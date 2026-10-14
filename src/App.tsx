@@ -4,7 +4,9 @@ import './App.css';
 import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
 import { BackToTop } from './components/common/BackToTop';
-import { EclipseAlert } from './components/eclipse/EclipseAlert';
+// Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
+// import { SkyAlerts } from './components/sky/SkyAlerts';
+import { InmetAlerts } from './components/inmet/InmetAlerts';
 import { WeatherIndices } from './components/indices/WeatherIndices';
 import { Moon } from './components/moon/Moon';
 import { OutdoorConditions } from './components/outdoor/OutdoorConditions';
@@ -18,7 +20,13 @@ import {
   type WindSpeedUnit,
 } from './utils/utils';
 import { Weather } from './components/weather/Weather';
-import type { WeatherConditions, WeatherResponse } from './types';
+import type {
+  AirQualityData,
+  InmetAlertsData,
+  UvIndexData,
+  WeatherConditions,
+  WeatherResponse,
+} from './types';
 
 const getSeason = (date: Date): string => {
   const monthDay = (date.getMonth() + 1) * 100 + date.getDate();
@@ -28,18 +36,70 @@ const getSeason = (date: Date): string => {
   return 'primavera';
 };
 
+const getSavedCityId = (): string => {
+  try {
+    const savedCityId = window.localStorage.getItem('tempo-no-taquari:selected-city');
+    return TAQUARI_VALLEY_CITIES.find((city) => city.id === savedCityId)?.id ?? 'lajeado';
+  } catch (error: unknown) {
+    console.error(
+      'Unable to read the saved city preference:',
+      error instanceof Error ? error.message : 'Unknown error',
+    );
+    return 'lajeado';
+  }
+};
+
 function App() {
   const [weather, setWeather] = useState<WeatherConditions | null>(null);
+  const [currentDate, setCurrentDate] = useState(() => new Date());
   const [error, setError] = useState<string | null>(null);
-  const [selectedCityId, setSelectedCityId] = useState<string>('lajeado');
+  const [airQuality, setAirQuality] = useState<AirQualityData | null>(null);
+  const [airQualityError, setAirQualityError] = useState<string | null>(null);
+  const [isAirQualityLoading, setIsAirQualityLoading] = useState(true);
+  const [uvIndex, setUvIndex] = useState<UvIndexData | null>(null);
+  const [uvIndexError, setUvIndexError] = useState<string | null>(null);
+  const [isUvIndexLoading, setIsUvIndexLoading] = useState(true);
+  const [inmetAlerts, setInmetAlerts] = useState<{
+    cityId: string;
+    data: InmetAlertsData;
+  } | null>(null);
+  const [inmetAlertsError, setInmetAlertsError] = useState<{
+    cityId: string;
+    message: string;
+  } | null>(null);
+  const [selectedCityId, setSelectedCityId] = useState<string>(getSavedCityId);
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('C');
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('km/h');
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => setCurrentDate(new Date()), 60_000);
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('tempo-no-taquari:selected-city', selectedCityId);
+    } catch (error: unknown) {
+      console.error(
+        'Unable to save the selected city preference:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  }, [selectedCityId]);
 
   useEffect(() => {
     const controller = new AbortController();
 
     setWeather(null);
     setError(null);
+    setAirQuality(null);
+    setAirQualityError(null);
+    setIsAirQualityLoading(true);
+    setUvIndex(null);
+    setUvIndexError(null);
+    setIsUvIndexLoading(true);
+    setInmetAlerts(null);
+    setInmetAlertsError(null);
     axios.get<WeatherResponse>('/api/weather', {
       params: { city: selectedCityId },
       signal: controller.signal,
@@ -62,13 +122,76 @@ function App() {
         }
       });
 
+    axios.get<AirQualityData>('/api/air-quality', {
+      params: { city: selectedCityId },
+      signal: controller.signal,
+    })
+      .then(({ data }) => {
+        setAirQuality(data);
+        setIsAirQualityLoading(false);
+      })
+      .catch((requestError: unknown) => {
+        if (!axios.isCancel(requestError)) {
+          setAirQualityError(
+            axios.isAxiosError<{ error?: string }>(requestError)
+              ? requestError.response?.data.error ?? requestError.message
+              : requestError instanceof Error
+              ? requestError.message
+              : 'Não foi possível consultar a qualidade do ar agora.',
+          );
+          setIsAirQualityLoading(false);
+        }
+      });
+
+    axios.get<UvIndexData>('/api/uv-index', {
+      params: { city: selectedCityId },
+      signal: controller.signal,
+    })
+      .then(({ data }) => {
+        setUvIndex(data);
+        setIsUvIndexLoading(false);
+      })
+      .catch((requestError: unknown) => {
+        if (!axios.isCancel(requestError)) {
+          setUvIndexError(
+            axios.isAxiosError<{ error?: string }>(requestError)
+              ? requestError.response?.data.error ?? requestError.message
+              : requestError instanceof Error
+              ? requestError.message
+              : 'Não foi possível consultar o índice UV agora.',
+          );
+          setIsUvIndexLoading(false);
+        }
+      });
+
+    axios.get<InmetAlertsData>('/api/inmet-alerts', {
+      params: { city: selectedCityId },
+      signal: controller.signal,
+    })
+      .then(({ data }) => {
+        setInmetAlerts({ cityId: selectedCityId, data });
+      })
+      .catch((requestError: unknown) => {
+        if (!axios.isCancel(requestError)) {
+          setInmetAlertsError(
+            {
+              cityId: selectedCityId,
+              message: axios.isAxiosError<{ error?: string }>(requestError)
+                ? requestError.response?.data.error ?? requestError.message
+                : requestError instanceof Error
+                ? requestError.message
+                : 'Não foi possível consultar os avisos do INMET agora.',
+            },
+          );
+        }
+      });
+
     return () => controller.abort();
   }, [selectedCityId]);
 
-  const backgroundColor = getCurrentTimeColor();
+  const backgroundColor = getCurrentTimeColor(weather?.sunrise, weather?.sunset, currentDate);
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
-  const currentDate = new Date();
 
   if (error) {
     return (
@@ -128,7 +251,13 @@ function App() {
         </label>
       </header>
 
-      <EclipseAlert />
+      {/* Reativar quando os alertas do céu forem incluídos novamente.
+      <SkyAlerts
+        precipitationMillimeters={uvIndex?.precipitationMillimeters}
+        cloudCoverPercent={uvIndex?.cloudCoverPercent}
+        isDay={uvIndex?.isDay}
+      />
+      */}
 
       <section className="dashboard-heading" aria-labelledby="page-title">
         <p className="eyebrow">PAINEL DO TEMPO</p>
@@ -185,6 +314,12 @@ function App() {
         </div>
       </section>
 
+      <InmetAlerts
+        alerts={inmetAlerts?.cityId === selectedCityId ? inmetAlerts.data.alerts : []}
+        error={inmetAlertsError?.cityId === selectedCityId ? inmetAlertsError.message : null}
+        cityName={TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name ?? ''}
+      />
+
       <section className="current-data" aria-label="Condições atuais">
         <Weather
           code={weather.condition_code}
@@ -203,9 +338,23 @@ function App() {
           rotation={weather.wind_direction}
           speed={weather.wind_speedy}
           displaySpeed={formatWindSpeed(weather.wind_speedy, windSpeedUnit)}
+          windSpeedUnit={windSpeedUnit}
         />
         <Moon moon={weather.moon_phase} />
-        <OutdoorConditions data={weather.outdoorConditions} />
+        <OutdoorConditions
+          temperatureUnit={temperatureUnit}
+          temperature={weather.temp}
+          humidity={weather.humidity}
+          data={{
+            ...weather.outdoorConditions,
+            uv: uvIndex ?? weather.outdoorConditions?.uv,
+            airQuality: airQuality ?? weather.outdoorConditions?.airQuality,
+          }}
+          airQualityError={airQualityError}
+          isAirQualityLoading={isAirQualityLoading}
+          uvIndexError={uvIndexError}
+          isUvIndexLoading={isUvIndexLoading}
+        />
       </section>
 
       <section className="forecast-section" aria-labelledby="forecast-title">
@@ -225,7 +374,8 @@ function App() {
         temperature={weather.temp}
         cloudiness={weather.cloudiness}
         forecast={weather.forecast.slice(1, 4)}
-        uvIndex={weather.outdoorConditions?.uv?.index}
+        uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
+        temperatureUnit={temperatureUnit}
       />
 
       <footer className="app-footer">
@@ -258,6 +408,24 @@ function App() {
           </a>
           <a href="https://hgbrasil.com/status/weather" target="_blank" rel="noreferrer">
             Dados meteorológicos por HG Brasil
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
+            </svg>
+          </a>
+          <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
+            Qualidade do ar e índice UV por Open-Meteo
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
+            </svg>
+          </a>
+          <a href="https://bas.dev/work/meteocons" target="_blank" rel="noreferrer">
+            Ícones por Meteocons
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
+            </svg>
+          </a>
+          <a href="https://atmosphere.copernicus.eu/" target="_blank" rel="noreferrer">
+            Dados de qualidade do ar do CAMS
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
             </svg>
