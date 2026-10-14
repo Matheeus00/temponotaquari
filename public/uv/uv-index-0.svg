@@ -1,0 +1,84 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  viewBox="0 0 128 128"
+>
+  <g
+    id="uv-index-0__uv-index-0"
+    clip-path="url(#uv-index-0__clip0_1837_4937)"
+  >
+    <g id="uv-index-0__UV Sun">
+      <mask
+        id="uv-index-0__mask0_1837_4937"
+        width="128"
+        height="128"
+        x="0"
+        y="0"
+        maskUnits="userSpaceOnUse"
+        style="mask-type:alpha"
+      >
+        <path
+          id="uv-index-0__Cutout"
+          fill="#000"
+          d="M128 0H0v128h64V85c0-11.598 9.402-21 21-21h43z"
+        />
+      </mask>
+      <g mask="url(#uv-index-0__mask0_1837_4937)">
+        <g id="uv-index-0__Sun">
+          <circle
+            id="uv-index-0__Core"
+            cx="64"
+            cy="64"
+            r="19.5"
+            fill="url(#uv-index-0__paint0_linear_1837_4937)"
+            stroke="#f8af18"
+          />
+          <g id="uv-index-0__Rays">
+            <path
+              fill="#f8af18"
+              d="M61 19a3 3 0 1 1 6 0v14a3 3 0 0 1-6 0zM93.699 30.059A3 3 0 1 1 97.94 34.3l-9.9 9.9a3 3 0 1 1-4.242-4.243zM109 61a3 3 0 1 1 0 6H95a3 3 0 1 1 0-6zM97.941 93.699a3 3 0 1 1-4.243 4.242l-9.899-9.9a3 3 0 1 1 4.243-4.242zM61 95a3 3 0 1 1 6 0v14a3 3 0 1 1-6 0zM39.958 83.799a3 3 0 1 1 4.243 4.243l-9.9 9.9a3 3 0 1 1-4.242-4.243zM33 61a3 3 0 1 1 0 6H19a3 3 0 0 1 0-6zM44.201 39.958a3 3 0 1 1-4.243 4.243l-9.9-9.9a3 3 0 1 1 4.243-4.242z"
+            />
+            <animateTransform
+              attributeName="transform"
+              begin="0s"
+              dur="6s"
+              repeatCount="indefinite"
+              type="rotate"
+              values="0 64.0 64.0;360 64.0 64.0"
+            />
+          </g>
+        </g>
+        <path
+          id="uv-index-0__Fix"
+          stroke="#f8af18"
+          d="M63.5 83.5c.536-11.47 8.256-19.669 20-20"
+        />
+      </g>
+    </g>
+    <g id="uv-index-0__Severity">
+      <rect width="30" height="30" x="79" y="79" fill="#91c700" rx="9" />
+      <path
+        id="uv-index-0__Text"
+        fill="#fff"
+        transform="translate(9.4 25.8) scale(0.22)"
+        d="M406 334.2q-8.2 9.8-22 9.8t-21.8-9.8q-8.1-9.7-8.1-26.4 0-16.5 8-26.1 8-9.7 22-9.7 13.7 0 21.8 9.7t8 26.1q.1 16.6-8 26.4Zm-22-4.2q12.6 0 12.6-22T384 286q-12.6 0-12.6 22t12.7 22Z"
+      />
+    </g>
+  </g>
+  <defs>
+    <linearGradient
+      id="uv-index-0__paint0_linear_1837_4937"
+      x1="64"
+      x2="64"
+      y1="44"
+      y2="84"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#fbbf24" />
+      <stop offset="1" stop-color="#f8af18" />
+    </linearGradient>
+    <clipPath id="uv-index-0__clip0_1837_4937">
+      <rect width="128" height="128" fill="#fff" />
+    </clipPath>
+  </defs>
+</svg>
