@@ -63,12 +63,19 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [ ] Chuva observada em estações próximas para complementar a previsão
 - [ ] Condições de estiagem, usando fonte e metodologia oficiais
 
+## Energia
+- [ ] Indicador de potencial de geração de energia em três níveis, com ícones Meteocons
+
 ## Previsão do tempo
 - [ ] Criar uma aba dedicada à previsão do tempo
 - [ ] Ter a previsão de hora a hora de hoje e do dia selecionado
 
 ## Transparência
 - [ ] Criar uma aba com o quadro de apoiadores voluntários do site
+
+## Mapa e localização
+- [ ] Criar uma visualização com mapa centralizado, dados meteorológicos ao redor e painéis laterais recolhíveis
+- [ ] Permitir localização atual opcional, com consentimento explícito e sem salvar coordenadas precisas
 
 ## Indicadores temporariamente fora da interface
 - [ ] Nível de pólen e respectiva explicação
