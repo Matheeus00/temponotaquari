@@ -6,6 +6,15 @@ export interface ForecastDay {
   rain_probability: number | string;
 }
 
+export interface HourlyForecast {
+  time: string;
+  temperature: number;
+  precipitationProbability: number;
+  weatherCode: number;
+  isDay: boolean;
+  windSpeed: number;
+}
+
 export interface OutdoorConditionsData {
   uv?: UvIndexData;
   pollen?: {

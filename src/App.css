@@ -251,7 +251,7 @@
   display: grid;
   width: min(1120px, 100%);
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(230px, 0.72fr);
-  grid-template-rows: minmax(215px, auto) minmax(185px, auto);
+  grid-template-rows: minmax(215px, auto) minmax(185px, auto) 0 minmax(185px, auto);
   gap: 18px;
   margin: 0 auto;
 }
@@ -475,10 +475,11 @@
   color: #f0f4fa;
 }
 
-@media (min-width: 721px) and (max-width: 900px) {
+@media (min-width: 721px) and (max-width: 1200px) {
   .current-data {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(330px, auto) minmax(220px, auto) auto;
+    grid-template-rows: minmax(330px, auto) auto minmax(220px, auto) auto;
+    row-gap: 0;
   }
 
   .current-data .weather-container {
@@ -486,19 +487,27 @@
     grid-row: 1;
   }
 
+  .current-data .hourly-forecast-section {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
   .current-data .rose-container {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 3;
+    margin-top: 18px;
   }
 
   .current-data .moon-container {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 3;
+    margin-top: 18px;
   }
 
   .current-data .outdoor-section {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
+    margin-top: 18px;
     min-height: 160px;
   }
 }
@@ -568,8 +577,9 @@
 
   .current-data {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(350px, auto) minmax(220px, auto) auto;
+    grid-template-rows: minmax(350px, auto) auto minmax(220px, auto) auto;
     gap: 14px;
+    row-gap: 0;
   }
 
   .weather-container {
@@ -577,19 +587,27 @@
     grid-row: 1;
   }
 
+  .current-data .hourly-forecast-section {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
   .rose-container {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 3;
+    margin-top: 14px;
   }
 
   .moon-container {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 3;
+    margin-top: 14px;
   }
 
   .outdoor-section {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
+    margin-top: 14px;
   }
 
   .section-caption {
@@ -660,8 +678,9 @@
 
   .current-data {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
     gap: 12px;
+    row-gap: 0;
   }
 
   .weather-container {
@@ -669,19 +688,27 @@
     grid-row: 1;
   }
 
-  .rose-container {
+  .current-data .hourly-forecast-section {
     grid-column: 1;
     grid-row: 2;
   }
 
-  .moon-container {
+  .rose-container {
     grid-column: 1;
     grid-row: 3;
+    margin-top: 12px;
+  }
+
+  .moon-container {
+    grid-column: 1;
+    grid-row: 4;
+    margin-top: 12px;
   }
 
   .outdoor-section {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 5;
+    margin-top: 12px;
   }
 
   .forecast-section {

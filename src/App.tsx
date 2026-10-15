@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
+import { HourlyForecast } from './components/forecast/HourlyForecast';
 import { BackToTop } from './components/common/BackToTop';
 // Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
 // import { SkyAlerts } from './components/sky/SkyAlerts';
@@ -22,6 +23,7 @@ import {
 import { Weather } from './components/weather/Weather';
 import type {
   AirQualityData,
+  HourlyForecast as HourlyForecastData,
   InmetAlertsData,
   UvIndexData,
   WeatherConditions,
@@ -53,6 +55,8 @@ function App() {
   const [weather, setWeather] = useState<WeatherConditions | null>(null);
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [error, setError] = useState<string | null>(null);
+  const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastData[] | null>(null);
+  const [hourlyForecastError, setHourlyForecastError] = useState<string | null>(null);
   const [airQuality, setAirQuality] = useState<AirQualityData | null>(null);
   const [airQualityError, setAirQualityError] = useState<string | null>(null);
   const [isAirQualityLoading, setIsAirQualityLoading] = useState(true);
@@ -92,6 +96,8 @@ function App() {
 
     setWeather(null);
     setError(null);
+    setHourlyForecast(null);
+    setHourlyForecastError(null);
     setAirQuality(null);
     setAirQualityError(null);
     setIsAirQualityLoading(true);
@@ -118,6 +124,28 @@ function App() {
               : requestError instanceof Error
               ? requestError.message
               : 'Não foi possível carregar a previsão do tempo.',
+          );
+        }
+      });
+
+    axios.get<{ forecast: HourlyForecastData[] }>('/api/hourly-forecast', {
+      params: { city: selectedCityId },
+      signal: controller.signal,
+    })
+      .then(({ data }) => {
+        if (!Array.isArray(data.forecast)) {
+          throw new Error('A resposta da API não contém a previsão por hora.');
+        }
+        setHourlyForecast(data.forecast);
+      })
+      .catch((requestError: unknown) => {
+        if (!axios.isCancel(requestError)) {
+          setHourlyForecastError(
+            axios.isAxiosError<{ error?: string }>(requestError)
+              ? requestError.response?.data.error ?? requestError.message
+              : requestError instanceof Error
+              ? requestError.message
+              : 'Não foi possível carregar a previsão por hora.',
           );
         }
       });
@@ -355,6 +383,21 @@ function App() {
           uvIndexError={uvIndexError}
           isUvIndexLoading={isUvIndexLoading}
         />
+        <section className="hourly-forecast-section" aria-labelledby="hourly-forecast-title">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">PRÓXIMAS 12 HORAS</p>
+              <h2 id="hourly-forecast-title">Previsão nas próximas horas</h2>
+            </div>
+            <span className="section-caption">Deslize para ver todos os horários</span>
+          </div>
+          <HourlyForecast
+            data={hourlyForecast}
+            error={hourlyForecastError}
+            temperatureUnit={temperatureUnit}
+            windSpeedUnit={windSpeedUnit}
+          />
+        </section>
       </section>
 
       <section className="forecast-section" aria-labelledby="forecast-title">

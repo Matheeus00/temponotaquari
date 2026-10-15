@@ -333,7 +333,7 @@
 @media (max-width: 720px) {
   .outdoor-section {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 5;
     min-height: 150px;
     padding: 16px 18px;
   }
@@ -357,7 +357,7 @@
 @media (max-width: 420px) {
   .outdoor-section {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 5;
   }
 
   .outdoor-metrics {

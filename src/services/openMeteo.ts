@@ -1,8 +1,127 @@
-import type { AirQualityData, UvIndexData } from '../types.js';
+import type { AirQualityData, HourlyForecast, UvIndexData } from '../types.js';
 
 interface Coordinates {
   latitude: number;
   longitude: number;
+}
+
+interface HourlyForecastResponse {
+  current: {
+    time: string;
+  };
+  hourly: {
+    time: string[];
+    temperature_2m: number[];
+    precipitation_probability: number[];
+    weather_code: number[];
+    is_day: number[];
+    wind_speed_10m: number[];
+  };
+}
+
+const isHourlyForecastResponse = (data: unknown): data is HourlyForecastResponse => {
+  if (typeof data !== 'object' || data === null || !('current' in data) || !('hourly' in data)) {
+    return false;
+  }
+
+  const { current, hourly } = data;
+  return (
+    typeof current === 'object' &&
+    current !== null &&
+    'time' in current &&
+    typeof current.time === 'string' &&
+    typeof hourly === 'object' &&
+    hourly !== null &&
+    'time' in hourly &&
+    Array.isArray(hourly.time) &&
+    hourly.time.every((value) => typeof value === 'string') &&
+    'temperature_2m' in hourly &&
+    Array.isArray(hourly.temperature_2m) &&
+    'precipitation_probability' in hourly &&
+    Array.isArray(hourly.precipitation_probability) &&
+    'weather_code' in hourly &&
+    Array.isArray(hourly.weather_code) &&
+    'is_day' in hourly &&
+    Array.isArray(hourly.is_day) &&
+    'wind_speed_10m' in hourly &&
+    Array.isArray(hourly.wind_speed_10m)
+  );
+};
+
+export async function getOpenMeteoHourlyForecast(
+  coordinates: Coordinates,
+): Promise<HourlyForecast[]> {
+  const url = new URL('https://api.open-meteo.com/v1/forecast');
+  url.searchParams.set('latitude', String(coordinates.latitude));
+  url.searchParams.set('longitude', String(coordinates.longitude));
+  url.searchParams.set(
+    'hourly',
+    'temperature_2m,precipitation_probability,weather_code,is_day,wind_speed_10m',
+  );
+  url.searchParams.set('current', 'temperature_2m');
+  url.searchParams.set('forecast_days', '2');
+  url.searchParams.set('timezone', 'America/Sao_Paulo');
+
+  const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+  if (!response.ok) {
+    throw new Error(`Open-Meteo returned HTTP ${response.status}.`);
+  }
+
+  const data: unknown = await response.json();
+  if (!isHourlyForecastResponse(data)) {
+    throw new Error('Open-Meteo returned an invalid hourly forecast.');
+  }
+
+  const { current, hourly } = data;
+  const lengths = [
+    hourly.temperature_2m.length,
+    hourly.precipitation_probability.length,
+    hourly.weather_code.length,
+    hourly.is_day.length,
+    hourly.wind_speed_10m.length,
+  ];
+  if (lengths.some((length) => length !== hourly.time.length)) {
+    throw new Error('Open-Meteo hourly forecast contains mismatched data.');
+  }
+
+  const currentHourIndex = hourly.time.findIndex((time) => time > current.time);
+  if (currentHourIndex < 0) {
+    throw new Error('Open-Meteo hourly forecast does not contain the current hour.');
+  }
+
+  return hourly.time.slice(currentHourIndex, currentHourIndex + 12).map((time, offset) => {
+    const index = currentHourIndex + offset;
+    const temperature = hourly.temperature_2m[index];
+    const precipitationProbability = hourly.precipitation_probability[index];
+    const weatherCode = hourly.weather_code[index];
+    const isDay = hourly.is_day[index];
+    const windSpeed = hourly.wind_speed_10m[index];
+    if (
+      typeof temperature !== 'number' ||
+      !Number.isFinite(temperature) ||
+      typeof precipitationProbability !== 'number' ||
+      !Number.isFinite(precipitationProbability) ||
+      precipitationProbability < 0 ||
+      precipitationProbability > 100 ||
+      typeof weatherCode !== 'number' ||
+      !Number.isFinite(weatherCode) ||
+      (isDay !== 0 && isDay !== 1) ||
+      typeof windSpeed !== 'number' ||
+      !Number.isFinite(windSpeed) ||
+      windSpeed < 0
+    ) {
+      throw new Error('Open-Meteo hourly forecast contains invalid measurements.');
+    }
+
+    return {
+      time,
+      temperature,
+      precipitationProbability,
+      weatherCode,
+      isDay: isDay === 1,
+      windSpeed,
+    };
+  });
 }
 
 const getAirQualityLevel = (index: number): string => {

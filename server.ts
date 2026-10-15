@@ -6,7 +6,11 @@ import { fileURLToPath } from 'node:url';
 import { getTaquariValleyCity } from './src/constants/cities.js';
 import { fetchHgBrasilWeather, HgBrasilHttpError } from './src/services/hgBrasil.js';
 import { getInmetAlerts } from './src/services/inmet.js';
-import { getOpenMeteoAirQuality, getOpenMeteoUvIndex } from './src/services/openMeteo.js';
+import {
+  getOpenMeteoAirQuality,
+  getOpenMeteoHourlyForecast,
+  getOpenMeteoUvIndex,
+} from './src/services/openMeteo.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
@@ -73,6 +77,28 @@ app.get('/api/air-quality', async (request, response) => {
       error instanceof Error ? error.message : 'Unknown error',
     );
     response.status(502).json({ error: 'Não foi possível consultar a qualidade do ar agora.' });
+  }
+});
+
+app.get('/api/hourly-forecast', async (request, response) => {
+  const city = getTaquariValleyCity(
+    typeof request.query.city === 'string' ? request.query.city : 'lajeado',
+  );
+  if (!city) {
+    response.status(400).json({ error: 'A cidade selecionada não está disponível.' });
+    return;
+  }
+
+  try {
+    const forecast = await getOpenMeteoHourlyForecast(city);
+    response.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1200');
+    response.json({ forecast });
+  } catch (error: unknown) {
+    console.error(
+      'Open-Meteo hourly forecast request failed:',
+      error instanceof Error ? error.message : 'Unknown error',
+    );
+    response.status(502).json({ error: 'Não foi possível consultar a previsão por hora agora.' });
   }
 });
 
