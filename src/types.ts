@@ -13,6 +13,7 @@ export interface HourlyForecast {
   weatherCode: number;
   isDay: boolean;
   windSpeed: number;
+  rain: number | string;
 }
 
 export interface OutdoorConditionsData {

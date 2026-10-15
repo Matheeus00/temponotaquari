@@ -16,6 +16,7 @@ interface HourlyForecastResponse {
     weather_code: number[];
     is_day: number[];
     wind_speed_10m: number[];
+    rain: number[];
   };
 }
 
@@ -44,7 +45,9 @@ const isHourlyForecastResponse = (data: unknown): data is HourlyForecastResponse
     'is_day' in hourly &&
     Array.isArray(hourly.is_day) &&
     'wind_speed_10m' in hourly &&
-    Array.isArray(hourly.wind_speed_10m)
+    Array.isArray(hourly.wind_speed_10m) &&
+    'rain' in hourly &&
+    Array.isArray(hourly.rain)
   );
 };
 
@@ -56,7 +59,7 @@ export async function getOpenMeteoHourlyForecast(
   url.searchParams.set('longitude', String(coordinates.longitude));
   url.searchParams.set(
     'hourly',
-    'temperature_2m,precipitation_probability,weather_code,is_day,wind_speed_10m',
+    'temperature_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,rain',
   );
   url.searchParams.set('current', 'temperature_2m');
   url.searchParams.set('forecast_days', '2');
@@ -79,6 +82,7 @@ export async function getOpenMeteoHourlyForecast(
     hourly.weather_code.length,
     hourly.is_day.length,
     hourly.wind_speed_10m.length,
+    hourly.rain.length,
   ];
   if (lengths.some((length) => length !== hourly.time.length)) {
     throw new Error('Open-Meteo hourly forecast contains mismatched data.');
@@ -96,6 +100,7 @@ export async function getOpenMeteoHourlyForecast(
     const weatherCode = hourly.weather_code[index];
     const isDay = hourly.is_day[index];
     const windSpeed = hourly.wind_speed_10m[index];
+    const rain = hourly.rain[index];
     if (
       typeof temperature !== 'number' ||
       !Number.isFinite(temperature) ||
@@ -108,7 +113,10 @@ export async function getOpenMeteoHourlyForecast(
       (isDay !== 0 && isDay !== 1) ||
       typeof windSpeed !== 'number' ||
       !Number.isFinite(windSpeed) ||
-      windSpeed < 0
+      windSpeed < 0 ||
+      typeof rain !== 'number' ||
+      !Number.isFinite(rain) ||
+      rain < 0
     ) {
       throw new Error('Open-Meteo hourly forecast contains invalid measurements.');
     }
@@ -120,6 +128,7 @@ export async function getOpenMeteoHourlyForecast(
       weatherCode,
       isDay: isDay === 1,
       windSpeed,
+      rain
     };
   });
 }

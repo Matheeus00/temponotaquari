@@ -100,11 +100,15 @@ export const HourlyForecast = ({
                   <small>{getTemperatureUnitLabel(temperatureUnit)}</small>
                 </p>
                 <div className="hourly-forecast-detail">
+                  <img src="/condition/raindrop-measure.svg" alt="" />
+                  <span>{hour.rain} mm</span>
+                </div>
+                <div className="hourly-forecast-detail">
                   <img src="/condition/raindrop.svg" alt="" />
                   <span>{hour.precipitationProbability}%</span>
                 </div>
                 <div className="hourly-forecast-detail hourly-forecast-wind">
-                  <img src={`/wind/wind-beaufort-${getBeaufortIndex(String(hour.windSpeed))}.svg`} alt="" />
+                  <img src="/wind/wind.svg" alt="" />
                   <span>{formatWindSpeed(hour.windSpeed, windSpeedUnit)}</span>
                 </div>
               </article>
