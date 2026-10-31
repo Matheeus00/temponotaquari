@@ -558,6 +558,15 @@
   background: rgb(255 255 255 / 88%);
 }
 
+.index-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
 @media (max-width: 900px) {
   .weather-indices-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

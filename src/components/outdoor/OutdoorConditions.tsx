@@ -36,6 +36,34 @@ const getUvIconSource = (index: number): string | null => {
   return `/uv/uv-index-${Math.max(1, Math.round(index))}.svg`;
 };
 
+const getAirQualityIconSource = (index: number): string | null => {
+  if (!Number.isFinite(index) || index < 0) {
+    return null;
+  }
+
+  if (index >= 0 && index <= 50) {
+    return '/air-quality/good.svg';
+  }
+
+  if (index >= 51 && index <= 100) {
+    return '/air-quality/moderate.svg'
+  }
+
+  if (index >= 101 && index <= 150) {
+    return '/air-quality/harmful_sensible.svg'
+  }
+
+  if (index >= 151 && index <= 200) {
+    return '/air-quality/harmful.svg'
+  }
+
+  if (index >= 201 && index <= 300) {
+    return '/air-quality/very-harmful.svg'
+  }
+
+  return '/air-quality/dangerous.svg'
+}
+
 const getDewPointLevel = (dewPointCelsius: number) => {
   if (dewPointCelsius < 10) {
     return { className: 'dry', label: 'Ar seco · confortável' };
@@ -63,6 +91,7 @@ export const OutdoorConditions = ({
   isUvIndexLoading = false,
 }: OutdoorConditionsProps) => {
   const uvIconSource = data?.uv ? getUvIconSource(data.uv.index) : null;
+  const airQualityIconSource = data?.airQuality ? getAirQualityIconSource(data.airQuality.index) : null;
   const openMeteoDewPoint = data?.uv?.dewPointCelsius;
   const fallbackDewPoint = calculateDewPointCelsius(temperature, humidity);
   const hasOpenMeteoDewPoint =
@@ -140,10 +169,7 @@ export const OutdoorConditions = ({
         </article>
         <article className="outdoor-card outdoor-card-dew-point">
           <span className="outdoor-icon outdoor-icon-dew-point" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 3c-2.5 3.1-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.5-7.9-6-11Z" />
-              <path d="M9 15a3 3 0 0 0 3 3" />
-            </svg>
+            <img src='/dew_point/thermometer-raindrop.svg' />
           </span>
           <span className="outdoor-copy">
             <span>Ponto de orvalho</span>
@@ -233,9 +259,11 @@ export const OutdoorConditions = ({
         */}
         <article className="outdoor-card outdoor-card-air">
           <span className="outdoor-icon outdoor-icon-air" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M3 8h12a2.5 2.5 0 1 0-2.5-2.5M2 12h17a2.5 2.5 0 1 1-2.5 2.5M4 16h8a2 2 0 1 1-2 2" />
-            </svg>
+            {airQualityIconSource ? <img src={airQualityIconSource} alt="" /> : (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 8h12a2.5 2.5 0 1 0-2.5-2.5M2 12h17a2.5 2.5 0 1 1-2.5 2.5M4 16h8a2 2 0 1 1-2 2" />
+              </svg>
+            )}
           </span>
           <span className="outdoor-copy">
             <span>Qualidade do ar</span>

@@ -85,7 +85,7 @@
   overflow: hidden;
   border: 1px solid #ccdde5;
   border-radius: 11px;
-  background: #dce9ee;
+  background: #f1f6f8;
 }
 
 .outdoor-uv-icon {
@@ -376,5 +376,5 @@
 
 .App--dark-background .outdoor-icon {
   border-color: #ccdde5;
-  background: #dce9ee;
+  background: #f1f6f8;
 }

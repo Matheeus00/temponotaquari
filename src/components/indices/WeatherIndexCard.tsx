@@ -1,6 +1,5 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { WeatherIndexId } from '../../types';
-import { IndexIcon } from './IndexIcon';
 
 interface WeatherIndexCardProps {
   id: WeatherIndexId;
@@ -24,9 +23,11 @@ export const WeatherIndexCard = ({
       className={`weather-index-icon weather-index-icon-${id}${level ? ` weather-index-icon-${id}-${level}` : ''}`}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 24 24" fill="none">
-        <IndexIcon id={id} />
-      </svg>
+      <span
+        aria-hidden="true"
+        className="index-icon"
+        style={{ '--icon': `url(/indices/${id}.svg)` } as CSSProperties}
+      />
     </span>
     <span className="weather-index-copy">
       <strong>{label}</strong>
