@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-11-02",
+    "title": "Atualização manual do painel",
+    "items": [
+      "Atualize clima, previsão e indicadores sem recarregar a página, respeitando o intervalo mínimo de 10 minutos."
+    ]
+  },
+  {
     "date": "2026-11-01",
     "title": "Novidades do Tempo no Taquari",
     "items": [

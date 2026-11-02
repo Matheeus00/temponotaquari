@@ -80,6 +80,7 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
 - [x] Exibir no painel principal a maior probabilidade de chuva nas próximas 6 horas
 - [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
+- [x] Permitir atualizar os dados manualmente sem recarregar a página, respeitando o intervalo mínimo de 10 minutos
 
 ## Sobre e transparência
 - [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
@@ -88,10 +89,6 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Exibir notas de novidades datadas, mantidas em `src/data/releaseNotes.json`
 
 As novidades formam uma timeline, da mais recente para a mais antiga. Para publicar uma atualização relevante, adicione uma entrada com data, título e resumo em `src/data/releaseNotes.json`; mantenha as entradas anteriores.
-
-## Mapa e localização
-- [ ] Criar uma visualização com mapa centralizado, dados meteorológicos ao redor e painéis laterais recolhíveis
-- [ ] Permitir localização atual opcional, com consentimento explícito e sem salvar coordenadas precisas
 
 ## Indicadores temporariamente fora da interface
 - [ ] Nível de pólen e respectiva explicação

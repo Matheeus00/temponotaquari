@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
@@ -85,6 +85,9 @@ function App() {
   const [selectedCityId, setSelectedCityId] = useState<string | null>(getSavedCityId);
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('C');
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('km/h');
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const previousCityId = useRef<string | null>(null);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => setCurrentDate(new Date()), 60_000);
@@ -107,22 +110,27 @@ function App() {
     if (!selectedCityId) return;
     const controller = new AbortController();
 
-    setSelectedForecast(null);
-    setShowTodayForecast(false);
-    setWeather(null);
-    setLastWeatherFetchedAt(null);
+    const cityChanged = previousCityId.current !== selectedCityId;
+    previousCityId.current = selectedCityId;
+    if (cityChanged) {
+      setSelectedForecast(null);
+      setShowTodayForecast(false);
+      setWeather(null);
+      setLastWeatherFetchedAt(null);
+      setHourlyForecast(null);
+      setAirQuality(null);
+      setUvIndex(null);
+      setInmetAlerts(null);
+    }
+    setIsRefreshing(true);
     setError(null);
-    setHourlyForecast(null);
     setHourlyForecastError(null);
-    setAirQuality(null);
     setAirQualityError(null);
     setIsAirQualityLoading(true);
-    setUvIndex(null);
     setUvIndexError(null);
     setIsUvIndexLoading(true);
-    setInmetAlerts(null);
     setInmetAlertsError(null);
-    axios.get<WeatherResponse>('/api/weather', {
+    const weatherRequest = axios.get<WeatherResponse>('/api/weather', {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
@@ -149,7 +157,7 @@ function App() {
         }
       });
 
-    axios.get<{ forecast: HourlyForecastData[] }>('/api/hourly-forecast', {
+    const hourlyForecastRequest = axios.get<{ forecast: HourlyForecastData[] }>('/api/hourly-forecast', {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
@@ -171,7 +179,7 @@ function App() {
         }
       });
 
-    axios.get<AirQualityData>('/api/air-quality', {
+    const airQualityRequest = axios.get<AirQualityData>('/api/air-quality', {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
@@ -192,7 +200,7 @@ function App() {
         }
       });
 
-    axios.get<UvIndexData>('/api/uv-index', {
+    const uvIndexRequest = axios.get<UvIndexData>('/api/uv-index', {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
@@ -213,7 +221,7 @@ function App() {
         }
       });
 
-    axios.get<InmetAlertsData>('/api/inmet-alerts', {
+    const inmetAlertsRequest = axios.get<InmetAlertsData>('/api/inmet-alerts', {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
@@ -235,13 +243,24 @@ function App() {
         }
       });
 
+    void Promise.allSettled([
+      weatherRequest,
+      hourlyForecastRequest,
+      airQualityRequest,
+      uvIndexRequest,
+      inmetAlertsRequest,
+    ]).then(() => {
+      if (!controller.signal.aborted) setIsRefreshing(false);
+    });
+
     return () => controller.abort();
-  }, [selectedCityId]);
+  }, [refreshKey, selectedCityId]);
 
   useEffect(() => {
-    if (!selectedCityId) return;
+    if (!selectedCityId || !lastWeatherFetchedAt) return;
     const controller = new AbortController();
-    const intervalId = window.setInterval(() => {
+    let timeoutId: number;
+    const refreshWeather = () => {
       axios.get<WeatherResponse>('/api/weather', {
         params: { city: selectedCityId },
         signal: controller.signal,
@@ -263,19 +282,26 @@ function App() {
               'Weather refresh failed:',
               requestError instanceof Error ? requestError.message : 'Unknown error',
             );
+            timeoutId = window.setTimeout(refreshWeather, WEATHER_REFRESH_INTERVAL_MS);
           }
         });
-    }, WEATHER_REFRESH_INTERVAL_MS);
+    };
+    timeoutId = window.setTimeout(
+      refreshWeather,
+      Math.max(0, lastWeatherFetchedAt.getTime() + WEATHER_REFRESH_INTERVAL_MS - Date.now()),
+    );
 
     return () => {
-      window.clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [selectedCityId]);
+  }, [lastWeatherFetchedAt, selectedCityId]);
 
   const backgroundColor = getCurrentTimeColor(weather?.sunrise, weather?.sunset, currentDate);
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
+  const canManuallyRefresh = lastWeatherFetchedAt !== null
+    && currentDate.getTime() - lastWeatherFetchedAt.getTime() >= WEATHER_REFRESH_INTERVAL_MS;
 
   useEffect(() => {
     const root = document.getElementById('root');
@@ -409,6 +435,25 @@ function App() {
             <small>Consulta automática a cada 10 min</small>
           </div>
         )}
+        <button
+          className="refresh-button"
+          type="button"
+          onClick={() => setRefreshKey((key) => key + 1)}
+          disabled={isRefreshing || !canManuallyRefresh}
+          aria-label={isRefreshing ? 'Atualizando dados' : 'Atualizar dados'}
+          title={!canManuallyRefresh ? 'Disponível após 10 minutos da última consulta' : undefined}
+        >
+          <svg
+            className={isRefreshing ? 'refresh-icon refresh-icon-spinning' : 'refresh-icon'}
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M20 7v5h-5M4 17v-5h5" />
+            <path d="M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
+          </svg>
+          {isRefreshing ? 'Atualizando' : 'Atualizar'}
+        </button>
         <label className="location-badge">
           <span className="location-pin" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
