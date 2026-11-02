@@ -1,0 +1,52 @@
+[
+  {
+    "date": "2026-11-01",
+    "title": "Novidades do Tempo no Taquari",
+    "items": [
+      "Navegação organizada nas abas Painel, Previsão e Sobre.",
+      "Previsão horária das próximas 24 horas, opção de ver o restante de hoje e consulta por hora dos dias selecionados.",
+      "Indicadores de chance de chuva nas próximas 6 horas, potencial solar e condições para secagem de roupas.",
+      "Marcação de feriados nacionais e estaduais do Rio Grande do Sul na previsão.",
+      "Página Sobre com fontes, metodologia, limitações e apoiadores do projeto."
+    ]
+  },
+  {
+    "date": "2026-10-14",
+    "title": "Mais detalhes na previsão por hora",
+    "items": [
+      "Previsão horária ampliada para as próximas 12 horas.",
+      "Volume de chuva previsto exibido junto aos horários."
+    ]
+  },
+  {
+    "date": "2026-10-13",
+    "title": "Avisos oficiais e novos dados meteorológicos",
+    "items": [
+      "Avisos meteorológicos oficiais do INMET para o município selecionado.",
+      "Painel ampliado com informações meteorológicas e índice UV."
+    ]
+  },
+  {
+    "date": "2026-10-08",
+    "title": "Índices para o dia a dia",
+    "items": [
+      "Adicionados índices de churrasco, mosquito, frizz, ressecamento da pele, frio e vitamina D."
+    ]
+  },
+  {
+    "date": "2026-10-06",
+    "title": "Painel e cidades do Vale do Taquari",
+    "items": [
+      "Painel ambiental reorganizado, com informações de vento e ambiente.",
+      "Adicionada a seleção entre cidades do Vale do Taquari.",
+      "Projeto apresentado como Tempo no Taquari, com contato por e-mail."
+    ]
+  },
+  {
+    "date": "2026-10-05",
+    "title": "Nova estrutura da aplicação",
+    "items": [
+      "Aplicação migrada para React com TypeScript e preparada para implantação com API no servidor."
+    ]
+  }
+]

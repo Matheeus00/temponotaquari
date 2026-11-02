@@ -78,12 +78,16 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Criar uma aba dedicada à previsão do tempo, com navegação entre horas, dias e índices
 - [x] Exibir a previsão horária das próximas 24 horas e permitir voltar às horas restantes de hoje
 - [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
+- [x] Exibir no painel principal a maior probabilidade de chuva nas próximas 6 horas
 - [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
 
 ## Sobre e transparência
 - [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
 - [x] Informar fontes de dados, estimativas, limitações e frequência de atualização
 - [x] Exibir apoiadores e seus perfis sociais autorizados, com ícones das plataformas; manter os dados em `src/data/supporters.json`
+- [x] Exibir notas de novidades datadas, mantidas em `src/data/releaseNotes.json`
+
+As novidades formam uma timeline, da mais recente para a mais antiga. Para publicar uma atualização relevante, adicione uma entrada com data, título e resumo em `src/data/releaseNotes.json`; mantenha as entradas anteriores.
 
 ## Mapa e localização
 - [ ] Criar uma visualização com mapa centralizado, dados meteorológicos ao redor e painéis laterais recolhíveis

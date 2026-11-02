@@ -1,5 +1,6 @@
 import './AboutPage.css';
 import supporters from '../../data/supporters.json';
+import releaseNotes from '../../data/releaseNotes.json';
 
 const sources = [
   {
@@ -29,6 +30,25 @@ const sources = [
   },
 ];
 
+const sortedReleaseNotes = [...releaseNotes]
+  .sort((first, second) => Date.parse(second.date) - Date.parse(first.date));
+const [latestRelease, ...olderReleases] = sortedReleaseNotes;
+
+const renderReleaseNote = (release: (typeof releaseNotes)[number]) => (
+  <article className="release-note" key={release.date}>
+    <time dateTime={release.date}>
+      {new Intl.DateTimeFormat('pt-BR', {
+        dateStyle: 'long',
+        timeZone: 'UTC',
+      }).format(new Date(`${release.date}T00:00:00Z`))}
+    </time>
+    <h3>{release.title}</h3>
+    <ul>
+      {release.items.map((item) => <li key={item}>{item}</li>)}
+    </ul>
+  </article>
+);
+
 export const AboutPage = () => (
   <div className="about-page">
     <header className="about-intro">
@@ -45,6 +65,25 @@ export const AboutPage = () => (
         </a>
       </div>
     </header>
+
+    <section className="about-section about-release-notes" aria-labelledby="release-notes-title">
+      <div className="about-section-heading">
+        <p className="eyebrow">ACOMPANHE O PROJETO</p>
+        <h2 id="release-notes-title">Novidades</h2>
+        <p>Veja o que mudou no Tempo no Taquari.</p>
+      </div>
+      <div className="release-notes-list">
+        {latestRelease && renderReleaseNote(latestRelease)}
+        {olderReleases.length > 0 && (
+          <details className="release-notes-history">
+            <summary>Ver histórico anterior ({olderReleases.length})</summary>
+            <div className="release-notes-list">
+              {olderReleases.map(renderReleaseNote)}
+            </div>
+          </details>
+        )}
+      </div>
+    </section>
 
     <section className="about-section" aria-labelledby="transparency-title">
       <div className="about-section-heading">
