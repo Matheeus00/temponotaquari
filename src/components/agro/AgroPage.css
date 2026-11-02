@@ -1,0 +1,237 @@
+.agro-page {
+  display: grid;
+  width: min(1120px, 100%);
+  gap: 18px;
+  margin: 0 auto;
+}
+
+.agro-intro,
+.agro-map-section,
+.agro-topics {
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 12px 30px rgb(28 52 77 / 10%);
+}
+
+.agro-intro {
+  padding: clamp(24px, 5vw, 46px);
+}
+
+.agro-intro .eyebrow {
+  margin-bottom: 12px;
+}
+
+.agro-intro h1 {
+  margin: 0;
+  color: #193550;
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.12;
+}
+
+.agro-intro > p:not(.eyebrow) {
+  margin: 12px 0 0;
+  color: #61758a;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.agro-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid #dce8e7;
+  border-radius: 14px;
+  background: #f4f9f8;
+}
+
+.agro-notice-mark {
+  display: grid;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #dcefed;
+  color: #287d8a;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.agro-notice p {
+  margin: 1px 0 0;
+  color: #486477;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.agro-map-section {
+  min-width: 0;
+  padding: clamp(20px, 4vw, 32px);
+}
+
+.agro-map-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.agro-map-heading .eyebrow {
+  margin-bottom: 6px;
+}
+
+.agro-map-heading h2 {
+  margin: 0;
+  color: #193550;
+  font-size: clamp(19px, 3vw, 24px);
+  letter-spacing: -0.5px;
+}
+
+.agro-map-count {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  color: #486477;
+  border: 1px solid #dce5eb;
+  border-radius: 999px;
+  background: #f8fafb;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.agro-map {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid #dce8e7;
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse at 42% 45%, rgb(213 235 226 / 60%), transparent 58%),
+    #f2f7f5;
+  color: #287d8a;
+}
+
+.agro-map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 440px;
+}
+
+.agro-map-marker-dot {
+  fill: #759a87;
+  stroke: #f8fcfa;
+  stroke-width: 2;
+}
+
+.agro-map-marker-halo {
+  fill: rgb(40 125 138 / 16%);
+  stroke: rgb(40 125 138 / 30%);
+  stroke-width: 1;
+}
+
+.agro-map-marker-selected .agro-map-marker-dot {
+  fill: #176b78;
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+
+.agro-map-caption {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  left: 12px;
+  margin: 0;
+  color: #486477;
+  font-size: 11px;
+  text-align: center;
+  text-shadow: 0 1px 3px #f2f7f5;
+  pointer-events: none;
+}
+
+.agro-map-disclaimer {
+  margin: 10px 0 0;
+  color: #61758a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.agro-topics {
+  padding: clamp(20px, 4vw, 32px);
+}
+
+.agro-topics-heading h2 {
+  margin: 0;
+  color: #193550;
+  font-size: 24px;
+  letter-spacing: -0.5px;
+}
+
+.agro-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.agro-topic-card {
+  min-width: 0;
+  min-height: 150px;
+  padding: 16px;
+  border: 1px solid #e2eaf0;
+  border-radius: 14px;
+  background: #f8fafb;
+}
+
+.agro-topic-status {
+  display: inline-flex;
+  padding: 4px 8px;
+  color: #61758a;
+  border: 1px solid #dce5eb;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.agro-topic-card h3 {
+  margin: 12px 0 0;
+  color: #304d68;
+  font-size: 15px;
+}
+
+.agro-topic-card p {
+  margin: 7px 0 0;
+  color: #61758a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media (max-width: 720px) {
+  .agro-topic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .agro-map-heading {
+    align-items: flex-start;
+  }
+
+  .agro-map-count {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .agro-topic-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .agro-topic-card {
+    min-height: auto;
+  }
+}

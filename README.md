@@ -82,6 +82,11 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
 - [x] Permitir atualizar os dados manualmente sem recarregar a página, respeitando o intervalo mínimo de 10 minutos
 
+## Agro
+- [x] Criar uma aba Agro com temas de estiagem, fogo, geada, chuva, calor e vento identificados como em breve
+- [x] Exibir um mapa esquemático com a localização das sedes dos 25 municípios, sem camadas de dados
+- [ ] Avaliar fontes e integrar dados meteorológicos e ambientais relevantes para o campo
+
 ## Sobre e transparência
 - [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
 - [x] Informar fontes de dados, estimativas, limitações e frequência de atualização

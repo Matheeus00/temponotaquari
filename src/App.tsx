@@ -8,6 +8,7 @@ import { BackToTop } from './components/common/BackToTop';
 import { CitySelection } from './components/common/CitySelection';
 import { getHolidayForDate } from './data/holidays';
 import { AboutPage } from './components/about/AboutPage';
+import { AgroPage } from './components/agro/AgroPage';
 // Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
 // import { SkyAlerts } from './components/sky/SkyAlerts';
 import { InmetAlerts } from './components/inmet/InmetAlerts';
@@ -33,7 +34,7 @@ import type {
   WeatherResponse,
 } from './types';
 
-type AppSection = 'panel' | 'forecast' | 'about';
+type AppSection = 'panel' | 'forecast' | 'agro' | 'about';
 
 const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
@@ -414,6 +415,13 @@ function App() {
           </button>
           <button
             type="button"
+            aria-current={activeSection === 'agro' ? 'page' : undefined}
+            onClick={() => navigateToSection('agro')}
+          >
+            Agro
+          </button>
+          <button
+            type="button"
             aria-current={activeSection === 'about' ? 'page' : undefined}
             onClick={() => navigateToSection('about')}
           >
@@ -678,6 +686,8 @@ function App() {
           />
         </section>
       )}
+
+      {activeSection === 'agro' && <AgroPage selectedCityId={selectedCityId} />}
 
       {activeSection === 'about' && <AboutPage />}
 
