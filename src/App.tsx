@@ -126,12 +126,11 @@ function App() {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
-      .then(({ data, headers }) => {
+      .then(({ data }) => {
         if (!data.results) {
           throw new Error('A resposta da API não contém os dados do clima.');
         }
-        const fetchedAtHeader = headers['x-weather-fetched-at'];
-        const fetchedAt = typeof fetchedAtHeader === 'string' ? new Date(fetchedAtHeader) : null;
+        const fetchedAt = typeof data.fetchedAt === 'string' ? new Date(data.fetchedAt) : null;
         if (!fetchedAt || !Number.isFinite(fetchedAt.getTime())) {
           throw new Error('A resposta do servidor não informou o horário da consulta.');
         }
@@ -247,12 +246,11 @@ function App() {
         params: { city: selectedCityId },
         signal: controller.signal,
       })
-        .then(({ data, headers }) => {
+        .then(({ data }) => {
           if (!data.results) {
             throw new Error('A resposta da API não contém os dados do clima.');
           }
-          const fetchedAtHeader = headers['x-weather-fetched-at'];
-          const fetchedAt = typeof fetchedAtHeader === 'string' ? new Date(fetchedAtHeader) : null;
+          const fetchedAt = typeof data.fetchedAt === 'string' ? new Date(data.fetchedAt) : null;
           if (!fetchedAt || !Number.isFinite(fetchedAt.getTime())) {
             throw new Error('A resposta do servidor não informou o horário da consulta.');
           }

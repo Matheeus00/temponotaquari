@@ -96,4 +96,5 @@ export interface WeatherConditions {
 
 export interface WeatherResponse {
   results?: WeatherConditions;
+  fetchedAt?: string;
 }

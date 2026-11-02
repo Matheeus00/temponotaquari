@@ -43,8 +43,10 @@ app.get('/api/weather', async (request, response) => {
 
   try {
     const weatherData = await fetchHgBrasilWeather(city.name, apiKey);
-    response.set('X-Weather-Fetched-At', new Date().toISOString());
-    response.json(weatherData);
+    if (typeof weatherData !== 'object' || weatherData === null || Array.isArray(weatherData)) {
+      throw new Error('Weather provider returned an invalid response.');
+    }
+    response.json({ ...weatherData, fetchedAt: new Date().toISOString() });
   } catch (error: unknown) {
     if (error instanceof HgBrasilHttpError) {
       console.error(`Weather provider returned HTTP ${error.status}.`);

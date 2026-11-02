@@ -33,8 +33,12 @@ export default async function handler(
 
   try {
     const weatherData = await fetchHgBrasilWeather(city.name, apiKey);
+    if (typeof weatherData !== 'object' || weatherData === null || Array.isArray(weatherData)) {
+      throw new Error('Weather provider returned an invalid response.');
+    }
+    const fetchedAt = new Date().toISOString();
     response.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1200');
-    sendJson(response, 200, weatherData);
+    sendJson(response, 200, { ...weatherData, fetchedAt });
   } catch (error: unknown) {
     if (error instanceof HgBrasilHttpError) {
       console.error(`Weather provider returned HTTP ${error.status}.`);
