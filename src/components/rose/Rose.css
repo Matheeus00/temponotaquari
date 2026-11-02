@@ -26,6 +26,15 @@
   font-size: 20px;
 }
 
+.widget-icon::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask: url('/rose/arrow-up-right.svg') center / contain no-repeat;
+  mask: url('/rose/arrow-up-right.svg') center / contain no-repeat;
+}
+
 .widget-heading h2 {
   margin: 0;
   color: #294762;

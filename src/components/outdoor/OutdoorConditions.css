@@ -37,6 +37,15 @@
   background: #e7f3f4;
 }
 
+.outdoor-heading-icon::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask: url('/common/environment.svg') center / contain no-repeat;
+  mask: url('/common/environment.svg') center / contain no-repeat;
+}
+
 .outdoor-environment-icon {
   width: 23px;
   height: 23px;

@@ -24,7 +24,7 @@ export const Moon = ({ moon }: MoonProps) => {
     return (
         <div className="moon-container">
             <div className="widget-heading">
-                <span className="moon-widget-icon" aria-hidden="true">◐</span>
+                <span className="moon-widget-icon" aria-hidden="true" />
                 <div><p className="widget-label">CICLO LUNAR</p><h2>Fase da lua</h2></div>
             </div>
             <div className="moon-content">

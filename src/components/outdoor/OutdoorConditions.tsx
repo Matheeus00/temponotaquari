@@ -107,13 +107,7 @@ export const OutdoorConditions = ({
   return (
     <section className="outdoor-section" aria-labelledby="outdoor-title">
       <div className="outdoor-heading">
-        <span className="outdoor-heading-icon" aria-hidden="true">
-          <svg className="outdoor-environment-icon" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M7 14c2-1 4-1.5 6-1.5S17 13 19 14M8 9c1.2.7 2.5 1 4 1s2.8-.3 4-1M12 3v18" />
-            <path d="M12 15c0-3.5 2.1-5.5 6-6-.2 3.8-2.1 6-6 6Zm0 2c0-2.8-1.7-4.4-4.8-4.8.2 3 1.8 4.8 4.8 4.8Z" />
-          </svg>
-        </span>
+        <span className="outdoor-heading-icon" aria-hidden="true" />
         <span className="outdoor-heading-copy">
           <span className="widget-label">AMBIENTE</span>
           <h2 id="outdoor-title">Condições ambientais</h2>

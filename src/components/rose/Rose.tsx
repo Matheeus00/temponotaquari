@@ -31,7 +31,7 @@ export const Rose = ({
     return (
         <div className='rose-container'>
             <div className="widget-heading">
-                <span className="widget-icon" aria-hidden="true">↗</span>
+                <span className="widget-icon" aria-hidden="true" />
                 <div><p className="widget-label">VENTO</p><h2>Direção e velocidade</h2></div>
             </div>
             <div className="rose-display">
