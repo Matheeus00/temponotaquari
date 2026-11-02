@@ -277,6 +277,22 @@ function App() {
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
 
+  useEffect(() => {
+    const root = document.getElementById('root');
+    const previousBodyBackground = document.body.style.backgroundColor;
+    const previousDocumentBackground = document.documentElement.style.backgroundColor;
+    const previousRootBackground = root?.style.backgroundColor;
+    document.body.style.backgroundColor = backgroundColor;
+    document.documentElement.style.backgroundColor = backgroundColor;
+    if (root) root.style.backgroundColor = backgroundColor;
+
+    return () => {
+      document.body.style.backgroundColor = previousBodyBackground;
+      document.documentElement.style.backgroundColor = previousDocumentBackground;
+      if (root) root.style.backgroundColor = previousRootBackground ?? '';
+    };
+  }, [backgroundColor]);
+
   if (!selectedCityId) {
     return (
       <CitySelection

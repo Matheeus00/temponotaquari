@@ -4,11 +4,22 @@ export const BackToTop = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const updateVisibility = () => setVisible(window.scrollY > 0);
+    const updateVisibility = () => {
+      const scrollPosition = Math.max(
+        window.scrollY,
+        document.documentElement.scrollTop,
+        document.body.scrollTop,
+      );
+      setVisible(scrollPosition > 0);
+    };
 
     updateVisibility();
     window.addEventListener('scroll', updateVisibility, { passive: true });
-    return () => window.removeEventListener('scroll', updateVisibility);
+    document.addEventListener('scroll', updateVisibility, { passive: true, capture: true });
+    return () => {
+      window.removeEventListener('scroll', updateVisibility);
+      document.removeEventListener('scroll', updateVisibility, true);
+    };
   }, []);
 
   const scrollToTop = () => {
