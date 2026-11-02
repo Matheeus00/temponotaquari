@@ -68,7 +68,7 @@ export async function getOpenMeteoHourlyForecast(
     'temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,rain,shortwave_radiation',
   );
   url.searchParams.set('current', 'temperature_2m');
-  url.searchParams.set('forecast_days', '16');
+  url.searchParams.set('forecast_days', '7');
   url.searchParams.set('timezone', 'America/Sao_Paulo');
 
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
