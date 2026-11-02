@@ -441,7 +441,18 @@ function App() {
       */}
 
       <section className="dashboard-heading" aria-labelledby="page-title">
-        <p className="eyebrow">PAINEL DO TEMPO</p>
+        <div className="dashboard-eyebrow">
+          <p className="eyebrow">PAINEL DO TEMPO</p>
+          {todayHoliday && (
+            <span
+              className={`forecast-day-holiday-label dashboard-holiday-label${todayHoliday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
+              title={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}: ${todayHoliday.name}`}
+              aria-label={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}: ${todayHoliday.name}`}
+            >
+              Feriado · {todayHoliday.name}
+            </span>
+          )}
+        </div>
         <p className="dashboard-date">
           <span>
             {new Intl.DateTimeFormat('pt-BR', {
@@ -455,15 +466,6 @@ function App() {
             {' · '}
             {getSeason(currentDate)}
           </span>
-          {todayHoliday && (
-            <span
-              className={`forecast-day-holiday-label${todayHoliday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
-              title={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}`}
-            >
-              Feriado {todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}
-              <span>{todayHoliday.name}</span>
-            </span>
-          )}
         </p>
         <h1 id="page-title">
           O céu de hoje em <b>{TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name}, RS</b>
