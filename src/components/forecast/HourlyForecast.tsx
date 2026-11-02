@@ -14,6 +14,8 @@ interface HourlyForecastProps {
   error: string | null;
   temperatureUnit: TemperatureUnit;
   windSpeedUnit: WindSpeedUnit;
+  selectedDay: boolean;
+  periodLabel: string;
 }
 
 const getCondition = (code: number): { description: string; icon: string } => {
@@ -55,6 +57,8 @@ export const HourlyForecast = ({
   error,
   temperatureUnit,
   windSpeedUnit,
+  selectedDay,
+  periodLabel,
 }: HourlyForecastProps) => {
   const today = getLocalDate();
 
@@ -70,10 +74,13 @@ export const HourlyForecast = ({
     ) : data.length === 0 ? (
       <p className="hourly-forecast-message">Sem previsão por hora disponível.</p>
     ) : (
-      <div className="hourly-forecast-track" aria-label="Previsão do tempo para as próximas 12 horas">
+      <div
+        className="hourly-forecast-track"
+        aria-label={`Previsão do tempo ${periodLabel}`}
+      >
         {data.map((hour, index) => {
           const condition = getCondition(hour.weatherCode);
-          const isNextDay = hour.time.slice(0, 10) > today;
+          const isNextDay = !selectedDay && hour.time.slice(0, 10) > today;
           const startsNextDay = isNextDay && data[index - 1]?.time.slice(0, 10) !== hour.time.slice(0, 10);
           return (
             <Fragment key={hour.time}>

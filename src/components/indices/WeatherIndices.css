@@ -17,7 +17,7 @@
 
 .weather-indices-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -69,6 +69,10 @@
   color: #397b8b;
   border-color: #ccdde5;
   background: #dce9ee;
+}
+
+.weather-index-icon-clothes-drying {
+  color: #648638;
 }
 
 .weather-index-card-frizz-very-low {
@@ -209,6 +213,30 @@
   --barbecue-background: #eaf6ef;
 }
 
+.weather-index-card-clothes-drying-poor {
+  --clothes-drying-color: #b34b4b;
+  --clothes-drying-border: #edc5c5;
+  --clothes-drying-background: #faeaea;
+}
+
+.weather-index-card-clothes-drying-fair {
+  --clothes-drying-color: #98751d;
+  --clothes-drying-border: #eee0a8;
+  --clothes-drying-background: #fbf6df;
+}
+
+.weather-index-card-clothes-drying-good {
+  --clothes-drying-color: #648638;
+  --clothes-drying-border: #d9e7bd;
+  --clothes-drying-background: #f2f7e8;
+}
+
+.weather-index-card-clothes-drying-excellent {
+  --clothes-drying-color: #287a52;
+  --clothes-drying-border: #c4e4d1;
+  --clothes-drying-background: #eaf6ef;
+}
+
 .weather-index-icon[class*='weather-index-icon-mosquito-'] {
   color: var(--mosquito-color);
   border-color: var(--mosquito-border);
@@ -239,6 +267,12 @@
   background: var(--barbecue-background);
 }
 
+.weather-index-icon[class*='weather-index-icon-clothes-drying-'] {
+  color: var(--clothes-drying-color);
+  border-color: var(--clothes-drying-border);
+  background: var(--clothes-drying-background);
+}
+
 .weather-index-card[class*='weather-index-card-mosquito-'] .weather-index-value {
   color: var(--mosquito-color);
 }
@@ -257,6 +291,10 @@
 
 .weather-index-card[class*='weather-index-card-barbecue-'] .weather-index-value {
   color: var(--barbecue-color);
+}
+
+.weather-index-card[class*='weather-index-card-clothes-drying-'] .weather-index-value {
+  color: var(--clothes-drying-color);
 }
 
 .weather-index-card[class*='weather-index-card-frizz-'] .weather-index-value {
@@ -384,6 +422,11 @@
 .weather-index-guide-content li[class^='weather-barbecue-level-'] {
   border: 1px solid var(--barbecue-border);
   background: var(--barbecue-background);
+}
+
+.weather-index-guide-content li[class^='weather-clothes-drying-level-'] {
+  border: 1px solid var(--clothes-drying-border);
+  background: var(--clothes-drying-background);
 }
 
 .weather-index-guide-content .weather-frizz-level-very-low {
@@ -518,6 +561,30 @@
   --barbecue-background: #eaf6ef;
 }
 
+.weather-index-guide-content .weather-clothes-drying-level-poor {
+  --clothes-drying-color: #b34b4b;
+  --clothes-drying-border: #edc5c5;
+  --clothes-drying-background: #faeaea;
+}
+
+.weather-index-guide-content .weather-clothes-drying-level-fair {
+  --clothes-drying-color: #98751d;
+  --clothes-drying-border: #eee0a8;
+  --clothes-drying-background: #fbf6df;
+}
+
+.weather-index-guide-content .weather-clothes-drying-level-good {
+  --clothes-drying-color: #648638;
+  --clothes-drying-border: #d9e7bd;
+  --clothes-drying-background: #f2f7e8;
+}
+
+.weather-index-guide-content .weather-clothes-drying-level-excellent {
+  --clothes-drying-color: #287a52;
+  --clothes-drying-border: #c4e4d1;
+  --clothes-drying-background: #eaf6ef;
+}
+
 .weather-index-guide-content li[class^='weather-frizz-level-'] strong {
   color: var(--frizz-color);
 }
@@ -540,6 +607,10 @@
 
 .weather-index-guide-content li[class^='weather-barbecue-level-'] strong {
   color: var(--barbecue-color);
+}
+
+.weather-index-guide-content li[class^='weather-clothes-drying-level-'] strong {
+  color: var(--clothes-drying-color);
 }
 
 .weather-index-guide-content li strong {

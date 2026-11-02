@@ -1,0 +1,105 @@
+.city-selection-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+
+.city-selection-card {
+  width: min(460px, 100%);
+  padding: clamp(24px, 5vw, 40px);
+  border: 1px solid rgb(255 255 255 / 75%);
+  border-radius: 22px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 14px 36px rgb(28 52 77 / 14%);
+}
+
+.city-selection-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 22px;
+  place-items: center;
+  color: #176b78;
+  border: 1px solid #c9dfe2;
+  border-radius: 15px;
+  background: #e7f3f4;
+}
+
+.city-selection-icon svg {
+  width: 25px;
+  height: 25px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.city-selection-card .eyebrow {
+  margin-bottom: 8px;
+}
+
+.city-selection-card h1 {
+  margin: 0;
+  color: #193550;
+  font-size: clamp(24px, 5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+}
+
+.city-selection-description {
+  margin: 12px 0 24px;
+  color: #61758a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.city-selection-card form {
+  display: grid;
+  gap: 9px;
+}
+
+.city-selection-card label {
+  color: #304d68;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.city-selection-card select {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  color: #294762;
+  border: 1px solid #ccdde5;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+}
+
+.city-selection-card select:focus-visible,
+.city-selection-card button:focus-visible {
+  outline: 3px solid rgb(40 125 138 / 35%);
+  outline-offset: 2px;
+}
+
+.city-selection-card button {
+  min-height: 44px;
+  margin-top: 7px;
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  background: #287d8a;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.city-selection-card button:hover:not(:disabled) {
+  background: #206a76;
+}
+
+.city-selection-card button:disabled {
+  background: #9aadb8;
+  cursor: not-allowed;
+}

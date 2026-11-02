@@ -9,11 +9,13 @@ export interface ForecastDay {
 export interface HourlyForecast {
   time: string;
   temperature: number;
+  humidity: number;
   precipitationProbability: number;
   weatherCode: number;
   isDay: boolean;
   windSpeed: number;
   rain: number | string;
+  shortwaveRadiation: number;
 }
 
 export interface OutdoorConditionsData {
@@ -33,6 +35,7 @@ export interface UvIndexData {
   precipitationMillimeters?: number;
   cloudCoverPercent?: number;
   isDay?: boolean;
+  solarRadiationWm2?: number;
 }
 
 export interface AirQualityData {
@@ -69,7 +72,8 @@ export type WeatherIndexId =
   | 'frizz'
   | 'skin-dryness'
   | 'cold'
-  | 'vitamin-d';
+  | 'vitamin-d'
+  | 'clothes-drying';
 
 export type WeatherIndicesData = Partial<Record<WeatherIndexId, WeatherIndexData>>;
 

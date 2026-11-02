@@ -5,6 +5,8 @@ import { TAQUARI_VALLEY_CITIES } from './constants/cities';
 import { Forecast } from './components/forecast/Forecast';
 import { HourlyForecast } from './components/forecast/HourlyForecast';
 import { BackToTop } from './components/common/BackToTop';
+import { CitySelection } from './components/common/CitySelection';
+import { getHolidayForDate } from './data/holidays';
 // Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
 // import { SkyAlerts } from './components/sky/SkyAlerts';
 import { InmetAlerts } from './components/inmet/InmetAlerts';
@@ -38,16 +40,16 @@ const getSeason = (date: Date): string => {
   return 'primavera';
 };
 
-const getSavedCityId = (): string => {
+const getSavedCityId = (): string | null => {
   try {
     const savedCityId = window.localStorage.getItem('tempo-no-taquari:selected-city');
-    return TAQUARI_VALLEY_CITIES.find((city) => city.id === savedCityId)?.id ?? 'lajeado';
+    return TAQUARI_VALLEY_CITIES.find((city) => city.id === savedCityId)?.id ?? null;
   } catch (error: unknown) {
     console.error(
       'Unable to read the saved city preference:',
       error instanceof Error ? error.message : 'Unknown error',
     );
-    return 'lajeado';
+    return null;
   }
 };
 
@@ -57,6 +59,8 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastData[] | null>(null);
   const [hourlyForecastError, setHourlyForecastError] = useState<string | null>(null);
+  const [selectedForecast, setSelectedForecast] = useState<{ dateKey: string; label: string } | null>(null);
+  const [showTodayForecast, setShowTodayForecast] = useState(false);
   const [airQuality, setAirQuality] = useState<AirQualityData | null>(null);
   const [airQualityError, setAirQualityError] = useState<string | null>(null);
   const [isAirQualityLoading, setIsAirQualityLoading] = useState(true);
@@ -71,7 +75,7 @@ function App() {
     cityId: string;
     message: string;
   } | null>(null);
-  const [selectedCityId, setSelectedCityId] = useState<string>(getSavedCityId);
+  const [selectedCityId, setSelectedCityId] = useState<string | null>(getSavedCityId);
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('C');
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('km/h');
 
@@ -81,6 +85,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!selectedCityId) return;
     try {
       window.localStorage.setItem('tempo-no-taquari:selected-city', selectedCityId);
     } catch (error: unknown) {
@@ -92,8 +97,11 @@ function App() {
   }, [selectedCityId]);
 
   useEffect(() => {
+    if (!selectedCityId) return;
     const controller = new AbortController();
 
+    setSelectedForecast(null);
+    setShowTodayForecast(false);
     setWeather(null);
     setError(null);
     setHourlyForecast(null);
@@ -221,6 +229,15 @@ function App() {
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
 
+  if (!selectedCityId) {
+    return (
+      <CitySelection
+        onConfirm={setSelectedCityId}
+        backgroundColor={backgroundColor}
+      />
+    );
+  }
+
   if (error) {
     return (
       <main className={appClassName} style={{ backgroundColor }}>
@@ -246,6 +263,27 @@ function App() {
     );
   }
 
+  const localToday = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'America/Sao_Paulo',
+  }).format(currentDate);
+  const todayHoliday = getHolidayForDate(localToday);
+  const visibleHourlyForecast = hourlyForecast === null
+    ? null
+    : selectedForecast
+    ? hourlyForecast.filter((hour) => hour.time.slice(0, 10) === selectedForecast.dateKey)
+    : showTodayForecast
+    ? hourlyForecast.filter((hour) => hour.time.slice(0, 10) === localToday)
+    : hourlyForecast.slice(0, 24);
+  const handleForecastDaySelect = (day: { dateKey: string; label: string }) => {
+    setSelectedForecast(day);
+    setShowTodayForecast(false);
+    window.requestAnimationFrame(() => {
+      document.getElementById('hourly-forecast-title')?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    });
+  };
   const hour = dayHour();
   const time = hour >= 6 && hour <= 18 ? 'day' : 'night';
 
@@ -290,16 +328,27 @@ function App() {
       <section className="dashboard-heading" aria-labelledby="page-title">
         <p className="eyebrow">PAINEL DO TEMPO</p>
         <p className="dashboard-date">
-          {new Intl.DateTimeFormat('pt-BR', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-          }).format(currentDate)}
-          {' · '}
-          {getSeason(currentDate)}
+          <span>
+            {new Intl.DateTimeFormat('pt-BR', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            }).format(currentDate)}
+            {' · '}
+            {getSeason(currentDate)}
+          </span>
+          {todayHoliday && (
+            <span
+              className={`forecast-day-holiday-label${todayHoliday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
+              title={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}`}
+            >
+              Feriado {todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}
+              <span>{todayHoliday.name}</span>
+            </span>
+          )}
         </p>
         <h1 id="page-title">
           O céu de hoje em <b>{TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name}, RS</b>
@@ -386,16 +435,47 @@ function App() {
         <section className="hourly-forecast-section" aria-labelledby="hourly-forecast-title">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">PRÓXIMAS 12 HORAS</p>
-              <h2 id="hourly-forecast-title">Previsão nas próximas horas</h2>
+              <p className="eyebrow">PREVISÃO HORÁRIA</p>
+              <h2 id="hourly-forecast-title">
+                {selectedForecast
+                  ? `Previsão para ${selectedForecast.label}`
+                  : showTodayForecast
+                  ? 'Previsão para hoje'
+                  : 'Previsão nas próximas 24 horas'}
+              </h2>
             </div>
-            <span className="section-caption">Deslize para ver todos os horários</span>
+            <div className="hourly-forecast-view-controls" aria-label="Período da previsão horária">
+              <button
+                className="hourly-forecast-reset"
+                type="button"
+                aria-pressed={!selectedForecast && !showTodayForecast}
+                onClick={() => {
+                  setSelectedForecast(null);
+                  setShowTodayForecast(false);
+                }}
+              >
+                Próximas 24 horas
+              </button>
+              <button
+                className="hourly-forecast-reset"
+                type="button"
+                aria-pressed={!selectedForecast && showTodayForecast}
+                onClick={() => {
+                  setSelectedForecast(null);
+                  setShowTodayForecast(true);
+                }}
+              >
+                Hoje
+              </button>
+            </div>
           </div>
           <HourlyForecast
-            data={hourlyForecast}
+            data={visibleHourlyForecast}
             error={hourlyForecastError}
             temperatureUnit={temperatureUnit}
             windSpeedUnit={windSpeedUnit}
+            selectedDay={selectedForecast !== null}
+            periodLabel={selectedForecast?.label ?? (showTodayForecast ? 'para hoje' : 'para as próximas 24 horas')}
           />
         </section>
       </section>
@@ -408,7 +488,12 @@ function App() {
           </div>
           <span className="section-caption">Acompanhe o que vem por aí</span>
         </div>
-        <Forecast data={weather.forecast} temperatureUnit={temperatureUnit} />
+        <Forecast
+          data={weather.forecast}
+          temperatureUnit={temperatureUnit}
+          selectedDate={selectedForecast?.dateKey ?? null}
+          onSelectDay={handleForecastDaySelect}
+        />
       </section>
 
       <WeatherIndices
@@ -417,6 +502,8 @@ function App() {
         temperature={weather.temp}
         cloudiness={weather.cloudiness}
         forecast={weather.forecast.slice(1, 4)}
+        hourlyForecast={visibleHourlyForecast ?? []}
+        periodLabel={selectedForecast ? selectedForecast.label : 'Próximas 24 horas'}
         uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
         temperatureUnit={temperatureUnit}
       />

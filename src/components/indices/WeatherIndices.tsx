@@ -1,6 +1,7 @@
-import type { ForecastDay, WeatherIndicesData } from '../../types';
+import type { ForecastDay, HourlyForecast, WeatherIndicesData } from '../../types';
 import { BarbecueIndex } from './BarbecueIndex';
 import { ColdIndex } from './ColdIndex';
+import { ClothesDryingIndex } from './ClothesDryingIndex';
 import { FrizzIndex } from './FrizzIndex';
 import { MosquitoIndex } from './MosquitoIndex';
 import { SkinDrynessIndex } from './SkinDrynessIndex';
@@ -14,6 +15,8 @@ interface WeatherIndicesProps {
   temperature: number | string;
   cloudiness: number | string;
   forecast: ForecastDay[];
+  hourlyForecast: HourlyForecast[];
+  periodLabel: string;
   uvIndex?: number;
   temperatureUnit: TemperatureUnit;
 }
@@ -24,6 +27,8 @@ export const WeatherIndices = ({
   temperature,
   cloudiness,
   forecast,
+  hourlyForecast,
+  periodLabel,
   uvIndex,
   temperatureUnit,
 }: WeatherIndicesProps) => (
@@ -56,6 +61,7 @@ export const WeatherIndices = ({
         temperatureUnit={temperatureUnit}
       />
       <VitaminDIndex data={data?.['vitamin-d']} uvIndex={uvIndex} />
+      <ClothesDryingIndex forecast={hourlyForecast} periodLabel={periodLabel} />
     </div>
   </section>
 );

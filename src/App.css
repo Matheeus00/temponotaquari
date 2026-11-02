@@ -235,7 +235,15 @@
 }
 
 .dashboard-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
   text-transform: none;
+}
+
+.dashboard-date .forecast-day-holiday-label {
+  margin-top: 0;
 }
 
 .section-caption {

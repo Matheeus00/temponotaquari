@@ -1,5 +1,6 @@
 import './Forecast.css';
 import type { ForecastDay } from '../../types';
+import { getHolidayForDate } from '../../data/holidays';
 import {
     formatTemperature,
     getTemperatureUnitLabel,
@@ -9,21 +10,79 @@ import {
 interface ForecastProps {
     data: ForecastDay[];
     temperatureUnit: TemperatureUnit;
+    selectedDate: string | null;
+    onSelectDay: (day: { dateKey: string; label: string }) => void;
 }
 
-export const Forecast = ({ data, temperatureUnit }: ForecastProps) => {
+const getLocalDate = (): string =>
+    new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Sao_Paulo' }).format(new Date());
+
+const getForecastDateKey = (date: string, today: string): string => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+
+    const dateParts = date.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?$/);
+    if (!dateParts) return date;
+
+    const [, dayText, monthText, yearText] = dateParts;
+    const day = Number(dayText);
+    const month = Number(monthText);
+    let year = yearText ? Number(yearText) : Number(today.slice(0, 4));
+    const candidate = new Date(Date.UTC(year, month - 1, day));
+    if (
+        candidate.getUTCDate() !== day
+        || candidate.getUTCMonth() !== month - 1
+        || candidate.getUTCFullYear() !== year
+    ) {
+        return date;
+    }
+
+    let dateKey = `${year}-${monthText.padStart(2, '0')}-${dayText.padStart(2, '0')}`;
+    if (!yearText && dateKey < today) {
+        year += 1;
+        dateKey = `${year}-${monthText.padStart(2, '0')}-${dayText.padStart(2, '0')}`;
+    }
+    return dateKey;
+};
+
+export const Forecast = ({
+    data,
+    temperatureUnit,
+    selectedDate,
+    onSelectDay,
+}: ForecastProps) => {
+    const today = getLocalDate();
     const upcomingDays = data.slice(1);
 
     return (
         <div className='forecast-container'>
         {upcomingDays.length > 0 ? (
             upcomingDays.map((day) => {
+                const dateKey = getForecastDateKey(day.date, today);
+                const holiday = getHolidayForDate(dateKey);
                 return (
-                    <div className='forecast-day' key={`${day.date}-${day.weekday}`}>
+                    <button
+                        className={`forecast-day${holiday ? ' forecast-day-holiday' : ''}${selectedDate === dateKey ? ' forecast-day-selected' : ''}`}
+                        key={`${day.date}-${day.weekday}`}
+                        type="button"
+                        aria-label={`Ver previsão por hora para ${day.weekday}, ${day.date}${holiday ? `, feriado: ${holiday.name} (${holiday.scope})` : ''}`}
+                        aria-pressed={selectedDate === dateKey}
+                        onClick={() => onSelectDay({ dateKey, label: `${day.weekday}, ${day.date}` })}
+                    >
                         <div className="forecast-day-heading">
                             <h3>{day.weekday}</h3>
                             <span>{day.date}</span>
                         </div>
+                        <span className="forecast-day-holiday-slot" aria-hidden={!holiday}>
+                        {holiday ? (
+                            <span
+                                className={`forecast-day-holiday-label${holiday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
+                                title={`${holiday.name} · ${holiday.scope}`}
+                            >
+                                Feriado {holiday.scope === 'Brasil' ? 'nacional' : 'estadual'}
+                                <span>{holiday.name}</span>
+                            </span>
+                        ) : null}
+                        </span>
                         <div className="forecast-temperatures">
                             <div className="forecast-temperature">
                                 <img className='max-icon' src='/forecast/pressure-high.svg' alt=''/>
@@ -38,7 +97,10 @@ export const Forecast = ({ data, temperatureUnit }: ForecastProps) => {
                             <img className='forecast-rain-icon' src='/forecast/raindrops.svg' alt=''/>
                             <span>{day.rain_probability}% <small>chance de chuva</small></span>
                         </div>
-                    </div>
+                        <span className="forecast-day-hint">
+                            {selectedDate === dateKey ? 'Selecionado · ver por hora' : 'Ver previsão por hora'}
+                        </span>
+                    </button>
                 )
             })
         ) : (

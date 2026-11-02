@@ -12,11 +12,13 @@ interface HourlyForecastResponse {
   hourly: {
     time: string[];
     temperature_2m: number[];
+    relative_humidity_2m: number[];
     precipitation_probability: number[];
     weather_code: number[];
     is_day: number[];
     wind_speed_10m: number[];
     rain: number[];
+    shortwave_radiation: number[];
   };
 }
 
@@ -38,6 +40,8 @@ const isHourlyForecastResponse = (data: unknown): data is HourlyForecastResponse
     hourly.time.every((value) => typeof value === 'string') &&
     'temperature_2m' in hourly &&
     Array.isArray(hourly.temperature_2m) &&
+    'relative_humidity_2m' in hourly &&
+    Array.isArray(hourly.relative_humidity_2m) &&
     'precipitation_probability' in hourly &&
     Array.isArray(hourly.precipitation_probability) &&
     'weather_code' in hourly &&
@@ -47,7 +51,9 @@ const isHourlyForecastResponse = (data: unknown): data is HourlyForecastResponse
     'wind_speed_10m' in hourly &&
     Array.isArray(hourly.wind_speed_10m) &&
     'rain' in hourly &&
-    Array.isArray(hourly.rain)
+    Array.isArray(hourly.rain) &&
+    'shortwave_radiation' in hourly &&
+    Array.isArray(hourly.shortwave_radiation)
   );
 };
 
@@ -59,10 +65,10 @@ export async function getOpenMeteoHourlyForecast(
   url.searchParams.set('longitude', String(coordinates.longitude));
   url.searchParams.set(
     'hourly',
-    'temperature_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,rain',
+    'temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,rain,shortwave_radiation',
   );
   url.searchParams.set('current', 'temperature_2m');
-  url.searchParams.set('forecast_days', '2');
+  url.searchParams.set('forecast_days', '16');
   url.searchParams.set('timezone', 'America/Sao_Paulo');
 
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
@@ -78,11 +84,13 @@ export async function getOpenMeteoHourlyForecast(
   const { current, hourly } = data;
   const lengths = [
     hourly.temperature_2m.length,
+    hourly.relative_humidity_2m.length,
     hourly.precipitation_probability.length,
     hourly.weather_code.length,
     hourly.is_day.length,
     hourly.wind_speed_10m.length,
     hourly.rain.length,
+    hourly.shortwave_radiation.length,
   ];
   if (lengths.some((length) => length !== hourly.time.length)) {
     throw new Error('Open-Meteo hourly forecast contains mismatched data.');
@@ -93,17 +101,23 @@ export async function getOpenMeteoHourlyForecast(
     throw new Error('Open-Meteo hourly forecast does not contain the current hour.');
   }
 
-  return hourly.time.slice(currentHourIndex, currentHourIndex + 12).map((time, offset) => {
+  return hourly.time.slice(currentHourIndex).map((time, offset) => {
     const index = currentHourIndex + offset;
     const temperature = hourly.temperature_2m[index];
+    const humidity = hourly.relative_humidity_2m[index];
     const precipitationProbability = hourly.precipitation_probability[index];
     const weatherCode = hourly.weather_code[index];
     const isDay = hourly.is_day[index];
     const windSpeed = hourly.wind_speed_10m[index];
     const rain = hourly.rain[index];
+    const shortwaveRadiation = hourly.shortwave_radiation[index];
     if (
       typeof temperature !== 'number' ||
       !Number.isFinite(temperature) ||
+      typeof humidity !== 'number' ||
+      !Number.isFinite(humidity) ||
+      humidity < 0 ||
+      humidity > 100 ||
       typeof precipitationProbability !== 'number' ||
       !Number.isFinite(precipitationProbability) ||
       precipitationProbability < 0 ||
@@ -116,7 +130,10 @@ export async function getOpenMeteoHourlyForecast(
       windSpeed < 0 ||
       typeof rain !== 'number' ||
       !Number.isFinite(rain) ||
-      rain < 0
+      rain < 0 ||
+      typeof shortwaveRadiation !== 'number' ||
+      !Number.isFinite(shortwaveRadiation) ||
+      shortwaveRadiation < 0
     ) {
       throw new Error('Open-Meteo hourly forecast contains invalid measurements.');
     }
@@ -124,11 +141,13 @@ export async function getOpenMeteoHourlyForecast(
     return {
       time,
       temperature,
+      humidity,
       precipitationProbability,
       weatherCode,
       isDay: isDay === 1,
       windSpeed,
-      rain
+      rain,
+      shortwaveRadiation,
     };
   });
 }
@@ -201,7 +220,10 @@ export async function getOpenMeteoUvIndex(
   const url = new URL('https://api.open-meteo.com/v1/forecast');
   url.searchParams.set('latitude', String(coordinates.latitude));
   url.searchParams.set('longitude', String(coordinates.longitude));
-  url.searchParams.set('current', 'uv_index,dew_point_2m,precipitation,cloud_cover,is_day');
+  url.searchParams.set(
+    'current',
+    'uv_index,dew_point_2m,precipitation,cloud_cover,is_day,shortwave_radiation',
+  );
   url.searchParams.set('daily', 'uv_index_max');
   url.searchParams.set('timezone', 'America/Sao_Paulo');
 
@@ -272,6 +294,13 @@ export async function getOpenMeteoUvIndex(
     isDay:
       'is_day' in current && (current.is_day === 0 || current.is_day === 1)
         ? current.is_day === 1
+        : undefined,
+    solarRadiationWm2:
+      'shortwave_radiation' in current &&
+      typeof current.shortwave_radiation === 'number' &&
+      Number.isFinite(current.shortwave_radiation) &&
+      current.shortwave_radiation >= 0
+        ? current.shortwave_radiation
         : undefined,
   };
 }

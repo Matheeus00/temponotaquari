@@ -21,16 +21,75 @@
 .forecast-day {
   min-width: 190px;
   padding: 16px;
+  color: inherit;
   border: 1px solid rgb(255 255 255 / 75%);
   border-radius: 18px;
   background: rgb(255 255 255 / 94%);
   box-shadow: 0 10px 24px rgb(28 52 77 / 10%);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
-.forecast-day:hover {
+.forecast-day:hover,
+.forecast-day-selected {
   transform: translateY(-3px);
   box-shadow: 0 14px 28px rgb(28 52 77 / 16%);
+}
+
+.forecast-day-selected {
+  border-color: #287d8a;
+  outline: 2px solid rgb(40 125 138 / 24%);
+  outline-offset: 1px;
+}
+
+.forecast-day-holiday {
+  background: linear-gradient(145deg, #fff 58%, #f1f7f5);
+}
+
+.forecast-day-holiday-slot {
+  display: flex;
+  min-height: 36px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.forecast-day-holiday-label {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 8px;
+  border: 1px solid #d5e6da;
+  border-radius: 9px;
+  background: #f0f7f1;
+  color: #426d4e;
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.forecast-day-holiday-label span {
+  color: #617c68;
+  font-size: 9px;
+  font-weight: 550;
+}
+
+.forecast-day-holiday-national {
+  border-color: #d7e2ee;
+  background: #f0f5fa;
+  color: #3f6282;
+}
+
+.forecast-day-holiday-national span {
+  color: #5b7187;
+}
+
+.forecast-day:focus-visible {
+  outline: 3px solid #287d8a;
+  outline-offset: 3px;
 }
 
 .forecast-day-heading {
@@ -119,6 +178,14 @@
   object-fit: contain;
 }
 
+.forecast-day-hint {
+  display: block;
+  margin-top: 12px;
+  color: #287d8a;
+  font-size: 10px;
+  font-weight: 650;
+}
+
 .hourly-forecast {
   min-width: 0;
 }
@@ -157,6 +224,43 @@
 
 .hourly-forecast-section .section-heading {
   margin-bottom: 5px;
+}
+
+.hourly-forecast-reset {
+  padding: 7px 10px;
+  color: #287d8a;
+  border: 1px solid #c9dfe2;
+  border-radius: 999px;
+  background: #f3f9f9;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.hourly-forecast-view-controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.hourly-forecast-reset[aria-pressed='true'] {
+  color: #fff;
+  border-color: #287d8a;
+  background: #287d8a;
+}
+
+.hourly-forecast-reset:hover {
+  background: #e7f3f4;
+}
+
+.hourly-forecast-reset[aria-pressed='true']:hover {
+  background: #206a76;
+}
+
+.hourly-forecast-reset:focus-visible {
+  outline: 2px solid #287d8a;
+  outline-offset: 3px;
 }
 
 .hourly-forecast-section .section-heading h2 {
@@ -339,6 +443,10 @@
 
   .hourly-forecast-section .section-heading h2 {
     font-size: 18px;
+  }
+
+  .hourly-forecast-view-controls {
+    flex-direction: column;
   }
 
   .hourly-forecast-card {
