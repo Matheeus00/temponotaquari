@@ -20,6 +20,7 @@ interface WeatherProps {
     windSpeed: string;
     rain: number | string;
     cloudiness: number | string;
+    rainProbabilityNextSixHours: number | null;
 }
 
 export const Weather = ({
@@ -34,6 +35,7 @@ export const Weather = ({
     windSpeed,
     rain,
     cloudiness,
+    rainProbabilityNextSixHours,
 }: WeatherProps) => {
     const apparentTemperature = calculateApparentTemperature(temp, humidity, windSpeed);
 
@@ -68,6 +70,16 @@ export const Weather = ({
                 <div className="weather-metric">
                     <span className="metric-icon"><img src='/condition/cloudy.svg' alt=''/></span>
                     <span className="metric-copy"><span>Nebulosidade</span><strong>{cloudiness}%</strong></span>
+                </div>
+                <div
+                    className="weather-metric"
+                    title="Maior chance de chuva prevista nas próximas 6 horas"
+                >
+                    <span className="metric-icon"><img src='/forecast/raindrops.svg' alt=''/></span>
+                    <span className="metric-copy">
+                        <span>Chance nas próximas 6h</span>
+                        <strong>{rainProbabilityNextSixHours === null ? '—' : `${rainProbabilityNextSixHours}%`}</strong>
+                    </span>
                 </div>
             </div>
             <div className='weather-body'>

@@ -73,12 +73,14 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Indicador estimado de potencial solar em três níveis, com radiação do Open-Meteo e indicação de noite
 
 ## Previsão do tempo
-- [ ] Criar uma aba dedicada à previsão do tempo
+- [x] Criar uma aba dedicada à previsão do tempo
 - [x] Exibir a previsão horária das próximas 24 horas e permitir voltar às horas restantes de hoje
 - [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
 
-## Transparência
-- [ ] Criar uma aba com o quadro de apoiadores voluntários do site
+## Sobre e transparência
+- [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
+- [x] Informar fontes de dados, estimativas, limitações e frequência de atualização
+- [x] Reservar espaço para apoiadores voluntários, com divulgação de nomes somente mediante autorização
 
 ## Mapa e localização
 - [ ] Criar uma visualização com mapa centralizado, dados meteorológicos ao redor e painéis laterais recolhíveis

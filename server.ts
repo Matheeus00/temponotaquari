@@ -43,6 +43,7 @@ app.get('/api/weather', async (request, response) => {
 
   try {
     const weatherData = await fetchHgBrasilWeather(city.name, apiKey);
+    response.set('X-Weather-Fetched-At', new Date().toISOString());
     response.json(weatherData);
   } catch (error: unknown) {
     if (error instanceof HgBrasilHttpError) {

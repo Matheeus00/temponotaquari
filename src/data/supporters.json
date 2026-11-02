@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Matheus Lucas",
+    "role": "Desenvolvedor principal",
+    "profiles": [
+      {
+        "name": "GitHub",
+        "platform": "github",
+        "href": "https://github.com/Matheeus00"
+      },
+      {
+        "name": "LinkedIn",
+        "platform": "linkedin",
+        "href": "https://www.linkedin.com/in/matheus-lucas-gassen-da-silva/"
+      }
+    ]
+  },
+  {
+    "name": "Thaís dos Reis",
+    "role": "Apoiadora inicial",
+    "profiles": [
+      {
+        "name": "Instagram",
+        "platform": "instagram",
+        "href": "https://www.instagram.com/rthhzz/"
+      }
+    ]
+  }
+]

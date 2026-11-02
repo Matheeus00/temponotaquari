@@ -7,6 +7,7 @@ import { HourlyForecast } from './components/forecast/HourlyForecast';
 import { BackToTop } from './components/common/BackToTop';
 import { CitySelection } from './components/common/CitySelection';
 import { getHolidayForDate } from './data/holidays';
+import { AboutPage } from './components/about/AboutPage';
 // Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
 // import { SkyAlerts } from './components/sky/SkyAlerts';
 import { InmetAlerts } from './components/inmet/InmetAlerts';
@@ -32,6 +33,10 @@ import type {
   WeatherResponse,
 } from './types';
 
+type AppSection = 'panel' | 'forecast' | 'about';
+
+const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+
 const getSeason = (date: Date): string => {
   const monthDay = (date.getMonth() + 1) * 100 + date.getDate();
   if (monthDay >= 1221 || monthDay < 320) return 'verão';
@@ -55,12 +60,14 @@ const getSavedCityId = (): string | null => {
 
 function App() {
   const [weather, setWeather] = useState<WeatherConditions | null>(null);
+  const [lastWeatherFetchedAt, setLastWeatherFetchedAt] = useState<Date | null>(null);
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [error, setError] = useState<string | null>(null);
   const [hourlyForecast, setHourlyForecast] = useState<HourlyForecastData[] | null>(null);
   const [hourlyForecastError, setHourlyForecastError] = useState<string | null>(null);
   const [selectedForecast, setSelectedForecast] = useState<{ dateKey: string; label: string } | null>(null);
   const [showTodayForecast, setShowTodayForecast] = useState(false);
+  const [activeSection, setActiveSection] = useState<AppSection>('panel');
   const [airQuality, setAirQuality] = useState<AirQualityData | null>(null);
   const [airQualityError, setAirQualityError] = useState<string | null>(null);
   const [isAirQualityLoading, setIsAirQualityLoading] = useState(true);
@@ -103,6 +110,7 @@ function App() {
     setSelectedForecast(null);
     setShowTodayForecast(false);
     setWeather(null);
+    setLastWeatherFetchedAt(null);
     setError(null);
     setHourlyForecast(null);
     setHourlyForecastError(null);
@@ -118,11 +126,17 @@ function App() {
       params: { city: selectedCityId },
       signal: controller.signal,
     })
-      .then(({ data }) => {
+      .then(({ data, headers }) => {
         if (!data.results) {
           throw new Error('A resposta da API não contém os dados do clima.');
         }
+        const fetchedAtHeader = headers['x-weather-fetched-at'];
+        const fetchedAt = typeof fetchedAtHeader === 'string' ? new Date(fetchedAtHeader) : null;
+        if (!fetchedAt || !Number.isFinite(fetchedAt.getTime())) {
+          throw new Error('A resposta do servidor não informou o horário da consulta.');
+        }
         setWeather(data.results);
+        setLastWeatherFetchedAt(fetchedAt);
       })
       .catch((requestError: unknown) => {
         if (!axios.isCancel(requestError)) {
@@ -225,6 +239,42 @@ function App() {
     return () => controller.abort();
   }, [selectedCityId]);
 
+  useEffect(() => {
+    if (!selectedCityId) return;
+    const controller = new AbortController();
+    const intervalId = window.setInterval(() => {
+      axios.get<WeatherResponse>('/api/weather', {
+        params: { city: selectedCityId },
+        signal: controller.signal,
+      })
+        .then(({ data, headers }) => {
+          if (!data.results) {
+            throw new Error('A resposta da API não contém os dados do clima.');
+          }
+          const fetchedAtHeader = headers['x-weather-fetched-at'];
+          const fetchedAt = typeof fetchedAtHeader === 'string' ? new Date(fetchedAtHeader) : null;
+          if (!fetchedAt || !Number.isFinite(fetchedAt.getTime())) {
+            throw new Error('A resposta do servidor não informou o horário da consulta.');
+          }
+          setWeather(data.results);
+          setLastWeatherFetchedAt(fetchedAt);
+        })
+        .catch((requestError: unknown) => {
+          if (!axios.isCancel(requestError)) {
+            console.error(
+              'Weather refresh failed:',
+              requestError instanceof Error ? requestError.message : 'Unknown error',
+            );
+          }
+        });
+    }, WEATHER_REFRESH_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      controller.abort();
+    };
+  }, [selectedCityId]);
+
   const backgroundColor = getCurrentTimeColor(weather?.sunrise, weather?.sunset, currentDate);
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
   const appClassName = `App page-shell ${backgroundTheme}`.trim();
@@ -274,7 +324,11 @@ function App() {
     : showTodayForecast
     ? hourlyForecast.filter((hour) => hour.time.slice(0, 10) === localToday)
     : hourlyForecast.slice(0, 24);
+  const rainProbabilityNextSixHours = hourlyForecast && hourlyForecast.length > 0
+    ? Math.max(...hourlyForecast.slice(0, 6).map((hourly) => hourly.precipitationProbability))
+    : null;
   const handleForecastDaySelect = (day: { dateKey: string; label: string }) => {
+    setActiveSection('forecast');
     setSelectedForecast(day);
     setShowTodayForecast(false);
     window.requestAnimationFrame(() => {
@@ -286,6 +340,13 @@ function App() {
   };
   const hour = dayHour();
   const time = hour >= 6 && hour <= 18 ? 'day' : 'night';
+  const navigateToSection = (section: AppSection) => {
+    setActiveSection(section);
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
 
   return (
     <main className={appClassName} style={{ backgroundColor }}>
@@ -296,6 +357,44 @@ function App() {
           </span>
           <span className="brand-name">Tempo <span>no Taquari</span></span>
         </a>
+        <nav className="app-navigation" aria-label="Navegação principal">
+          <button
+            type="button"
+            aria-current={activeSection === 'panel' ? 'page' : undefined}
+            onClick={() => navigateToSection('panel')}
+          >
+            Painel
+          </button>
+          <button
+            type="button"
+            aria-current={activeSection === 'forecast' ? 'page' : undefined}
+            onClick={() => navigateToSection('forecast')}
+          >
+            Previsão
+          </button>
+          <button
+            type="button"
+            aria-current={activeSection === 'about' ? 'page' : undefined}
+            onClick={() => navigateToSection('about')}
+          >
+            Sobre
+          </button>
+        </nav>
+        {lastWeatherFetchedAt && (
+          <div className="last-updated">
+            <span>
+              Dados atualizados às{' '}
+              <time dateTime={lastWeatherFetchedAt.toISOString()}>
+                {new Intl.DateTimeFormat('pt-BR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZone: 'America/Sao_Paulo',
+                }).format(lastWeatherFetchedAt)}
+              </time>
+            </span>
+            <small>Consulta automática a cada 10 min</small>
+          </div>
+        )}
         <label className="location-badge">
           <span className="location-pin" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
@@ -317,6 +416,8 @@ function App() {
         </label>
       </header>
 
+      {activeSection === 'panel' && (
+        <>
       {/* Reativar quando os alertas do céu forem incluídos novamente.
       <SkyAlerts
         precipitationMillimeters={uvIndex?.precipitationMillimeters}
@@ -410,6 +511,7 @@ function App() {
           windSpeed={weather.wind_speedy}
           rain={weather.rain}
           cloudiness={weather.cloudiness}
+          rainProbabilityNextSixHours={rainProbabilityNextSixHours}
         />
         <Rose
           rotation={weather.wind_direction}
@@ -432,81 +534,91 @@ function App() {
           uvIndexError={uvIndexError}
           isUvIndexLoading={isUvIndexLoading}
         />
-        <section className="hourly-forecast-section" aria-labelledby="hourly-forecast-title">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">PREVISÃO HORÁRIA</p>
-              <h2 id="hourly-forecast-title">
-                {selectedForecast
-                  ? `Previsão para ${selectedForecast.label}`
-                  : showTodayForecast
-                  ? 'Previsão para hoje'
-                  : 'Previsão nas próximas 24 horas'}
-              </h2>
+      </section>
+
+        </>
+      )}
+
+      {activeSection === 'forecast' && (
+        <section className="forecast-page" aria-label="Previsão do tempo">
+          <section className="hourly-forecast-section" aria-labelledby="hourly-forecast-title">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">PREVISÃO HORÁRIA</p>
+                <h1 id="hourly-forecast-title">
+                  {selectedForecast
+                    ? `Previsão para ${selectedForecast.label}`
+                    : showTodayForecast
+                    ? 'Previsão para hoje'
+                    : 'Previsão nas próximas 24 horas'}
+                </h1>
+              </div>
+              <div className="hourly-forecast-view-controls" aria-label="Período da previsão horária">
+                <button
+                  className="hourly-forecast-reset"
+                  type="button"
+                  aria-pressed={!selectedForecast && !showTodayForecast}
+                  onClick={() => {
+                    setSelectedForecast(null);
+                    setShowTodayForecast(false);
+                  }}
+                >
+                  Próximas 24 horas
+                </button>
+                <button
+                  className="hourly-forecast-reset"
+                  type="button"
+                  aria-pressed={!selectedForecast && showTodayForecast}
+                  onClick={() => {
+                    setSelectedForecast(null);
+                    setShowTodayForecast(true);
+                  }}
+                >
+                  Hoje
+                </button>
+              </div>
             </div>
-            <div className="hourly-forecast-view-controls" aria-label="Período da previsão horária">
-              <button
-                className="hourly-forecast-reset"
-                type="button"
-                aria-pressed={!selectedForecast && !showTodayForecast}
-                onClick={() => {
-                  setSelectedForecast(null);
-                  setShowTodayForecast(false);
-                }}
-              >
-                Próximas 24 horas
-              </button>
-              <button
-                className="hourly-forecast-reset"
-                type="button"
-                aria-pressed={!selectedForecast && showTodayForecast}
-                onClick={() => {
-                  setSelectedForecast(null);
-                  setShowTodayForecast(true);
-                }}
-              >
-                Hoje
-              </button>
+            <HourlyForecast
+              data={visibleHourlyForecast}
+              error={hourlyForecastError}
+              temperatureUnit={temperatureUnit}
+              windSpeedUnit={windSpeedUnit}
+              selectedDay={selectedForecast !== null}
+              periodLabel={selectedForecast?.label ?? (showTodayForecast ? 'para hoje' : 'para as próximas 24 horas')}
+            />
+          </section>
+
+          <section className="forecast-section" aria-labelledby="forecast-title">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">PRÓXIMOS DIAS</p>
+                <h2 id="forecast-title">Previsão estendida</h2>
+              </div>
+              <span className="section-caption">Selecione um dia para ver os detalhes por hora</span>
             </div>
-          </div>
-          <HourlyForecast
-            data={visibleHourlyForecast}
-            error={hourlyForecastError}
+            <Forecast
+              data={weather.forecast}
+              temperatureUnit={temperatureUnit}
+              selectedDate={selectedForecast?.dateKey ?? null}
+              onSelectDay={handleForecastDaySelect}
+            />
+          </section>
+
+          <WeatherIndices
+            data={weather.weatherIndices}
+            humidity={weather.humidity}
+            temperature={weather.temp}
+            cloudiness={weather.cloudiness}
+            forecast={weather.forecast.slice(1, 4)}
+            hourlyForecast={visibleHourlyForecast ?? []}
+            periodLabel={selectedForecast ? selectedForecast.label : 'Próximas 24 horas'}
+            uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
             temperatureUnit={temperatureUnit}
-            windSpeedUnit={windSpeedUnit}
-            selectedDay={selectedForecast !== null}
-            periodLabel={selectedForecast?.label ?? (showTodayForecast ? 'para hoje' : 'para as próximas 24 horas')}
           />
         </section>
-      </section>
+      )}
 
-      <section className="forecast-section" aria-labelledby="forecast-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">PRÓXIMOS DIAS</p>
-            <h2 id="forecast-title">Previsão estendida</h2>
-          </div>
-          <span className="section-caption">Acompanhe o que vem por aí</span>
-        </div>
-        <Forecast
-          data={weather.forecast}
-          temperatureUnit={temperatureUnit}
-          selectedDate={selectedForecast?.dateKey ?? null}
-          onSelectDay={handleForecastDaySelect}
-        />
-      </section>
-
-      <WeatherIndices
-        data={weather.weatherIndices}
-        humidity={weather.humidity}
-        temperature={weather.temp}
-        cloudiness={weather.cloudiness}
-        forecast={weather.forecast.slice(1, 4)}
-        hourlyForecast={visibleHourlyForecast ?? []}
-        periodLabel={selectedForecast ? selectedForecast.label : 'Próximas 24 horas'}
-        uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
-        temperatureUnit={temperatureUnit}
-      />
+      {activeSection === 'about' && <AboutPage />}
 
       <footer className="app-footer">
         <div className="footer-brand">

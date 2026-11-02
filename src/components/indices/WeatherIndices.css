@@ -1,4 +1,5 @@
 .weather-indices-section {
+  min-width: 0;
   max-width: 1120px;
   margin: 32px auto 0;
 }
