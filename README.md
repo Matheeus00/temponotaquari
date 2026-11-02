@@ -14,6 +14,7 @@ Nesse projeto estou utilizando:\
 O projeto usa Vite para desenvolvimento e build, com React e TypeScript. A chave da HG Brasil é usada somente pelo servidor e não deve ser adicionada ao código do cliente.
 Os dados da previsão por hora, da qualidade do ar, do índice UV, do ponto de orvalho, da umidade e da radiação solar são consultados pelo servidor no Open-Meteo; a qualidade do ar também é atribuída ao CAMS, conforme a licença CC BY 4.0. A previsão horária permite ver as próximas 24 horas, o restante do dia de hoje ou todas as horas disponíveis de um dia selecionado na previsão estendida, no fuso de Brasília. O potencial solar é uma estimativa baseada na radiação em W/m², não uma medição da energia produzida por um sistema fotovoltaico. O índice de secagem de roupas combina previsão horária de temperatura, umidade, vento, radiação e chuva; é uma referência, não um tempo exato de secagem. Se o Open-Meteo não fornecer o ponto de orvalho, ele é estimado com temperatura e umidade da HG Brasil pela fórmula de Magnus-Tetens.
 Os avisos do INMET são consultados no servidor, filtrados para o município selecionado e armazenados em cache por 10 minutos. As orientações exibidas são fornecidas pelo próprio aviso.
+As condições atuais são consultadas novamente a cada 10 minutos. O cabeçalho exibe o horário da consulta concluída ao servidor; esse horário não representa necessariamente o instante da observação meteorológica na fonte. A previsão horária, a qualidade do ar e o índice UV usam cache de servidor/CDN por até 10 minutos, com possibilidade de servir dados antigos enquanto são revalidados.
 Os avisos de arco-íris e o calendário de chuvas de meteoros estão temporariamente fora da interface. O código e os ícones permanecem no projeto para uma possível reativação; as datas de meteoros são aproximadas e devem ser revisadas anualmente em `src/components/sky/SkyAlerts.tsx`.
 
 O arquivo `public/robots.txt` permite a indexação das páginas públicas pelos mecanismos de busca e aponta para o sitemap. Endpoints de API não são destinados à indexação.
@@ -73,14 +74,16 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Indicador estimado de potencial solar em três níveis, com radiação do Open-Meteo e indicação de noite
 
 ## Previsão do tempo
-- [x] Criar uma aba dedicada à previsão do tempo
+- [x] Organizar a navegação principal nas abas Painel, Previsão e Sobre
+- [x] Criar uma aba dedicada à previsão do tempo, com navegação entre horas, dias e índices
 - [x] Exibir a previsão horária das próximas 24 horas e permitir voltar às horas restantes de hoje
 - [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
+- [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
 
 ## Sobre e transparência
 - [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
 - [x] Informar fontes de dados, estimativas, limitações e frequência de atualização
-- [x] Reservar espaço para apoiadores voluntários, com divulgação de nomes somente mediante autorização
+- [x] Exibir apoiadores e seus perfis sociais autorizados, com ícones das plataformas; manter os dados em `src/data/supporters.json`
 
 ## Mapa e localização
 - [ ] Criar uma visualização com mapa centralizado, dados meteorológicos ao redor e painéis laterais recolhíveis
