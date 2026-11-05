@@ -24,6 +24,26 @@ const sources = [
     href: 'https://portal.inmet.gov.br/',
   },
   {
+    name: 'EXOSS',
+    detail: 'Calendário de chuvas de meteoros, com períodos de atividade e datas de pico.',
+    href: 'https://press.exoss.org/calendario/',
+  },
+  {
+    name: 'IAU Meteor Data Center',
+    detail: 'Catálogo de chuvas de meteoros estabelecidas e dados de seus radiantes.',
+    href: 'https://www.ta3.sk/IAUC22DB/MDC2022/Roje/roje_lista.php?corobic_roje=1&sort_roje=0',
+  },
+  {
+    name: 'NASA — eclipses solares',
+    detail: 'Catálogo e previsões de eclipses solares.',
+    href: 'https://eclipse.gsfc.nasa.gov/SEdecade/SEdecade2021.html',
+  },
+  {
+    name: 'NASA — eclipses lunares',
+    detail: 'Catálogo e previsões de eclipses lunares.',
+    href: 'https://eclipse.gsfc.nasa.gov/LEdecade/LEdecade2021.html',
+  },
+  {
     name: 'Meteocons',
     detail: 'Ícones meteorológicos de Bas Milius.',
     href: 'https://bas.dev/work/meteocons',

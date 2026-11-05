@@ -14,6 +14,26 @@ const getStringArray = (value: unknown): string[] =>
     ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
     : [];
 
+const getSeverityRank = (severity: string): number => {
+  const normalizedSeverity = normalizeText(severity);
+  if (normalizedSeverity.includes('grande perigo')) return 3;
+  if (normalizedSeverity === 'perigo') return 2;
+  if (normalizedSeverity.includes('perigo potencial')) return 1;
+  return 0;
+};
+
+export const selectMostSevereAlerts = (alerts: InmetAlert[]): InmetAlert[] => {
+  const alertsByPhenomenon = new Map<string, InmetAlert>();
+  for (const alert of alerts) {
+    const key = normalizeText(alert.phenomenon).trim();
+    const current = alertsByPhenomenon.get(key);
+    if (!current || getSeverityRank(alert.severity) > getSeverityRank(current.severity)) {
+      alertsByPhenomenon.set(key, alert);
+    }
+  }
+  return [...alertsByPhenomenon.values()];
+};
+
 interface CachedInmetAlert {
   municipalities: string;
   alert: InmetAlert;
@@ -123,7 +143,8 @@ const getActiveAlerts = async (): Promise<CachedInmetAlert[]> => {
 
 export const getInmetAlerts = async (cityName: string): Promise<InmetAlert[]> => {
   const alerts = await getActiveAlerts();
-  return alerts
+  const cityAlerts = alerts
     .filter(({ municipalities }) => includesCity(municipalities, cityName))
     .map(({ alert }) => alert);
+  return selectMostSevereAlerts(cityAlerts);
 };

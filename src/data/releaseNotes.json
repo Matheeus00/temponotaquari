@@ -1,10 +1,24 @@
 [
   {
+    "date": "2026-11-05",
+    "title": "Fenômenos no céu",
+    "items": [
+      "Possibilidade de arco-íris estimada por chuva, nebulosidade e elevação solar calculada com SunCalc; não confirma a observação do fenômeno.",
+      "Calendário de chuvas de meteoros atualizado com períodos e picos publicados pela EXOSS para 2026.",
+      "Índice de churrasco ajustado para considerar apenas a previsão do dia atual.",
+      "Ícone noturno dedicado para o potencial solar.",
+      "Feriados municipais exibidos conforme a cidade selecionada; o ponto facultativo de Lajeado é identificado separadamente.",
+      "A aba Astronomia agora apresenta fase lunar, arco-íris e meteoros em cards explicativos alinhados ao restante do painel.",
+      "Potencial solar movido para um card próprio abaixo das informações de vento.",
+      "Alertas repetidos do INMET por fenômeno agora exibem somente o aviso de maior severidade."
+    ]
+  },
+  {
     "date": "2026-11-02",
     "title": "Área Agro e melhorias no painel",
     "items": [
       "Aba Agro criada com mapa esquemático das sedes municipais e temas de estiagem, fogo, geada, chuva, calor e vento em planejamento.",
-      "Atualize clima, previsão e indicadores sem recarregar a página, respeitando o intervalo mínimo de 10 minutos."
+      "O botão Atualizar corrige o relógio exibido a qualquer momento e consulta clima, previsão e indicadores somente quando vence o intervalo de 10 minutos."
     ]
   },
   {

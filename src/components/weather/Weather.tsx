@@ -23,6 +23,67 @@ interface WeatherProps {
     rainProbabilityNextSixHours: number | null;
 }
 
+interface WeatherAdviceProps {
+    temp: number | string;
+    temperatureUnit: TemperatureUnit;
+    humidity: number | string;
+    windSpeed: string;
+    rain: number | string;
+    rainProbabilityNextSixHours: number | null;
+    uvIndex?: number;
+}
+
+const getWeatherAdvice = ({
+    temp,
+    temperatureUnit,
+    humidity,
+    windSpeed,
+    rain,
+    rainProbabilityNextSixHours,
+    uvIndex,
+}: WeatherAdviceProps): string[] => {
+    const apparentTemperature = calculateApparentTemperature(temp, humidity, windSpeed);
+    const advice: string[] = [];
+
+    if (typeof uvIndex === 'number' && Number.isFinite(uvIndex) && uvIndex >= 3) {
+        advice.push('Passe protetor solar: o índice UV pede proteção.');
+    }
+    if (apparentTemperature !== null && apparentTemperature <= 16) {
+        advice.push(
+            `Leve um casaco: sensação térmica de ${formatTemperature(apparentTemperature, temperatureUnit)}${getTemperatureUnitLabel(temperatureUnit)}.`,
+        );
+    }
+    if (
+        (typeof rainProbabilityNextSixHours === 'number' && rainProbabilityNextSixHours >= 40)
+        || Number.parseFloat(String(rain).trim().replace(',', '.')) >= 0.1
+    ) {
+        advice.push('Leve guarda-chuva: há previsão de chuva nas próximas horas.');
+    }
+    if (apparentTemperature !== null && apparentTemperature >= 30) {
+        advice.push('Beba água e prefira locais com sombra.');
+    }
+
+    return advice;
+};
+
+export const WeatherAdvice = (props: WeatherAdviceProps) => {
+    const advice = getWeatherAdvice(props);
+
+    return (
+        <div className="weather-advice" aria-label="Dicas para agora">
+            <span className="weather-advice-icon" aria-hidden="true">
+                <img src="/condition/weather-alert.svg" alt="" />
+            </span>
+            <div>
+                <p className="weather-advice-label">DICA PARA AGORA</p>
+                <p className="weather-advice-message">
+                    {advice.length > 0 ? advice.join(' ') : 'Condições tranquilas para aproveitar o dia.'}
+                </p>
+            </div>
+        </div>
+    );
+};
+
 export const Weather = ({
     code,
     temp,

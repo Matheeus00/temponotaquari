@@ -15,7 +15,7 @@ O projeto usa Vite para desenvolvimento e build, com React e TypeScript. A chave
 Os dados da previsão por hora, da qualidade do ar, do índice UV, do ponto de orvalho, da umidade e da radiação solar são consultados pelo servidor no Open-Meteo; a qualidade do ar também é atribuída ao CAMS, conforme a licença CC BY 4.0. A previsão horária permite ver as próximas 24 horas, o restante do dia de hoje ou todas as horas disponíveis de um dia selecionado na previsão estendida, no fuso de Brasília. O potencial solar é uma estimativa baseada na radiação em W/m², não uma medição da energia produzida por um sistema fotovoltaico. O índice de secagem de roupas combina previsão horária de temperatura, umidade, vento, radiação e chuva; é uma referência, não um tempo exato de secagem. Se o Open-Meteo não fornecer o ponto de orvalho, ele é estimado com temperatura e umidade da HG Brasil pela fórmula de Magnus-Tetens.
 Os avisos do INMET são consultados no servidor, filtrados para o município selecionado e armazenados em cache por 10 minutos. As orientações exibidas são fornecidas pelo próprio aviso.
 As condições atuais são consultadas novamente a cada 10 minutos. O cabeçalho exibe o horário da consulta concluída ao servidor; esse horário não representa necessariamente o instante da observação meteorológica na fonte. A previsão horária, a qualidade do ar e o índice UV usam cache de servidor/CDN por até 10 minutos, com possibilidade de servir dados antigos enquanto são revalidados.
-Os avisos de arco-íris e o calendário de chuvas de meteoros estão temporariamente fora da interface. O código e os ícones permanecem no projeto para uma possível reativação; as datas de meteoros são aproximadas e devem ser revisadas anualmente em `src/components/sky/SkyAlerts.tsx`.
+O aviso de possibilidade de arco-íris combina precipitação e nebulosidade estimadas pelo Open-Meteo com a elevação solar calculada pelo SunCalc. É uma heurística, não confirma que um arco-íris esteja visível; orientação em relação ao Sol e horizonte livre também influenciam. O calendário de chuvas de meteoros usa períodos e picos publicados pela [EXOSS](https://press.exoss.org/calendario/) para 2026; revise e atualize os dados quando a fonte publicar um novo calendário.
 
 O arquivo `public/robots.txt` permite a indexação das páginas públicas pelos mecanismos de busca e aponta para o sitemap. Endpoints de API não são destinados à indexação.
 
@@ -43,7 +43,8 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Solicitar a cidade na primeira visita e salvar a escolha para as próximas visitas
 - [x] Marcar feriados nacionais e estaduais do RS na previsão estendida, incluindo data móvel calculada para a Sexta-feira Santa, com destaque visual discreto
 - [ ] Adicionar datas comemorativas (distintas de feriados oficiais) e temas visuais relacionados
-- [ ] Incluir feriados municipais e regionais com base em fontes oficiais de cada cidade
+- [x] Exibir datas municipais fornecidas para os municípios atendidos, distinguindo ponto facultativo
+- [ ] Validar anualmente as datas e as fontes oficiais de cada município
 - [ ] Revisar e validar anualmente o calendário e as regras de datas móveis
 
 ## Saúde
@@ -53,14 +54,16 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Ressecamento de pele
 - [x] Gripe/Resfriado
 - [x] Vitamina D
+- [x] Estimar condições para churrasco usando somente a nebulosidade atual e a previsão de hoje
 
 ## Cotidiano
 - [x] Estimativa de condições para secagem de roupas, com explicação dos critérios
 
 ## Astronomia
-- [ ] Reativar o calendário de chuvas de meteoros (temporariamente fora da interface)
+- [x] Reunir fase da Lua, estimativa de arco-íris, chuvas de meteoros e eclipses em cards explicativos
+- [x] Exibir a chuva de meteoros ativa ou a próxima, com períodos e picos do calendário EXOSS 2026
 - [x] Estação do ano
-- [ ] Possibilidade de arco-íris baseada nas condições atuais (temporariamente fora da interface)
+- [x] Indicar possibilidade de arco-íris com chuva, nebulosidade e elevação solar; tratar como estimativa, não confirmação
 
 ## Dados regionais
 - [x] Alertas oficiais INMET
@@ -72,6 +75,8 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 
 ## Energia
 - [x] Indicador estimado de potencial solar em três níveis, com radiação do Open-Meteo e indicação de noite
+- [x] Exibir o potencial solar em um card próprio abaixo das informações de vento
+- [x] Exibir ícone noturno dedicado para o potencial solar
 
 ## Previsão do tempo
 - [x] Organizar a navegação principal nas abas Painel, Previsão e Sobre
@@ -80,7 +85,7 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
 - [x] Exibir no painel principal a maior probabilidade de chuva nas próximas 6 horas
 - [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
-- [x] Permitir atualizar os dados manualmente sem recarregar a página, respeitando o intervalo mínimo de 10 minutos
+- [x] Permitir atualizar o relógio manualmente; consultar os dados sem recarregar a página somente após o intervalo de 10 minutos
 
 ## Agro
 - [x] Criar uma aba Agro com temas de estiagem, fogo, geada, chuva, calor e vento identificados como em breve

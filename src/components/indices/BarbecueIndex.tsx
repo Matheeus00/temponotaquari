@@ -1,4 +1,4 @@
-import type { ForecastDay, WeatherIndexData } from '../../types';
+import type { ForecastDay } from '../../types';
 import { DismissibleDetails } from '../common/DismissibleDetails';
 import { WeatherIndexCard } from './WeatherIndexCard';
 import { normalizeIndexLabel, parseIndexNumber } from './indexUtils';
@@ -9,9 +9,8 @@ import {
 } from '../../utils/utils';
 
 interface BarbecueIndexProps {
-  data?: WeatherIndexData;
   cloudiness: number | string;
-  forecast: ForecastDay[];
+  todayForecast?: ForecastDay;
   temperatureUnit: TemperatureUnit;
 }
 
@@ -45,54 +44,50 @@ const getBarbecueLevel = (value: number | string): number | undefined => {
   return levelByLabel[normalized];
 };
 
-const getBarbecueIndex = (cloudiness: number | string, forecast: ForecastDay[]) => {
+const getBarbecueIndex = (
+  cloudiness: number | string,
+  todayForecast: ForecastDay | undefined,
+) => {
   const cloudinessValue = parseIndexNumber(cloudiness);
   if (
     !Number.isFinite(cloudinessValue)
     || cloudinessValue < 0
     || cloudinessValue > 100
-    || forecast.length < 3
+    || !todayForecast
   ) {
     return undefined;
   }
 
-  const nextThreeDays = forecast.slice(0, 3);
-  const rainProbabilities = nextThreeDays.map((day) => parseIndexNumber(day.rain_probability));
-  const maximumTemperatures = nextThreeDays.map((day) => parseIndexNumber(day.max));
-  if (
-    rainProbabilities.some((probability) =>
-      !Number.isFinite(probability) || probability < 0 || probability > 100)
-    || maximumTemperatures.some((temperature) => !Number.isFinite(temperature))
-  ) {
+  const rainProbability = parseIndexNumber(todayForecast.rain_probability);
+  const maximumTemperature = parseIndexNumber(todayForecast.max);
+  if (!Number.isFinite(rainProbability) || rainProbability < 0 || rainProbability > 100
+    || !Number.isFinite(maximumTemperature)) {
     return undefined;
   }
 
-  const rainyDays = rainProbabilities.filter((probability) => probability >= 50).length;
-  const highestRainProbability = Math.max(...rainProbabilities);
-  const highestTemperature = Math.max(...maximumTemperatures);
   let level: number;
 
-  if (highestRainProbability >= 80 || rainyDays >= 2) {
+  if (rainProbability >= 80) {
     level = 0;
   } else if (
-    highestRainProbability >= 50
+    rainProbability >= 50
     || cloudinessValue >= 70
-    || highestTemperature < 16
-    || highestTemperature > 36
+    || maximumTemperature < 16
+    || maximumTemperature > 36
   ) {
     level = 1;
   } else if (
-    highestRainProbability <= 10
+    rainProbability <= 10
     && cloudinessValue <= 15
-    && highestTemperature >= 22
-    && highestTemperature <= 32
+    && maximumTemperature >= 22
+    && maximumTemperature <= 32
   ) {
     level = 4;
   } else if (
-    highestRainProbability < 30
+    rainProbability < 30
     && cloudinessValue <= 40
-    && highestTemperature >= 18
-    && highestTemperature <= 35
+    && maximumTemperature >= 18
+    && maximumTemperature <= 35
   ) {
     level = 3;
   } else {
@@ -103,12 +98,11 @@ const getBarbecueIndex = (cloudiness: number | string, forecast: ForecastDay[]) 
 };
 
 export const BarbecueIndex = ({
-  data,
   cloudiness,
-  forecast,
+  todayForecast,
   temperatureUnit,
 }: BarbecueIndexProps) => {
-  const metric = data ?? getBarbecueIndex(cloudiness, forecast);
+  const metric = getBarbecueIndex(cloudiness, todayForecast);
   const level = metric ? getBarbecueLevel(metric.value) : undefined;
   const displayValue = level === undefined
     ? metric?.value
@@ -128,16 +122,16 @@ export const BarbecueIndex = ({
           <div className="weather-index-guide-content">
             <h3>Estimativa de condições para churrasco</h3>
             <p>
-              A estimativa considera a nebulosidade atual, as máximas e a probabilidade
-              de chuva previstas para os próximos três dias. É uma referência para
-              planejamento e pode mudar com a previsão.
+              A estimativa considera a nebulosidade atual, a máxima e a probabilidade
+              de chuva previstas para hoje. É uma referência para planejamento e pode
+              mudar com a previsão.
             </p>
             <ul>
-              <li className="weather-barbecue-level-0"><strong>Em área coberta</strong><span>Probabilidade de chuva de 80% ou mais em algum dia, ou de 50% ou mais em pelo menos dois dias.</span></li>
-              <li className="weather-barbecue-level-1"><strong>Melhor em área coberta</strong><span>Chuva provável, nebulosidade atual de 70% ou mais, ou máxima abaixo de {formatTemperature(16, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} ou acima de {formatTemperature(36, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)}.</span></li>
+              <li className="weather-barbecue-level-0"><strong>Em área coberta</strong><span>Probabilidade de chuva hoje de 80% ou mais.</span></li>
+              <li className="weather-barbecue-level-1"><strong>Melhor em área coberta</strong><span>Chuva provável hoje, nebulosidade atual de 70% ou mais, ou máxima prevista abaixo de {formatTemperature(16, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)} ou acima de {formatTemperature(36, temperatureUnit)} {getTemperatureUnitLabel(temperatureUnit)}.</span></li>
               <li className="weather-barbecue-level-2"><strong>Tá valendo</strong><span>Sem chuva forte prevista, mas a nebulosidade, a chance de chuva ou a temperatura ficam fora dos critérios de um dia ideal.</span></li>
-              <li className="weather-barbecue-level-3"><strong>Dia ideal</strong><span>Chance máxima de chuva abaixo de 30%, nebulosidade atual de até 40% e máxima prevista entre {temperatureRange(18, 35)}.</span></li>
-              <li className="weather-barbecue-level-4"><strong>Perfeito!</strong><span>Chance máxima de chuva de até 10%, nebulosidade atual de até 15% e máxima entre {temperatureRange(22, 32)}.</span></li>
+              <li className="weather-barbecue-level-3"><strong>Dia ideal</strong><span>Chance de chuva hoje abaixo de 30%, nebulosidade atual de até 40% e máxima prevista entre {temperatureRange(18, 35)}.</span></li>
+              <li className="weather-barbecue-level-4"><strong>Perfeito!</strong><span>Chance de chuva hoje de até 10%, nebulosidade atual de até 15% e máxima prevista entre {temperatureRange(22, 32)}.</span></li>
             </ul>
             <p className="weather-index-guide-note">
               A previsão do tempo pode mudar; confira novamente perto do evento e tenha

@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128"><g id="solar-panel-alert__solar-panel-alert" clip-path="url(#solar-panel-alert__clip0_3086_22501)"><g id="solar-panel-alert__Mask group"><mask id="solar-panel-alert__mask0_3086_22501" width="128" height="128" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path id="solar-panel-alert__Alert Mask" fill="#000" fill-rule="evenodd" d="M128 128H0V0h128zM80.196 64c-2.31-4-8.083-4-10.392 0L57.68 85c-2.31 4 .577 9 5.196 9h24.248c4.619 0 7.506-5 5.196-9z" clip-rule="evenodd"/></mask><g mask="url(#solar-panel-alert__mask0_3086_22501)"><g id="solar-panel-alert__Solar Panel"><rect id="solar-panel-alert__Panel" width="35" height="49" x="38.5" y="39.5" fill="url(#solar-panel-alert__paint0_linear_3086_22501)" stroke="#212a3b" rx="5.5"/><path id="solar-panel-alert__Lines" fill="#304878" d="M56.5 40v14.5H73v1H56.5v16H73v1H56.5V88h-1V72.5H39v-1h16.5v-16H39v-1h16.5V40z"/></g></g></g><g id="solar-panel-alert__Alert"><path id="solar-panel-alert__Exclamation" fill="url(#solar-panel-alert__paint1_linear_3086_22501)" stroke="#202939" d="M72.835 65.75c.962-1.667 3.368-1.667 4.33 0l12.124 21c.962 1.667-.24 3.75-2.165 3.75H62.876c-1.864 0-3.052-1.955-2.249-3.593l.084-.157z"><animate attributeName="opacity" begin="0s" dur="1s" keyTimes="0;0.294;0.5;0.794;1" repeatCount="indefinite" values="1;1;0;0;1"/></path><path id="solar-panel-alert__ExclamationMark" fill="#fff" d="M75.758 81.59h-1.494l-.846-5.022v-3.384h3.168v3.384zm.846 4.41H73.4v-3.006h3.204z"><animate attributeName="opacity" begin="0s" dur="1s" keyTimes="0;0.294;0.5;0.794;1" repeatCount="indefinite" values="1;1;0;0;1"/></path></g></g><defs><linearGradient id="solar-panel-alert__paint0_linear_3086_22501" x1="56" x2="56" y1="39" y2="89" gradientUnits="userSpaceOnUse"><stop stop-color="#304878"/><stop offset="1" stop-color="#212a3b"/></linearGradient><linearGradient id="solar-panel-alert__paint1_linear_3086_22501" x1="75" x2="75" y1="64" y2="91" gradientUnits="userSpaceOnUse"><stop stop-color="#364d6e"/><stop offset="1" stop-color="#202939"/></linearGradient><clipPath id="solar-panel-alert__clip0_3086_22501"><rect width="128" height="128" fill="#fff"/></clipPath></defs></svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
+  <g id="solar-panel-night__solar-panel-night">
+    <g id="solar-panel-night__Moon">
+      <path id="solar-panel-night__Moon_2" fill="url(#solar-panel-night__paint0_linear_3086_22649)" stroke="#72b9d5" stroke-linecap="round" stroke-linejoin="round" d="M77.115 29.595c-1.737 8.568 5.638 16.62 14.199 16.188-1.64 5.05-6.425 8.717-12.096 8.717-7.03 0-12.718-5.621-12.718-12.541 0-6.214 4.588-11.375 10.615-12.364"/>
+      <animateTransform attributeName="transform" begin="0s" calcMode="spline" dur="3s" keySplines=".42 0 .58 1; .42 0 .58 1" repeatCount="indefinite" type="rotate" values="-6 78.9 42.0;6 78.9 42.0;-6 78.9 42.0"/>
+    </g>
+    <g id="solar-panel-night__Solar Panel">
+      <rect id="solar-panel-night__Panel" width="35" height="49" x="46.5" y="39.5" fill="url(#solar-panel-night__paint1_linear_3086_22649)" stroke="#212a3b" rx="5.5"/>
+      <path id="solar-panel-night__Lines" fill="#304878" d="M64.5 40v14.5H81v1H64.5v16H81v1H64.5V88h-1V72.5H47v-1h16.5v-16H47v-1h16.5V40z"/>
+    </g>
+  </g>
+  <defs>
+    <linearGradient id="solar-panel-night__paint0_linear_3086_22649" x1="79" x2="79" y1="29" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#86c3db"/>
+      <stop offset="1" stop-color="#72b9d5"/>
+    </linearGradient>
+    <linearGradient id="solar-panel-night__paint1_linear_3086_22649" x1="64" x2="64" y1="39" y2="89" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#304878"/>
+      <stop offset="1" stop-color="#212a3b"/>
+    </linearGradient>
+  </defs>
+</svg>

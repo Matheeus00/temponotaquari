@@ -1,6 +1,10 @@
 import './Forecast.css';
 import type { ForecastDay } from '../../types';
-import { getHolidayForDate } from '../../data/holidays';
+import {
+    getHolidayForDate,
+    getHolidayScopeLabel,
+    getHolidayTypeLabel,
+} from '../../data/holidays';
 import {
     formatTemperature,
     getTemperatureUnitLabel,
@@ -9,6 +13,7 @@ import {
 
 interface ForecastProps {
     data: ForecastDay[];
+    cityId: string;
     temperatureUnit: TemperatureUnit;
     selectedDate: string | null;
     onSelectDay: (day: { dateKey: string; label: string }) => void;
@@ -46,6 +51,7 @@ const getForecastDateKey = (date: string, today: string): string => {
 
 export const Forecast = ({
     data,
+    cityId,
     temperatureUnit,
     selectedDate,
     onSelectDay,
@@ -58,13 +64,15 @@ export const Forecast = ({
         {upcomingDays.length > 0 ? (
             upcomingDays.map((day) => {
                 const dateKey = getForecastDateKey(day.date, today);
-                const holiday = getHolidayForDate(dateKey);
+                const holiday = getHolidayForDate(dateKey, cityId);
+                const holidayScopeLabel = holiday ? getHolidayScopeLabel(holiday.scope) : null;
+                const holidayTypeLabel = holiday ? getHolidayTypeLabel(holiday) : null;
                 return (
                     <button
                         className={`forecast-day${holiday ? ' forecast-day-holiday' : ''}${selectedDate === dateKey ? ' forecast-day-selected' : ''}`}
                         key={`${day.date}-${day.weekday}`}
                         type="button"
-                        aria-label={`Ver previsão por hora para ${day.weekday}, ${day.date}${holiday ? `, feriado: ${holiday.name} (${holiday.scope})` : ''}`}
+                        aria-label={`Ver previsão por hora para ${day.weekday}, ${day.date}${holiday ? `, ${holidayTypeLabel?.toLowerCase()} ${holidayScopeLabel}: ${holiday.name}` : ''}`}
                         aria-pressed={selectedDate === dateKey}
                         onClick={() => onSelectDay({ dateKey, label: `${day.weekday}, ${day.date}` })}
                     >
@@ -75,10 +83,10 @@ export const Forecast = ({
                         <span className="forecast-day-holiday-slot" aria-hidden={!holiday}>
                         {holiday ? (
                             <span
-                                className={`forecast-day-holiday-label${holiday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
-                                title={`${holiday.name} · ${holiday.scope}`}
+                                className={`forecast-day-holiday-label forecast-day-holiday-${holiday.scope === 'Brasil' ? 'national' : holiday.scope === 'Municipal' ? 'municipal' : 'state'}`}
+                                title={`${holiday.name} · ${holidayScopeLabel}`}
                             >
-                                Feriado {holiday.scope === 'Brasil' ? 'nacional' : 'estadual'}
+                                {holidayTypeLabel} {holidayScopeLabel}
                                 <span>{holiday.name}</span>
                             </span>
                         ) : null}

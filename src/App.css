@@ -413,7 +413,7 @@
   margin: 0;
 }
 
-.current-data:has(.beaufort-guide[open], .outdoor-guide[open], .moon-guide[open]) {
+.current-data:has(.beaufort-guide[open], .outdoor-guide[open], .moon-guide[open], .solar-potential-guide[open]) {
   z-index: 2;
 }
 
@@ -717,15 +717,14 @@
     margin-top: 0;
   }
 
-  .current-data .moon-container {
-    grid-column: 2;
-    grid-row: 2;
-    margin-top: 0;
+  .current-data .solar-potential-card {
+    grid-column: 1;
+    grid-row: 3;
   }
 
   .current-data .outdoor-section {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
     margin-top: 0;
     min-height: 160px;
   }
@@ -783,6 +782,10 @@
   animation: loading-spin 800ms linear infinite;
 }
 
+.refresh-icon-clicked {
+  animation: loading-spin 650ms ease-out;
+}
+
 @keyframes loading-spin {
   to {
     transform: rotate(360deg);
@@ -796,7 +799,7 @@
 
   .current-data {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: minmax(350px, auto) minmax(220px, auto) auto;
+    grid-template-rows: minmax(350px, auto) minmax(220px, auto) minmax(150px, auto) auto;
     gap: 14px;
     row-gap: 14px;
   }
@@ -812,15 +815,14 @@
     margin-top: 0;
   }
 
-  .current-data .moon-container {
-    grid-column: 2;
-    grid-row: 2;
-    margin-top: 0;
+  .current-data .solar-potential-card {
+    grid-column: 1;
+    grid-row: 3;
   }
 
   .current-data .outdoor-section {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
     margin-top: 0;
   }
 
@@ -893,6 +895,12 @@
     flex: 1;
     padding-right: 8px;
     padding-left: 8px;
+  }
+
+  .app-navigation button {
+    padding-right: 3px;
+    padding-left: 3px;
+    font-size: 10px;
   }
 
   .brand-icon {
@@ -973,10 +981,9 @@
     margin-top: 0;
   }
 
-  .current-data .moon-container {
+  .current-data .solar-potential-card {
     grid-column: 1;
     grid-row: 3;
-    margin-top: 0;
   }
 
   .current-data .outdoor-section {

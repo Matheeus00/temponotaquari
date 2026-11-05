@@ -1,0 +1,401 @@
+.astronomy-page {
+  display: grid;
+  width: min(1120px, 100%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 18px;
+  margin: 0 auto;
+  color: #526879;
+  font-family: inherit;
+  text-align: left;
+}
+
+.astronomy-page .widget-label,
+.astronomy-page .eyebrow {
+  color: #617c97;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.2px;
+}
+
+.astronomy-page h2 {
+  color: #294762;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.astronomy-page .eclipse-calendar-heading h2 {
+  color: #294762;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.App--dark-background .astronomy-page .eclipse-calendar-heading .eyebrow {
+  color: #617c97;
+}
+
+.astronomy-page .moon-container {
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 230px;
+}
+
+.astronomy-page .sky-alerts,
+.astronomy-page .eclipse-calendar {
+  width: 100%;
+  margin: 0;
+}
+
+.astronomy-page .sky-alerts-rainbow {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.astronomy-page .sky-alerts-meteor {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.astronomy-page .meteor-catalog-card,
+.astronomy-page .eclipse-calendar {
+  grid-column: 1 / -1;
+}
+
+.astronomy-page .sky-alerts-rainbow {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.astronomy-page .sky-alert {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 230px;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 9px;
+  padding: 17px 19px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 12px 30px rgb(28 52 77 / 12%);
+}
+
+.astronomy-page .sky-alert-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.astronomy-page .sky-alert-heading > div {
+  min-width: 0;
+}
+
+.astronomy-page .sky-alert-heading .widget-label {
+  margin: 0 0 3px;
+  line-height: 1.4;
+}
+
+.astronomy-page .sky-alert-heading h2 {
+  margin: 0;
+}
+
+.astronomy-page .sky-alert-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #287d8a;
+  border: 0;
+  border-radius: 12px;
+  background: #e7f3f4;
+}
+
+.astronomy-page .sky-alert-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.astronomy-page .sky-alert-copy {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.astronomy-page .sky-alert-copy strong {
+  color: #294762;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.astronomy-page .sky-alert-description {
+  color: #617689;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.astronomy-page .sky-alert-label {
+  color: #8a7041;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.1px;
+  line-height: 1.4;
+}
+
+.astronomy-page .sky-alert-badge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  color: #806536;
+  border: 1px solid rgb(181 150 91 / 30%);
+  border-radius: 999px;
+  background: #fffaf0;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.6px;
+}
+
+.astronomy-page .sky-alert-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.astronomy-page .sky-alert-guide {
+  position: relative;
+  width: fit-content;
+  color: #547087;
+  font-size: 10px;
+}
+
+.astronomy-page .sky-alert-guide summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.astronomy-page .sky-alert-guide-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: min(360px, calc(100vw - 48px));
+  max-height: min(65vh, 420px);
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid #dce6ed;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(28 52 77 / 22%);
+  text-align: left;
+}
+
+.astronomy-page .sky-alert-guide-content h3 {
+  margin: 0 0 8px;
+  color: #294762;
+  font-size: 12px;
+}
+
+.astronomy-page .sky-alert-guide-content p {
+  margin: 0 0 9px;
+  color: #547087;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.astronomy-page .sky-alert-guide-content p:last-child {
+  margin-bottom: 0;
+}
+
+.astronomy-page .meteor-catalog-card {
+  min-width: 0;
+  padding: 20px 22px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 20px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 12px 30px rgb(28 52 77 / 12%);
+}
+
+.astronomy-page .meteor-catalog-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.astronomy-page .meteor-catalog-heading > div {
+  min-width: 0;
+}
+
+.astronomy-page .meteor-catalog-heading .widget-label {
+  margin: 0 0 3px;
+  line-height: 1.4;
+}
+
+.astronomy-page .meteor-catalog-heading h2 {
+  margin: 0;
+}
+
+.astronomy-page .meteor-catalog-intro {
+  margin: 14px 0 10px;
+  color: #617689;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.astronomy-page .meteor-catalog-details summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.astronomy-page .meteor-catalog-details[open] summary {
+  margin-bottom: 10px;
+}
+
+.astronomy-page .meteor-catalog-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.astronomy-page .meteor-catalog-list li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: #f2f6f8;
+}
+
+.astronomy-page .meteor-catalog-list strong {
+  color: #304d68;
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.astronomy-page .meteor-catalog-list span {
+  color: #77899a;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.App--dark-background .astronomy-page .meteor-catalog-card {
+  border-color: rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 94%);
+}
+
+.App--dark-background .astronomy-page .sky-alert {
+  border-color: rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 94%);
+}
+
+.App--dark-background .astronomy-page .sky-alert-copy strong {
+  color: #294762;
+}
+
+.App--dark-background .astronomy-page .sky-alert-description {
+  color: #617689;
+}
+
+.App--dark-background .astronomy-page .sky-alert-guide summary {
+  color: #287d8a;
+}
+
+.App--dark-background .astronomy-page .sky-alert-footer {
+  border-top-color: #e8eef2;
+}
+
+.App--dark-background .astronomy-page .sky-alert-guide-content {
+  border-color: #dce6ed;
+  background: #fff;
+}
+
+.App--dark-background .astronomy-page .sky-alert-guide-content h3 {
+  color: #294762;
+}
+
+.App--dark-background .astronomy-page .sky-alert-guide-content p {
+  color: #547087;
+}
+
+.App--dark-background .astronomy-page .meteor-catalog-intro {
+  color: #617689;
+}
+
+.App--dark-background .astronomy-page .meteor-catalog-list li {
+  background: #f2f6f8;
+}
+
+.App--dark-background .astronomy-page .meteor-catalog-list strong {
+  color: #304d68;
+}
+
+.App--dark-background .astronomy-page .meteor-catalog-list span {
+  color: #77899a;
+}
+
+.App--dark-background .astronomy-page .moon-type {
+  color: #294762;
+}
+
+.App--dark-background .astronomy-page .moon-caption {
+  color: #77899a;
+}
+
+@media (max-width: 720px) {
+  .astronomy-page {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .astronomy-page .moon-container,
+  .astronomy-page .sky-alerts-rainbow,
+  .astronomy-page .sky-alerts-meteor,
+  .astronomy-page .meteor-catalog-card,
+  .astronomy-page .eclipse-calendar {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .astronomy-page .moon-container {
+    min-height: 185px;
+  }
+
+  .astronomy-page .sky-alert {
+    min-height: 220px;
+  }
+
+  .astronomy-page .meteor-catalog-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .astronomy-page .meteor-catalog-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

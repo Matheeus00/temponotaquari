@@ -92,6 +92,16 @@
   color: #5b7187;
 }
 
+.forecast-day-holiday-municipal {
+  border-color: #e7dfc7;
+  background: #faf7ed;
+  color: #75612e;
+}
+
+.forecast-day-holiday-municipal span {
+  color: #807044;
+}
+
 .forecast-day:focus-visible {
   outline: 3px solid #287d8a;
   outline-offset: 3px;
@@ -295,8 +305,6 @@
 }
 
 .hourly-forecast-day-divider {
-  position: sticky;
-  left: 0;
   display: flex;
   min-width: 34px;
   flex: 0 0 34px;

@@ -6,14 +6,17 @@ import { Forecast } from './components/forecast/Forecast';
 import { HourlyForecast } from './components/forecast/HourlyForecast';
 import { BackToTop } from './components/common/BackToTop';
 import { CitySelection } from './components/common/CitySelection';
-import { getHolidayForDate } from './data/holidays';
+import {
+  getHolidayForDate,
+  getHolidayScopeLabel,
+  getHolidayTypeLabel,
+} from './data/holidays';
 import { AboutPage } from './components/about/AboutPage';
 import { AgroPage } from './components/agro/AgroPage';
-// Alertas de arco-íris e chuva de meteoros temporariamente fora da interface.
-// import { SkyAlerts } from './components/sky/SkyAlerts';
+import { AstronomyPage } from './components/sky/AstronomyPage';
 import { InmetAlerts } from './components/inmet/InmetAlerts';
 import { WeatherIndices } from './components/indices/WeatherIndices';
-import { Moon } from './components/moon/Moon';
+import { SolarPotential } from './components/outdoor/SolarPotential';
 import { OutdoorConditions } from './components/outdoor/OutdoorConditions';
 import { Rose } from './components/rose/Rose';
 import {
@@ -24,7 +27,7 @@ import {
   type TemperatureUnit,
   type WindSpeedUnit,
 } from './utils/utils';
-import { Weather } from './components/weather/Weather';
+import { Weather, WeatherAdvice } from './components/weather/Weather';
 import type {
   AirQualityData,
   HourlyForecast as HourlyForecastData,
@@ -34,7 +37,7 @@ import type {
   WeatherResponse,
 } from './types';
 
-type AppSection = 'panel' | 'forecast' | 'agro' | 'about';
+type AppSection = 'panel' | 'forecast' | 'astronomy' | 'agro' | 'about';
 
 const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
@@ -88,6 +91,7 @@ function App() {
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>('km/h');
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshAnimationKey, setRefreshAnimationKey] = useState(0);
   const previousCityId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -251,7 +255,9 @@ function App() {
       uvIndexRequest,
       inmetAlertsRequest,
     ]).then(() => {
-      if (!controller.signal.aborted) setIsRefreshing(false);
+      if (!controller.signal.aborted) {
+        setIsRefreshing(false);
+      }
     });
 
     return () => controller.abort();
@@ -297,6 +303,39 @@ function App() {
       controller.abort();
     };
   }, [lastWeatherFetchedAt, selectedCityId]);
+
+  useEffect(() => {
+    if (!selectedCityId) return;
+    const controller = new AbortController();
+    const intervalId = window.setInterval(() => {
+      axios.get<UvIndexData>('/api/uv-index', {
+        params: { city: selectedCityId },
+        signal: controller.signal,
+      })
+        .then(({ data }) => {
+          setUvIndex(data);
+          setUvIndexError(null);
+          setIsUvIndexLoading(false);
+        })
+        .catch((requestError: unknown) => {
+          if (!axios.isCancel(requestError)) {
+            setUvIndexError(
+              axios.isAxiosError<{ error?: string }>(requestError)
+                ? requestError.response?.data.error ?? requestError.message
+                : requestError instanceof Error
+                ? requestError.message
+                : 'Não foi possível consultar o índice UV agora.',
+            );
+            setIsUvIndexLoading(false);
+          }
+        });
+    }, WEATHER_REFRESH_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+      controller.abort();
+    };
+  }, [selectedCityId]);
 
   const backgroundColor = getCurrentTimeColor(weather?.sunrise, weather?.sunset, currentDate);
   const backgroundTheme = isDarkColor(backgroundColor) ? 'App--dark-background' : '';
@@ -357,7 +396,8 @@ function App() {
   const localToday = new Intl.DateTimeFormat('sv-SE', {
     timeZone: 'America/Sao_Paulo',
   }).format(currentDate);
-  const todayHoliday = getHolidayForDate(localToday);
+  const selectedCity = TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId);
+  const todayHoliday = getHolidayForDate(localToday, selectedCityId);
   const visibleHourlyForecast = hourlyForecast === null
     ? null
     : selectedForecast
@@ -415,6 +455,13 @@ function App() {
           </button>
           <button
             type="button"
+            aria-current={activeSection === 'astronomy' ? 'page' : undefined}
+            onClick={() => navigateToSection('astronomy')}
+          >
+            Astronomia
+          </button>
+          <button
+            type="button"
             aria-current={activeSection === 'agro' ? 'page' : undefined}
             onClick={() => navigateToSection('agro')}
           >
@@ -440,19 +487,35 @@ function App() {
                 }).format(lastWeatherFetchedAt)}
               </time>
             </span>
-            <small>Consulta automática a cada 10 min</small>
           </div>
         )}
         <button
           className="refresh-button"
           type="button"
-          onClick={() => setRefreshKey((key) => key + 1)}
-          disabled={isRefreshing || !canManuallyRefresh}
-          aria-label={isRefreshing ? 'Atualizando dados' : 'Atualizar dados'}
-          title={!canManuallyRefresh ? 'Disponível após 10 minutos da última consulta' : undefined}
+          onClick={() => {
+            setRefreshAnimationKey((key) => key + 1);
+            const now = new Date();
+            setCurrentDate(now);
+            if (
+              !isRefreshing &&
+              lastWeatherFetchedAt &&
+              now.getTime() - lastWeatherFetchedAt.getTime() >= WEATHER_REFRESH_INTERVAL_MS
+            ) {
+              setRefreshKey((key) => key + 1);
+            }
+          }}
+          aria-label={
+            isRefreshing
+              ? 'Atualizando dados'
+              : canManuallyRefresh
+              ? 'Atualizar horário e dados'
+              : 'Atualizar horário; os dados serão consultados no próximo intervalo'
+          }
+          title={!canManuallyRefresh ? 'Atualiza o relógio; os dados são consultados a cada 10 minutos' : undefined}
         >
           <svg
-            className={isRefreshing ? 'refresh-icon refresh-icon-spinning' : 'refresh-icon'}
+            key={refreshAnimationKey}
+            className={`refresh-icon${isRefreshing ? ' refresh-icon-spinning' : ' refresh-icon-clicked'}`}
             viewBox="0 0 24 24"
             fill="none"
             aria-hidden="true"
@@ -485,24 +548,16 @@ function App() {
 
       {activeSection === 'panel' && (
         <>
-      {/* Reativar quando os alertas do céu forem incluídos novamente.
-      <SkyAlerts
-        precipitationMillimeters={uvIndex?.precipitationMillimeters}
-        cloudCoverPercent={uvIndex?.cloudCoverPercent}
-        isDay={uvIndex?.isDay}
-      />
-      */}
-
       <section className="dashboard-heading" aria-labelledby="page-title">
         <div className="dashboard-eyebrow">
           <p className="eyebrow">PAINEL DO TEMPO</p>
           {todayHoliday && (
             <span
-              className={`forecast-day-holiday-label dashboard-holiday-label${todayHoliday.scope === 'Brasil' ? ' forecast-day-holiday-national' : ' forecast-day-holiday-state'}`}
-              title={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}: ${todayHoliday.name}`}
-              aria-label={`Feriado ${todayHoliday.scope === 'Brasil' ? 'nacional' : 'estadual'}: ${todayHoliday.name}`}
+              className={`forecast-day-holiday-label dashboard-holiday-label forecast-day-holiday-${todayHoliday.scope === 'Brasil' ? 'national' : todayHoliday.scope === 'Municipal' ? 'municipal' : 'state'}`}
+              title={`${getHolidayTypeLabel(todayHoliday)} ${getHolidayScopeLabel(todayHoliday.scope)}: ${todayHoliday.name}`}
+              aria-label={`${getHolidayTypeLabel(todayHoliday)} ${getHolidayScopeLabel(todayHoliday.scope)}: ${todayHoliday.name}`}
             >
-              Feriado · {todayHoliday.name}
+              {getHolidayTypeLabel(todayHoliday)} · {todayHoliday.name}
             </span>
           )}
         </div>
@@ -521,7 +576,7 @@ function App() {
           </span>
         </p>
         <h1 id="page-title">
-          O céu de hoje em <b>{TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name}, RS</b>
+          O céu de hoje em <b>{selectedCity?.name}, RS</b>
         </h1>
         <div className="unit-controls" aria-label="Unidades de medida">
           <label>
@@ -567,6 +622,16 @@ function App() {
         cityName={TAQUARI_VALLEY_CITIES.find((city) => city.id === selectedCityId)?.name ?? ''}
       />
 
+      <WeatherAdvice
+        temp={weather.temp}
+        temperatureUnit={temperatureUnit}
+        humidity={weather.humidity}
+        windSpeed={weather.wind_speedy}
+        rain={weather.rain}
+        rainProbabilityNextSixHours={rainProbabilityNextSixHours}
+        uvIndex={uvIndex?.index ?? weather.outdoorConditions?.uv?.index}
+      />
+
       <section className="current-data" aria-label="Condições atuais">
         <Weather
           code={weather.condition_code}
@@ -588,7 +653,12 @@ function App() {
           displaySpeed={formatWindSpeed(weather.wind_speedy, windSpeedUnit)}
           windSpeedUnit={windSpeedUnit}
         />
-        <Moon moon={weather.moon_phase} />
+        <SolarPotential
+          isDay={uvIndex?.isDay ?? weather.outdoorConditions?.uv?.isDay}
+          radiation={uvIndex?.solarRadiationWm2 ?? weather.outdoorConditions?.uv?.solarRadiationWm2}
+          error={uvIndexError}
+          isLoading={isUvIndexLoading}
+        />
         <OutdoorConditions
           temperatureUnit={temperatureUnit}
           temperature={weather.temp}
@@ -667,6 +737,7 @@ function App() {
             </div>
             <Forecast
               data={weather.forecast}
+              cityId={selectedCityId}
               temperatureUnit={temperatureUnit}
               selectedDate={selectedForecast?.dateKey ?? null}
               onSelectDay={handleForecastDaySelect}
@@ -679,6 +750,7 @@ function App() {
             temperature={weather.temp}
             cloudiness={weather.cloudiness}
             forecast={weather.forecast.slice(1, 4)}
+            todayForecast={weather.forecast[0]}
             hourlyForecast={visibleHourlyForecast ?? []}
             periodLabel={selectedForecast ? selectedForecast.label : 'Próximas 24 horas'}
             uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
@@ -688,6 +760,17 @@ function App() {
       )}
 
       {activeSection === 'agro' && <AgroPage selectedCityId={selectedCityId} />}
+
+      {activeSection === 'astronomy' && selectedCity && (
+        <AstronomyPage
+          moonPhase={weather.moon_phase}
+          precipitationMillimeters={uvIndex?.precipitationMillimeters}
+          cloudCoverPercent={uvIndex?.cloudCoverPercent}
+          latitude={selectedCity.latitude}
+          longitude={selectedCity.longitude}
+          date={currentDate}
+        />
+      )}
 
       {activeSection === 'about' && <AboutPage />}
 
@@ -739,6 +822,12 @@ function App() {
           </a>
           <a href="https://atmosphere.copernicus.eu/" target="_blank" rel="noreferrer">
             Dados de qualidade do ar do CAMS
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
+            </svg>
+          </a>
+          <a href="https://press.exoss.org/calendario/" target="_blank" rel="noreferrer">
+            Calendário de meteoros por EXOSS
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 3h7v7M13 3 6.5 9.5M11 9v4H3V5h4" />
             </svg>

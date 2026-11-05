@@ -15,6 +15,7 @@ interface WeatherIndicesProps {
   temperature: number | string;
   cloudiness: number | string;
   forecast: ForecastDay[];
+  todayForecast?: ForecastDay;
   hourlyForecast: HourlyForecast[];
   periodLabel: string;
   uvIndex?: number;
@@ -27,6 +28,7 @@ export const WeatherIndices = ({
   temperature,
   cloudiness,
   forecast,
+  todayForecast,
   hourlyForecast,
   periodLabel,
   uvIndex,
@@ -41,9 +43,8 @@ export const WeatherIndices = ({
     </div>
     <div className="weather-indices-grid">
       <BarbecueIndex
-        data={data?.barbecue}
         cloudiness={cloudiness}
-        forecast={forecast}
+        todayForecast={todayForecast}
         temperatureUnit={temperatureUnit}
       />
       <MosquitoIndex

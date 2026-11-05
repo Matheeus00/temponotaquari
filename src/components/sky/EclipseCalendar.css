@@ -1,0 +1,252 @@
+.eclipse-calendar {
+  width: min(1120px, 100%);
+  margin: 0 auto 20px;
+  padding: 18px;
+  border: 1px solid rgb(255 255 255 / 72%);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 12px 30px rgb(28 52 77 / 12%);
+}
+
+.eclipse-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.eclipse-calendar-heading .eyebrow {
+  margin: 0 0 4px;
+}
+
+.eclipse-calendar-heading h2 {
+  margin: 0;
+  color: #344b62;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.eclipse-calendar-heading img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.eclipse-calendar-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.eclipse-calendar-group {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgb(116 123 161 / 18%);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 46%);
+}
+
+.eclipse-calendar-group h3 {
+  margin: 0 0 10px;
+  color: #294762;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.eclipse-calendar-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eclipse-calendar-list li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgb(116 123 161 / 18%);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 46%);
+}
+
+.eclipse-calendar-list time {
+  color: #6b6487;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.eclipse-calendar-list strong {
+  color: #344b62;
+  font-size: 12px;
+}
+
+.eclipse-calendar-list li span,
+.eclipse-calendar-note,
+.eclipse-calendar-empty {
+  color: #667b8d;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.eclipse-calendar-empty {
+  margin: 0;
+}
+
+.eclipse-calendar-guide {
+  position: relative;
+  width: fit-content;
+  margin: 10px 0;
+  color: #547087;
+  font-size: 10px;
+}
+
+.eclipse-calendar-guide summary {
+  width: fit-content;
+  color: #287d8a;
+  cursor: pointer;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.eclipse-calendar-guide-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  width: min(460px, calc(100vw - 48px));
+  max-height: min(65vh, 460px);
+  padding: 14px;
+  overflow-y: auto;
+  border: 1px solid #dce6ed;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(28 52 77 / 22%);
+  text-align: left;
+}
+
+.eclipse-explanation-group + .eclipse-explanation-group {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #e8eef2;
+}
+
+.eclipse-calendar-guide-content h3 {
+  margin: 0 0 8px;
+  color: #294762;
+  font-size: 12px;
+}
+
+.eclipse-explanation-group h3 {
+  margin-bottom: 10px;
+  color: #287d8a;
+  font-size: 13px;
+}
+
+.eclipse-calendar-guide-content p {
+  margin: 0 0 9px;
+  color: #547087;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.eclipse-calendar-guide-content p:last-child {
+  margin-bottom: 0;
+}
+
+.eclipse-calendar-guide-content strong {
+  color: #304d68;
+}
+
+.eclipse-calendar-guide-content .eclipse-safety-note {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff6e8;
+}
+
+.eclipse-calendar-note {
+  margin: 12px 0 6px;
+}
+
+.App--dark-background .eclipse-calendar {
+  border-color: rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 94%);
+}
+
+.App--dark-background .eclipse-calendar-heading h2,
+.App--dark-background .eclipse-calendar-group h3,
+.App--dark-background .eclipse-calendar-list strong,
+.App--dark-background .eclipse-calendar-list time,
+.App--dark-background .eclipse-calendar-list li span,
+.App--dark-background .eclipse-calendar-note {
+  color: #344b62;
+}
+
+.App--dark-background .eclipse-calendar-list li {
+  border-color: rgb(116 123 161 / 18%);
+  background: rgb(255 255 255 / 46%);
+}
+
+.App--dark-background .eclipse-calendar-group {
+  border-color: rgb(116 123 161 / 18%);
+  background: rgb(255 255 255 / 46%);
+}
+
+.App--dark-background .eclipse-calendar-guide summary {
+  color: #287d8a;
+}
+
+.App--dark-background .eclipse-calendar-guide-content {
+  border-color: #dce6ed;
+  background: #fff;
+}
+
+.App--dark-background .eclipse-calendar-guide-content h3 {
+  color: #294762;
+}
+
+.App--dark-background .eclipse-explanation-group + .eclipse-explanation-group {
+  border-top-color: #e8eef2;
+}
+
+.App--dark-background .eclipse-explanation-group h3 {
+  color: #287d8a;
+}
+
+.App--dark-background .eclipse-calendar-guide-content p {
+  color: #547087;
+}
+
+.App--dark-background .eclipse-calendar-guide-content strong {
+  color: #304d68;
+}
+
+.App--dark-background .eclipse-calendar-guide-content .eclipse-safety-note {
+  background: #fff6e8;
+}
+
+.App--dark-background .eclipse-calendar-heading .eyebrow {
+  color: #617c97;
+}
+
+@media (max-width: 480px) {
+  .eclipse-calendar {
+    padding: 14px;
+  }
+
+  .eclipse-calendar-list {
+    grid-template-columns: 1fr;
+  }
+
+  .eclipse-calendar-groups {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

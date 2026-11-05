@@ -80,12 +80,6 @@ const getDewPointLevel = (dewPointCelsius: number) => {
   return { className: 'oppressive', label: 'Opressivo · tropical' };
 };
 
-const getSolarLevel = (radiation: number) => {
-  if (radiation < 200) return { label: 'Baixo', icon: 'panel-low' };
-  if (radiation < 500) return { label: 'Médio', icon: 'panel-medium' };
-  return { label: 'Alto', icon: 'panel-high' };
-};
-
 export const OutdoorConditions = ({
   data,
   temperatureUnit,
@@ -102,18 +96,14 @@ export const OutdoorConditions = ({
   const fallbackDewPoint = calculateDewPointCelsius(temperature, humidity);
   const hasOpenMeteoDewPoint =
     typeof openMeteoDewPoint === 'number' && Number.isFinite(openMeteoDewPoint);
+  const hour = dayHour();
+  const isNight = data?.uv?.isDay === false
+    || (data?.uv?.isDay === undefined && (hour < 6 || hour > 18));
   const dewPoint = hasOpenMeteoDewPoint ? openMeteoDewPoint : fallbackDewPoint;
   const hasDewPoint = typeof dewPoint === 'number' && Number.isFinite(dewPoint);
   const dewPointLevel = hasDewPoint ? getDewPointLevel(dewPoint) : null;
   const formatDewPointGuideTemperature = (value: number) =>
     `${formatTemperature(value, temperatureUnit)} ${getTemperatureUnitLabel(temperatureUnit)}`;
-  const hour = dayHour();
-  const isNight = data?.uv?.isDay === false
-    || (data?.uv?.isDay === undefined && (hour < 6 || hour > 18));
-  const solarRadiation = data?.uv?.solarRadiationWm2;
-  const solarLevel = typeof solarRadiation === 'number' ? getSolarLevel(solarRadiation) : null;
-  const solarIconSource = isNight ? 'panel-alert' : solarLevel?.icon;
-
   return (
     <section className="outdoor-section" aria-labelledby="outdoor-title">
       <div className="outdoor-heading">
@@ -166,56 +156,6 @@ export const OutdoorConditions = ({
                   <li><strong>6–7 · Alto</strong><span>Reduza a exposição ao sol, especialmente perto do meio-dia, e use proteção.</span></li>
                   <li><strong>8–10 · Muito alto</strong><span>Evite o sol nos horários de maior intensidade e reforce a proteção.</span></li>
                   <li><strong>11+ · Extremo</strong><span>Evite ficar ao sol. Se sair, use proteção completa e procure sombra.</span></li>
-                </ul>
-              </div>
-            </DismissibleDetails>
-          </span>
-        </article>
-        <article className="outdoor-card outdoor-card-solar">
-          <span className="outdoor-icon" aria-hidden="true">
-            {solarIconSource ? (
-              <img src={`/solar/${solarIconSource}.svg`} alt="" />
-            ) : (
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
-              </svg>
-            )}
-          </span>
-          <span className="outdoor-copy">
-            <span>Potencial solar</span>
-            {isNight ? (
-              <>
-                <strong>Sem geração · noite</strong>
-                <small>Radiação solar indisponível neste horário</small>
-              </>
-            ) : solarLevel && typeof solarRadiation === 'number' ? (
-              <>
-                <strong>{solarLevel.label}</strong>
-                <small>
-                  {solarRadiation.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} W/m²
-                  {' · '}estimativa de radiação
-                </small>
-              </>
-            ) : (
-              <strong className="outdoor-pending">
-                {uvIndexError ? 'Indisponível' : isUvIndexLoading ? 'Carregando...' : 'Sem dados'}
-              </strong>
-            )}
-            <DismissibleDetails className="outdoor-guide" summary="Sobre o potencial solar">
-              <div className="outdoor-guide-content">
-                <h3>Estimativa de radiação solar</h3>
-                <p>
-                  O nível usa a radiação solar estimada pelo Open-Meteo no momento,
-                  medida em watts por metro quadrado (W/m²). É uma referência das
-                  condições para geração, não uma medição da energia produzida por
-                  um painel específico.
-                </p>
-                <ul>
-                  <li><strong>Baixo</strong><span>Abaixo de 200 W/m².</span></li>
-                  <li><strong>Médio</strong><span>De 200 a 499 W/m².</span></li>
-                  <li><strong>Alto</strong><span>A partir de 500 W/m².</span></li>
-                  <li><strong>Noite</strong><span>Sem radiação solar para geração.</span></li>
                 </ul>
               </div>
             </DismissibleDetails>
