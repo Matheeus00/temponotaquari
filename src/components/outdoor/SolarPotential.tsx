@@ -26,13 +26,16 @@ export const SolarPotential = ({
   const solarLevel = typeof radiation === 'number' && Number.isFinite(radiation)
     ? getSolarLevel(radiation)
     : null;
-  const icon = isNight ? 'panel-alert' : solarLevel?.icon;
+  const panelIcon = isNight ? 'panel-alert' : solarLevel?.icon;
 
   return (
     <article className="solar-potential-card" aria-label="Potencial solar">
-      <div className="solar-potential-heading">
-        <span className="solar-potential-icon" aria-hidden="true">
-          {icon ? <img src={`/solar/${icon}.svg`} alt="" /> : null}
+      <div className="widget-heading solar-potential-heading">
+        <span className="solar-potential-category-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="5.5" />
+            <path d="M12 1v5.5m0 11V23M4.22 4.22l3.89 3.89m7.78 7.78 3.89 3.89M1 12h5.5m11 0H23M4.22 19.78l3.89-3.89m7.78-7.78 3.89-3.89" />
+          </svg>
         </span>
         <div>
           <p className="widget-label">ENERGIA SOLAR</p>
@@ -40,21 +43,31 @@ export const SolarPotential = ({
         </div>
       </div>
       <div className="solar-potential-content">
-        {isNight ? (
-          <>
-            <strong>Sem geração · noite</strong>
-            <span>Radiação solar indisponível neste horário</span>
-          </>
-        ) : solarLevel && typeof radiation === 'number' ? (
-          <>
-            <strong>{solarLevel.label}</strong>
-            <span>{radiation.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} W/m² · estimativa de radiação</span>
-          </>
-        ) : (
-          <strong className="solar-potential-pending">
-            {error ? 'Indisponível' : isLoading ? 'Carregando...' : 'Sem dados'}
-          </strong>
+        {panelIcon && (
+          <span className="solar-potential-panel-icon" aria-hidden="true">
+            <img src={`/solar/${panelIcon}.svg`} alt="" />
+          </span>
         )}
+        <div className="solar-potential-copy">
+          {isNight ? (
+            <>
+              <strong>Sem geração · noite</strong>
+              <span>Radiação solar indisponível neste horário</span>
+            </>
+          ) : solarLevel && typeof radiation === 'number' ? (
+            <>
+              <strong>
+                {radiation.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+                {' '}<small>W/m²</small>
+              </strong>
+              <span className="solar-potential-level">{solarLevel.label}</span>
+            </>
+          ) : (
+            <strong className="solar-potential-pending">
+              {error ? 'Indisponível' : isLoading ? 'Carregando...' : 'Sem dados'}
+            </strong>
+          )}
+        </div>
       </div>
       <DismissibleDetails className="solar-potential-guide" summary="Sobre o potencial solar">
         <div className="solar-potential-guide-content">

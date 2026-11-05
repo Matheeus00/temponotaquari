@@ -5,9 +5,9 @@
   grid-column: 2;
   grid-row: 2;
   flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 18px 20px;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px 18px 12px;
   border: 1px solid rgb(255 255 255 / 70%);
   border-radius: 20px;
   background: rgb(255 255 255 / 94%);
@@ -33,41 +33,85 @@
   color: #294762;
   font-size: 14px;
   font-weight: 650;
+  text-align: left;
 }
 
-.solar-potential-icon {
+.solar-potential-category-icon {
   display: grid;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid #ccdde5;
-  border-radius: 11px;
-  background: #f1f6f8;
-}
-
-.solar-potential-icon img {
   width: 36px;
   height: 36px;
-  object-fit: contain;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #287d8a;
+  border-radius: 12px;
+  background: #e7f3f4;
+}
+
+.solar-potential-category-icon svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.7px;
 }
 
 .solar-potential-content {
   display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.solar-potential-panel-icon {
+  display: grid;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.solar-potential-panel-icon img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.solar-potential-copy {
+  display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 4px;
   color: #77899a;
   font-size: 11px;
   line-height: 1.4;
+  text-align: left;
 }
 
-.solar-potential-content strong {
+.solar-potential-copy strong {
   color: #304d68;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
 }
 
-.solar-potential-content .solar-potential-pending {
+.solar-potential-copy strong small {
+  color: #526e88;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.solar-potential-copy .solar-potential-level {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #edf1f4;
+  color: #526879;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.solar-potential-copy .solar-potential-pending {
   color: #718598;
   font-size: 12px;
   font-weight: 550;
@@ -76,6 +120,8 @@
 .solar-potential-guide {
   position: relative;
   width: fit-content;
+  margin-top: auto;
+  padding-top: 8px;
   color: #547087;
   font-size: 10px;
 }
