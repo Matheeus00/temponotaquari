@@ -8,6 +8,19 @@
   box-shadow: 0 12px 30px rgb(28 52 77 / 12%);
 }
 
+.eclipse-calendar:has(.eclipse-calendar-guide[open]) {
+  position: relative;
+  z-index: 6;
+}
+
+.eclipse-calendar-guide[open] {
+  z-index: 7;
+}
+
+.eclipse-calendar-guide[open] > :not(summary) {
+  z-index: 20;
+}
+
 .eclipse-calendar-heading {
   display: flex;
   align-items: center;
