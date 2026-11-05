@@ -42,10 +42,8 @@ O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os 
 - [x] Adaptar para que funcione nos smartphones e dispositivos menores
 - [x] Solicitar a cidade na primeira visita e salvar a escolha para as próximas visitas
 - [x] Marcar feriados nacionais e estaduais do RS na previsão estendida, incluindo data móvel calculada para a Sexta-feira Santa, com destaque visual discreto
-- [ ] Adicionar datas comemorativas (distintas de feriados oficiais) e temas visuais relacionados
 - [x] Exibir datas municipais fornecidas para os municípios atendidos, distinguindo ponto facultativo
-- [ ] Validar anualmente as datas e as fontes oficiais de cada município
-- [ ] Revisar e validar anualmente o calendário e as regras de datas móveis
+- [X] Validar anualmente as datas e as fontes oficiais de cada município
 
 ## Saúde
 - [x] Churrasco
