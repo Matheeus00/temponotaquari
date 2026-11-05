@@ -115,7 +115,7 @@
   color: #285d68;
   border: 1px solid rgb(255 255 255 / 65%);
   border-radius: 12px;
-  background: rgb(255 255 255 / 48%);
+  background: #fff;
   font: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -127,13 +127,17 @@
   background: #fff;
 }
 
+.refresh-button:active:not(:disabled) {
+  background: #e8f0f3;
+}
+
 .refresh-button:focus-visible {
   outline: 2px solid #287d8a;
   outline-offset: 2px;
 }
 
 .refresh-button:disabled {
-  opacity: 0.75;
+  opacity: 1;
   cursor: wait;
 }
 
