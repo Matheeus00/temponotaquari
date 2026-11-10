@@ -24,6 +24,7 @@ interface WeatherProps {
 }
 
 interface WeatherAdviceProps {
+    time: 'day' | 'night';
     temp: number | string;
     temperatureUnit: TemperatureUnit;
     humidity: number | string;
@@ -41,29 +42,45 @@ const getWeatherAdvice = ({
     rain,
     rainProbabilityNextSixHours,
     uvIndex,
-}: WeatherAdviceProps): string[] => {
+    time,
+}: WeatherAdviceProps): Array<{ message: string; icon: string }> => {
     const apparentTemperature = calculateApparentTemperature(temp, humidity, windSpeed);
-    const advice: string[] = [];
+    const advice: Array<{ message: string; icon: string }> = [];
 
     if (typeof uvIndex === 'number' && Number.isFinite(uvIndex) && uvIndex >= 3) {
-        advice.push('Passe protetor solar: o índice UV pede proteção.');
+        advice.push({
+            message: 'Passe protetor solar: o índice UV pede proteção.',
+            icon: 'sun-hot',
+        });
     }
     if (apparentTemperature !== null && apparentTemperature <= 16) {
-        advice.push(
-            `Leve um casaco: sensação térmica de ${formatTemperature(apparentTemperature, temperatureUnit)}${getTemperatureUnitLabel(temperatureUnit)}.`,
-        );
+        advice.push({
+            message: `Leve um casaco: sensação térmica de ${formatTemperature(apparentTemperature, temperatureUnit)}${getTemperatureUnitLabel(temperatureUnit)}.`,
+            icon: 'thermometer-colder',
+        });
     }
     if (
         (typeof rainProbabilityNextSixHours === 'number' && rainProbabilityNextSixHours >= 40)
         || Number.parseFloat(String(rain).trim().replace(',', '.')) >= 0.1
     ) {
-        advice.push('Leve guarda-chuva: há previsão de chuva nas próximas horas.');
+        advice.push({
+            message: 'Leve guarda-chuva: há previsão de chuva nas próximas horas.',
+            icon: 'umbrella-wind',
+        });
     }
     if (apparentTemperature !== null && apparentTemperature >= 30) {
-        advice.push('Beba água e prefira locais com sombra.');
+        advice.push({
+            message: 'Beba água e prefira locais com sombra.',
+            icon: 'thermometer-warmer',
+        });
     }
 
-    return advice;
+    return advice.length > 0
+        ? advice
+        : [{
+            message: `Condições tranquilas para aproveitar ${time === 'day' ? 'o dia' : 'a noite'}.`,
+            icon: time === 'day' ? 'day-clear' : 'night-clear',
+        }];
 };
 
 export const WeatherAdvice = (props: WeatherAdviceProps) => {
@@ -71,14 +88,18 @@ export const WeatherAdvice = (props: WeatherAdviceProps) => {
 
     return (
         <div className="weather-advice" aria-label="Dicas para agora">
-            <span className="weather-advice-icon" aria-hidden="true">
-                <img src="/condition/weather-alert.svg" alt="" />
-            </span>
-            <div>
+            <div className="weather-advice-content">
                 <p className="weather-advice-label">DICA PARA AGORA</p>
-                <p className="weather-advice-message">
-                    {advice.length > 0 ? advice.join(' ') : 'Condições tranquilas para aproveitar o dia.'}
-                </p>
+                <ul className="weather-advice-items">
+                    {advice.map(({ message, icon }) => (
+                        <li className="weather-advice-item" key={message}>
+                            <span className="weather-advice-icon" aria-hidden="true">
+                                <img src={`/condition/${icon}.svg`} alt="" />
+                            </span>
+                            <p className="weather-advice-message">{message}</p>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );

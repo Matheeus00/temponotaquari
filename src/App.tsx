@@ -623,6 +623,7 @@ function App() {
       />
 
       <WeatherAdvice
+        time={time}
         temp={weather.temp}
         temperatureUnit={temperatureUnit}
         humidity={weather.humidity}
@@ -752,8 +753,9 @@ function App() {
             forecast={weather.forecast.slice(1, 4)}
             todayForecast={weather.forecast[0]}
             hourlyForecast={visibleHourlyForecast ?? []}
+            selectedDate={selectedForecast?.dateKey ?? null}
             periodLabel={selectedForecast ? selectedForecast.label : 'Próximas 24 horas'}
-            uvIndex={uvIndex?.dailyMax ?? weather.outdoorConditions?.uv?.index}
+            uvForecast={uvIndex ?? weather.outdoorConditions?.uv}
             temperatureUnit={temperatureUnit}
           />
         </section>

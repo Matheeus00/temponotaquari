@@ -15,18 +15,18 @@ const getVitaminDIndex = (uvIndex?: number) => {
   if (uvIndex < 3) {
     return {
       value: 0,
-      description: `Pico UV previsto para hoje: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial baixo de síntese natural.`,
+      description: `Pico UV previsto para o dia consultado: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial baixo de síntese natural.`,
     };
   }
   if (uvIndex < 6) {
     return {
       value: 1,
-      description: `Pico UV previsto para hoje: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial moderado de síntese natural.`,
+      description: `Pico UV previsto para o dia consultado: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial moderado de síntese natural.`,
     };
   }
   return {
     value: 2,
-    description: `Pico UV previsto para hoje: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial elevado de síntese natural; mantenha a proteção solar.`,
+    description: `Pico UV previsto para o dia consultado: ${uvIndex.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}. Potencial elevado de síntese natural; mantenha a proteção solar.`,
   };
 };
 

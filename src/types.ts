@@ -10,6 +10,7 @@ export interface HourlyForecast {
   time: string;
   temperature: number;
   humidity: number;
+  cloudCover: number;
   precipitationProbability: number;
   weatherCode: number;
   isDay: boolean;
@@ -31,6 +32,10 @@ export interface UvIndexData {
   index: number;
   level: string;
   dailyMax: number;
+  dailyForecast?: Array<{
+    date: string;
+    dailyMax: number;
+  }>;
   dewPointCelsius?: number;
   precipitationMillimeters?: number;
   cloudCoverPercent?: number;

@@ -25,7 +25,7 @@ const getSkinDrynessIndex = (humidity: number | string, forecast: ForecastDay[])
     !Number.isFinite(humidityValue)
     || humidityValue < 0
     || humidityValue > 100
-    || forecast.length < 3
+    || forecast.length === 0
   ) {
     return undefined;
   }
@@ -37,21 +37,28 @@ const getSkinDrynessIndex = (humidity: number | string, forecast: ForecastDay[])
   }
 
   const rainyDays = rainProbabilities.filter((probability) => probability >= 50).length;
-  if (humidityValue >= 65 || rainyDays >= 2) {
+  const selectedDay = forecast.length === 1;
+  if (humidityValue >= 65 || rainyDays >= (selectedDay ? 1 : 2)) {
     return {
       value: 'Baixo',
-      description: 'A presença de chuva ou o ar úmido reduzem a chance de ressecamento da pele.',
+      description: selectedDay
+        ? 'A umidade ou a chuva prevista reduzem a chance de ressecamento da pele neste dia.'
+        : 'A presença de chuva ou o ar úmido reduzem a chance de ressecamento da pele.',
     };
   }
   if (humidityValue < 40 && rainyDays === 0) {
     return {
       value: 'Alto',
-      description: 'Tempo seco e sem chuva favorece ressecamento intenso da pele.',
+      description: selectedDay
+        ? 'O ar seco e a ausência de chuva favorecem ressecamento intenso da pele neste dia.'
+        : 'Tempo seco e sem chuva favorece ressecamento intenso da pele.',
     };
   }
   return {
     value: 'Moderado',
-    description: 'Ausência de chuva e umidade baixa favorecem leve ressecamento da pele.',
+    description: selectedDay
+      ? 'A umidade e a chance de chuva indicam potencial moderado de ressecamento neste dia.'
+      : 'Ausência de chuva e umidade baixa favorecem leve ressecamento da pele.',
   };
 };
 

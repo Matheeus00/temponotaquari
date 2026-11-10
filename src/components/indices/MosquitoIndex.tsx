@@ -27,7 +27,7 @@ const getLevel = (value: string): MosquitoLevel | undefined => {
 
 const getMosquitoIndex = (temperature: number | string, forecast: ForecastDay[]) => {
   const temperatureValue = parseIndexNumber(temperature);
-  if (!Number.isFinite(temperatureValue) || forecast.length < 3) return undefined;
+  if (!Number.isFinite(temperatureValue) || forecast.length === 0) return undefined;
 
   const rainProbabilities = forecast.slice(0, 3).map((day) => parseIndexNumber(day.rain_probability));
   if (rainProbabilities.some((probability) =>
@@ -36,21 +36,28 @@ const getMosquitoIndex = (temperature: number | string, forecast: ForecastDay[])
   }
 
   const rainyDays = rainProbabilities.filter((probability) => probability >= 50).length;
+  const selectedDay = forecast.length === 1;
   if (temperatureValue < 20 || rainyDays === 0) {
     return {
       value: 'Baixo',
-      description: 'Tempo mais seco ou com temperaturas amenas reduz o potencial de mosquitos.',
+      description: selectedDay
+        ? 'Temperatura amena ou baixa chance de chuva reduz o potencial de mosquitos neste dia.'
+        : 'Tempo mais seco ou com temperaturas amenas reduz o potencial de mosquitos.',
     };
   }
-  if (temperatureValue >= 30 && rainyDays >= 2) {
+  if (temperatureValue >= 30 && rainyDays >= (selectedDay ? 1 : 2)) {
     return {
       value: 'Alto',
-      description: 'Calor intenso e chuvas frequentes criam condições muito favoráveis a mosquitos.',
+      description: selectedDay
+        ? 'Calor intenso e chuva provável criam condições favoráveis a mosquitos neste dia.'
+        : 'Calor intenso e chuvas frequentes criam condições muito favoráveis a mosquitos.',
     };
   }
   return {
     value: 'Moderado',
-    description: 'Calor leve e chuvas ocasionais favorecem presença moderada de mosquitos.',
+    description: selectedDay
+      ? 'As condições de temperatura e chuva favorecem presença moderada de mosquitos neste dia.'
+      : 'Calor leve e chuvas ocasionais favorecem presença moderada de mosquitos.',
   };
 };
 

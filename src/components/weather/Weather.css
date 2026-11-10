@@ -152,7 +152,6 @@
   display: flex;
   width: min(1120px, 100%);
   align-items: flex-start;
-  gap: 14px;
   margin: 0 auto 18px;
   padding: 14px 16px;
   border: 1px solid #c9dfe7;
@@ -162,10 +161,29 @@
   text-align: left;
 }
 
+.weather-advice-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.weather-advice-items {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weather-advice-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .weather-advice-icon {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   flex: 0 0 auto;
   place-items: center;
   border: 1px solid #c7dfe5;
@@ -174,8 +192,8 @@
 }
 
 .weather-advice-icon img {
-  width: 27px;
-  height: 27px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 }
 
@@ -279,6 +297,10 @@
   .weather-advice {
     gap: 10px;
     padding: 12px;
+  }
+
+  .weather-advice-item {
+    gap: 8px;
   }
 
   .weather-advice-message {

@@ -12,11 +12,31 @@ const normalizeText = (text: string): string =>
 
 const getAlertIcon = (phenomenon: string): string => {
   const normalizedPhenomenon = normalizeText(phenomenon);
-  if (normalizedPhenomenon.includes('tornado')) return 'tornado';
-  if (normalizedPhenomenon.includes('tromba')) return 'waterspout';
-  if (normalizedPhenomenon.includes('ciclone') || normalizedPhenomenon.includes('furacao')) {
-    return 'hurricane';
+  if (normalizedPhenomenon === 'ventos costeiros' || normalizedPhenomenon === 'vendaval') {
+    return 'umbrella-wind';
   }
+  if (normalizedPhenomenon === 'ressaca') return 'water';
+  if (
+    normalizedPhenomenon === 'onda de frio'
+    || normalizedPhenomenon === 'friagem'
+    || normalizedPhenomenon === 'declinio de temperatura'
+  ) {
+    return 'thermometer-colder';
+  }
+  if (normalizedPhenomenon === 'tornados') return 'tornado';
+  if (normalizedPhenomenon === 'tempestade de raios') {
+    return 'thunderstorms-rain';
+  }
+  if (normalizedPhenomenon === 'granizo') return 'hail';
+  if (normalizedPhenomenon === 'chuvas intensas') return 'rain';
+  if (normalizedPhenomenon === 'onda de calor') return 'thermometer-warmer';
+  if (normalizedPhenomenon === 'geada') return 'snowflake';
+  if (normalizedPhenomenon === 'estiagem' || normalizedPhenomenon === 'seca') return 'sun-hot';
+  if (normalizedPhenomenon === 'incendios') return 'smoke';
+  if (normalizedPhenomenon === 'baixa umidade') return 'humidity';
+  if (normalizedPhenomenon === 'neve') return 'snow';
+  if (normalizedPhenomenon === 'acumulado de chuva') return 'raindrop-measure';
+  if (normalizedPhenomenon === 'tempestade') return 'thunderstorms';
   return 'weather-alert';
 };
 

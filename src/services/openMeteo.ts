@@ -13,6 +13,7 @@ interface HourlyForecastResponse {
     time: string[];
     temperature_2m: number[];
     relative_humidity_2m: number[];
+    cloud_cover: number[];
     precipitation_probability: number[];
     weather_code: number[];
     is_day: number[];
@@ -42,6 +43,8 @@ const isHourlyForecastResponse = (data: unknown): data is HourlyForecastResponse
     Array.isArray(hourly.temperature_2m) &&
     'relative_humidity_2m' in hourly &&
     Array.isArray(hourly.relative_humidity_2m) &&
+    'cloud_cover' in hourly &&
+    Array.isArray(hourly.cloud_cover) &&
     'precipitation_probability' in hourly &&
     Array.isArray(hourly.precipitation_probability) &&
     'weather_code' in hourly &&
@@ -65,7 +68,7 @@ export async function getOpenMeteoHourlyForecast(
   url.searchParams.set('longitude', String(coordinates.longitude));
   url.searchParams.set(
     'hourly',
-    'temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,rain,shortwave_radiation',
+    'temperature_2m,relative_humidity_2m,cloud_cover,precipitation_probability,weather_code,is_day,wind_speed_10m,rain,shortwave_radiation',
   );
   url.searchParams.set('current', 'temperature_2m');
   url.searchParams.set('forecast_days', '7');
@@ -85,6 +88,7 @@ export async function getOpenMeteoHourlyForecast(
   const lengths = [
     hourly.temperature_2m.length,
     hourly.relative_humidity_2m.length,
+    hourly.cloud_cover.length,
     hourly.precipitation_probability.length,
     hourly.weather_code.length,
     hourly.is_day.length,
@@ -105,6 +109,7 @@ export async function getOpenMeteoHourlyForecast(
     const index = currentHourIndex + offset;
     const temperature = hourly.temperature_2m[index];
     const humidity = hourly.relative_humidity_2m[index];
+    const cloudCover = hourly.cloud_cover[index];
     const precipitationProbability = hourly.precipitation_probability[index];
     const weatherCode = hourly.weather_code[index];
     const isDay = hourly.is_day[index];
@@ -118,6 +123,10 @@ export async function getOpenMeteoHourlyForecast(
       !Number.isFinite(humidity) ||
       humidity < 0 ||
       humidity > 100 ||
+      typeof cloudCover !== 'number' ||
+      !Number.isFinite(cloudCover) ||
+      cloudCover < 0 ||
+      cloudCover > 100 ||
       typeof precipitationProbability !== 'number' ||
       !Number.isFinite(precipitationProbability) ||
       precipitationProbability < 0 ||
@@ -142,6 +151,7 @@ export async function getOpenMeteoHourlyForecast(
       time,
       temperature,
       humidity,
+      cloudCover,
       precipitationProbability,
       weatherCode,
       isDay: isDay === 1,
@@ -259,17 +269,33 @@ export async function getOpenMeteoUvIndex(
     daily === null ||
     !('uv_index_max' in daily) ||
     !Array.isArray(daily.uv_index_max) ||
-    typeof daily.uv_index_max[0] !== 'number' ||
-    !Number.isFinite(daily.uv_index_max[0]) ||
-    daily.uv_index_max[0] < 0
+    !('time' in daily) ||
+    !Array.isArray(daily.time)
   ) {
     throw new Error('Open-Meteo response does not contain today’s maximum UV index.');
+  }
+
+  const dailyUvIndexMax = daily.uv_index_max;
+  const dailyDates = daily.time;
+  if (
+    dailyDates.length !== dailyUvIndexMax.length ||
+    typeof dailyUvIndexMax[0] !== 'number' ||
+    !Number.isFinite(dailyUvIndexMax[0]) ||
+    dailyUvIndexMax.some((value) =>
+      typeof value !== 'number' || !Number.isFinite(value) || value < 0) ||
+    dailyDates.some((date) => typeof date !== 'string')
+  ) {
+    throw new Error('Open-Meteo response does not contain a valid daily UV forecast.');
   }
 
   return {
     index: current.uv_index,
     level: getUvLevel(current.uv_index),
-    dailyMax: daily.uv_index_max[0],
+    dailyMax: dailyUvIndexMax[0],
+    dailyForecast: dailyDates.map((date, index) => ({
+      date,
+      dailyMax: dailyUvIndexMax[index],
+    })),
     dewPointCelsius:
       'dew_point_2m' in current &&
       typeof current.dew_point_2m === 'number' &&
