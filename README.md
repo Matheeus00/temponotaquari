@@ -1,102 +1,132 @@
-# Tempo no Taquari :sunny: :cloud:
+# Tempo no Taquari
 
-WebApp de previsão do tempo para Lajeado e outras 24 cidades principais do Vale do Taquari, no Rio Grande do Sul.
+Aplicação web de previsão do tempo para **25 municípios do Vale do Taquari**, no Rio Grande do Sul. O projeto combina previsões, alertas oficiais e indicadores relacionados ao clima em uma interface pensada para o contexto local.
 
-# Utilizações: :white_check_mark:
-Nesse projeto estou utilizando:\
-[React com TypeScript](https://www.typescriptlang.org/) - Interface e tipagem da aplicação\
-[HG Brasil](https://hgbrasil.com/status/weather) - API de Previsão do Tempo\
-[Open-Meteo](https://open-meteo.com/) - Previsão por hora, qualidade do ar (dados CAMS), índice UV, ponto de orvalho e estimativa de radiação solar\
-[INMET](https://portal.inmet.gov.br/) - Avisos meteorológicos oficiais por município\
-[INPE — Programa Queimadas](https://terrabrasilis.dpi.inpe.br/queimadas/portal/) - Referência para dados de focos e risco de fogo\
-[Meteocons](https://bas.dev/work/meteocons) - Ícones meteorológicos SVG com animações, criados por Bas Milius
+> **Publicado na Vercel.** O README apresenta a proposta, as tecnologias, as decisões de implementação e os próximos passos do projeto — não é um guia para instalação ou contribuição.
 
-O projeto usa Vite para desenvolvimento e build, com React e TypeScript. A chave da HG Brasil é usada somente pelo servidor e não deve ser adicionada ao código do cliente.
-Os dados da previsão por hora, da qualidade do ar, do índice UV, do ponto de orvalho, da umidade e da radiação solar são consultados pelo servidor no Open-Meteo; a qualidade do ar também é atribuída ao CAMS, conforme a licença CC BY 4.0. A previsão horária permite ver as próximas 24 horas, o restante do dia de hoje ou todas as horas disponíveis de um dia selecionado na previsão estendida, no fuso de Brasília. O potencial solar é uma estimativa baseada na radiação em W/m², não uma medição da energia produzida por um sistema fotovoltaico. O índice de secagem de roupas combina previsão horária de temperatura, umidade, vento, radiação e chuva; é uma referência, não um tempo exato de secagem. Se o Open-Meteo não fornecer o ponto de orvalho, ele é estimado com temperatura e umidade da HG Brasil pela fórmula de Magnus-Tetens.
-Os avisos do INMET são consultados no servidor, filtrados para o município selecionado e armazenados em cache por 10 minutos. As orientações exibidas são fornecidas pelo próprio aviso.
-As condições atuais são consultadas novamente a cada 10 minutos. O cabeçalho exibe o horário da consulta concluída ao servidor; esse horário não representa necessariamente o instante da observação meteorológica na fonte. A previsão horária, a qualidade do ar e o índice UV usam cache de servidor/CDN por até 10 minutos, com possibilidade de servir dados antigos enquanto são revalidados.
-O aviso de possibilidade de arco-íris combina precipitação e nebulosidade estimadas pelo Open-Meteo com a elevação solar calculada pelo SunCalc. É uma heurística, não confirma que um arco-íris esteja visível; orientação em relação ao Sol e horizonte livre também influenciam. O calendário de chuvas de meteoros usa períodos e picos publicados pela [EXOSS](https://press.exoss.org/calendario/) para 2026; revise e atualize os dados quando a fonte publicar um novo calendário.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
+![Vercel](https://img.shields.io/badge/Publicado%20na-Vercel-000000?logo=vercel&logoColor=white)
 
-O arquivo `public/robots.txt` permite a indexação das páginas públicas pelos mecanismos de busca e aponta para o sitemap. Endpoints de API não são destinados à indexação.
+## A proposta
 
-O ícone específico de qualidade do ar ainda não está disponível; aguardamos sua inclusão no Meteocons.
+A ideia é tornar informações meteorológicas de diferentes fontes mais fáceis de consultar e úteis para quem vive ou acompanha o Vale do Taquari. Em vez de mostrar apenas a temperatura, a aplicação reúne previsões, dados ambientais, alertas e estimativas para o cotidiano.
 
-# Deploy na Vercel
-Em **Project Settings → Environment Variables**, crie `WEATHER_API_KEY` com a chave da HG Brasil e habilite-a para os ambientes desejados (Production, Preview e/ou Development). Não use o prefi[...]
+A navegação é organizada em cinco áreas:
 
-# Executar localmente
-```bash
-npm install
-cp .env.example .env
-# Configure WEATHER_API_KEY no arquivo .env
-npm run dev
+- **Painel** — condições atuais e indicadores selecionados.
+- **Previsão** — previsão por hora e para os próximos dias.
+- **Astronomia** — informações como fase da Lua e eventos astronômicos.
+- **Agro** — área dedicada a temas meteorológicos e ambientais relevantes ao campo.
+- **Sobre** — apresentação do projeto, fontes, limitações, novidades e contato.
+
+A cidade pode ser escolhida entre os 25 municípios atendidos, e a preferência fica salva no navegador.
+
+## Tecnologias
+
+| Tecnologia | Uso no projeto |
+| --- | --- |
+| [React](https://react.dev/) | Construção da interface em componentes. |
+| [TypeScript](https://www.typescriptlang.org/) | Tipagem estática da aplicação. |
+| [Vite](https://vite.dev/) | Servidor de desenvolvimento e build do frontend. |
+| [Express](https://expressjs.com/) | Servidor e endpoints que consultam fontes externas. |
+| [Axios](https://axios-http.com/) | Requisições HTTP. |
+| [SunCalc](https://github.com/mourner/suncalc) | Cálculos de posição solar usados em estimativas. |
+| [Vercel](https://vercel.com/) | Publicação do projeto. |
+| CSS | Estilos e adaptação da interface a diferentes telas. |
+
+## Arquitetura
+
+A interface consulta endpoints da aplicação. O servidor valida o município, consulta os serviços externos e entrega os dados necessários ao frontend. A chave da HG Brasil é mantida no servidor, sem ser incluída no código enviado ao navegador.
+
+```mermaid
+flowchart LR
+    U[Pessoa usuária] --> UI[Interface React + TypeScript]
+    UI --> API[Endpoints da aplicação]
+    API --> S[Servidor Express]
+    S --> HG[HG Brasil]
+    S --> OM[Open-Meteo]
+    S --> INMET[INMET]
+    S --> UI
+    UI --> V[Vercel]
 ```
 
-O servidor local aplica um limite de 120 consultas por IP a cada 15 minutos. Os avisos do INMET são armazenados em cache por 10 minutos para evitar consultas repetidas à fonte. Para verificar os tipos, execute `npm run typecheck`; para gerar a versão de produção, execute `npm run build`.
+A aplicação também usa cache nos endpoints compatíveis e limita o volume de requisições ao servidor. Os alertas do INMET são filtrados para o município selecionado; os dados disponibilizados pela API são armazenados em cache por 10 minutos.
 
-# Infraestrutura
-- [x] Completar o mapeamento das **Condições do Tempo**
-- [x] Melhorar a disposição do itens na tela
-- [x] Implementar os resto dos dados da previsão do tempo utilizando os dados da **HG Brasil**
-- [ ] Criar uma persistência que armazena os dados por alguns dias
-- [x] Adaptar para que funcione nos smartphones e dispositivos menores
-- [x] Solicitar a cidade na primeira visita e salvar a escolha para as próximas visitas
-- [x] Marcar feriados nacionais e estaduais do RS na previsão estendida, incluindo data móvel calculada para a Sexta-feira Santa, com destaque visual discreto
-- [x] Exibir datas municipais fornecidas para os municípios atendidos, distinguindo ponto facultativo
-- [X] Validar anualmente as datas e as fontes oficiais de cada município
+## Minha abordagem
 
-## Saúde
-- [x] Churrasco
-- [x] Mosquito
-- [x] Frizz
-- [x] Ressecamento de pele
-- [x] Gripe/Resfriado
-- [x] Vitamina D
-- [x] Estimar condições para churrasco usando somente a nebulosidade atual e a previsão de hoje
+O desenvolvimento parte de uma pergunta prática: **como transformar dados meteorológicos de fontes diferentes em informações locais compreensíveis, sem esconder de onde vêm ou o que significam?**
 
-## Cotidiano
-- [x] Estimativa de condições para secagem de roupas, com explicação dos critérios
+```mermaid
+flowchart LR
+    A[01 · Contexto local<br/>25 municípios do Vale] --> B[02 · Fontes adequadas<br/>previsão e dados oficiais]
+    B --> C[03 · Integração<br/>consulta e organização no servidor]
+    C --> D[04 · Experiência<br/>informação clara por município]
+    D --> E[05 · Transparência<br/>fontes, limites e estimativas]
+```
 
-## Astronomia
-- [x] Reunir fase da Lua, estimativa de arco-íris, chuvas de meteoros e eclipses em cards explicativos
-- [x] Exibir a chuva de meteoros ativa ou a próxima, com períodos e picos do calendário EXOSS 2026
-- [x] Estação do ano
-- [x] Indicar possibilidade de arco-íris com chuva, nebulosidade e elevação solar; tratar como estimativa, não confirmação
+Na prática, isso orienta algumas decisões do projeto:
 
-## Dados regionais
-- [x] Alertas oficiais INMET
-- [ ] Nível do Rio Taquari apenas para municípios atendidos por estações oficiais identificadas, mostrando estação e distância (a API REST da [ANA Hidroweb](https://www.snirh.gov.br/hidroweb/) exige token; validar acesso e cobertura antes de exibir leituras)
-- [x] Qualidade do ar (AQI)
-- [ ] Risco meteorológico de fogo do INPE, distinguindo-o de focos de calor detectados por satélite
-- [ ] Chuva observada em estações próximas para complementar a previsão
-- [ ] Condições de estiagem, usando fonte e metodologia oficiais
+- **Contextualizar:** relacionar os dados à cidade selecionada e à região.
+- **Separar responsabilidades:** manter integrações e credenciais no servidor, e a apresentação dos dados na interface.
+- **Explicar as estimativas:** deixar claro quando um indicador é calculado e não uma observação ou alerta oficial.
+- **Priorizar fontes e cobertura:** novas informações regionais dependem de fontes confiáveis e de dados adequados para os municípios atendidos.
 
-## Energia
-- [x] Indicador estimado de potencial solar em três níveis, com radiação do Open-Meteo e indicação de noite
-- [x] Exibir o potencial solar em um card próprio abaixo das informações de vento
-- [x] Exibir ícone noturno dedicado para o potencial solar
+## Fontes de dados e créditos
 
-## Previsão do tempo
-- [x] Organizar a navegação principal nas abas Painel, Previsão e Sobre
-- [x] Criar uma aba dedicada à previsão do tempo, com navegação entre horas, dias e índices
-- [x] Exibir a previsão horária das próximas 24 horas e permitir voltar às horas restantes de hoje
-- [x] Permitir selecionar outro dia da previsão estendida para ver todas as horas disponíveis
-- [x] Exibir no painel principal a maior probabilidade de chuva nas próximas 6 horas
-- [x] Exibir no cabeçalho o horário da última consulta das condições atuais e informar a atualização automática a cada 10 minutos
-- [x] Permitir atualizar o relógio manualmente; consultar os dados sem recarregar a página somente após o intervalo de 10 minutos
+- [HG Brasil](https://hgbrasil.com/status/weather) — condições atuais e previsão do tempo.
+- [Open-Meteo](https://open-meteo.com/) — previsão horária e dados complementares, incluindo qualidade do ar, índice UV, ponto de orvalho e radiação solar.
+- [CAMS](https://atmosphere.copernicus.eu/) — fonte dos dados de qualidade do ar disponibilizados pelo Open-Meteo.
+- [INMET](https://portal.inmet.gov.br/) — avisos meteorológicos oficiais.
+- [EXOSS](https://press.exoss.org/calendario/) — referência para o calendário de chuvas de meteoros.
+- [Meteocons](https://bas.dev/work/meteocons) — ícones meteorológicos SVG de Bas Milius.
+- [SunCalc](https://github.com/mourner/suncalc) — biblioteca usada em cálculos relacionados à posição solar.
 
-## Agro
-- [x] Criar uma aba Agro com temas de estiagem, fogo, geada, chuva, calor e vento identificados como em breve
-- [x] Exibir um mapa esquemático com a localização das sedes dos 25 municípios, sem camadas de dados
-- [ ] Avaliar fontes e integrar dados meteorológicos e ambientais relevantes para o campo
+## Funcionalidades implementadas
 
-## Sobre e transparência
-- [x] Criar uma aba Sobre com apresentação do projeto, cobertura, contato e feedback
-- [x] Informar fontes de dados, estimativas, limitações e frequência de atualização
-- [x] Exibir apoiadores e seus perfis sociais autorizados, com ícones das plataformas; manter os dados em `src/data/supporters.json`
-- [x] Exibir notas de novidades datadas, mantidas em `src/data/releaseNotes.json`
+- Previsão para os 25 municípios atendidos.
+- Condições atuais, previsão horária e previsão estendida.
+- Alertas do INMET associados ao município selecionado.
+- Qualidade do ar, índice UV e estimativa de potencial solar.
+- Indicadores para o cotidiano, como condições para secagem de roupas.
+- Informações de astronomia, incluindo fase da Lua e chuvas de meteoros.
+- Feriados nacionais e estaduais e datas municipais disponíveis.
+- Estimativas apresentadas com contexto e ressalvas.
+- Interface responsiva e escolha de unidades de medida.
 
-As novidades formam uma timeline, da mais recente para a mais antiga. Para publicar uma atualização relevante, adicione uma entrada com data, título e resumo em `src/data/releaseNotes.json`; mantenha as entradas anteriores.
+## Roadmap
 
-## Indicadores temporariamente fora da interface
-- [ ] Nível de pólen e respectiva explicação
+Os itens abaixo representam possibilidades em estudo, não compromissos com prazo. A inclusão depende da disponibilidade, cobertura e confiabilidade das fontes de dados.
+
+### Dados regionais e ambientais
+
+- [ ] Avaliar dados do nível do Rio Taquari em estações oficiais identificadas, mostrando estação e distância quando houver cobertura adequada.
+- [ ] Integrar chuva observada em estações próximas para complementar a previsão.
+- [ ] Investigar fontes e metodologias oficiais para apresentar condições de estiagem.
+- [ ] Avaliar dados do INPE sobre risco meteorológico de fogo, distinguindo risco de focos de calor detectados por satélite.
+
+### Agro
+
+- [ ] Avaliar fontes de dados meteorológicos e ambientais relevantes para a seção Agro.
+
+### Melhorias técnicas
+
+- [ ] Avaliar uma estratégia de persistência temporária dos dados para reduzir consultas repetidas às fontes externas.
+
+### Saúde
+
+- [ ] Reavaliar a inclusão do nível de pólen e de uma explicação adequada para esse indicador.
+
+## Transparência e limitações
+
+As informações dependem da disponibilidade e da atualização das fontes externas. O horário mostrado pela aplicação corresponde à consulta concluída pelo servidor e não necessariamente ao instante em que a condição meteorológica foi observada.
+
+Alguns recursos são **estimativas**, não confirmações de fenômenos. Por exemplo, a indicação de possibilidade de arco-íris combina precipitação e nebulosidade previstas pelo Open-Meteo com a elevação solar calculada pelo SunCalc. Ela não confirma que um arco-íris será observado.
+
+A aplicação procura distinguir dados de previsão, avisos oficiais e indicadores calculados. Mais detalhes sobre fontes, critérios e limitações também estão disponíveis na seção **Sobre** do site.
+
+## Publicação
+
+O projeto está publicado na [Vercel](https://vercel.com/). A chave da HG Brasil é configurada como variável de ambiente no servidor e não deve ser exposta no frontend.
