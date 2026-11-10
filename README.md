@@ -26,16 +26,16 @@ A cidade pode ser escolhida entre os 25 municípios atendidos, e a preferência 
 
 ## Tecnologias
 
-| Tecnologia | Uso no projeto |
-| --- | --- |
-| [React](https://react.dev/) | Construção da interface em componentes. |
-| [TypeScript](https://www.typescriptlang.org/) | Tipagem estática da aplicação. |
-| [Vite](https://vite.dev/) | Servidor de desenvolvimento e build do frontend. |
-| [Express](https://expressjs.com/) | Servidor e endpoints que consultam fontes externas. |
-| [Axios](https://axios-http.com/) | Requisições HTTP. |
-| [SunCalc](https://github.com/mourner/suncalc) | Cálculos de posição solar usados em estimativas. |
-| [Vercel](https://vercel.com/) | Publicação do projeto. |
-| CSS | Estilos e adaptação da interface a diferentes telas. |
+| Ícone | Tecnologia | Uso no projeto |
+| --- | --- | --- |
+| ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black) | [React](https://react.dev/) | Construção da interface em componentes. |
+| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) | [TypeScript](https://www.typescriptlang.org/) | Tipagem estática da aplicação. |
+| ![Vite](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white) | [Vite](https://vite.dev/) | Servidor de desenvolvimento e build do frontend. |
+| ![Express](https://img.shields.io/badge/-Express-000000?logo=express&logoColor=white) | [Express](https://expressjs.com/) | Servidor e endpoints que consultam fontes externas. |
+| ![Axios](https://img.shields.io/badge/-Axios-5A29E4?logo=axios&logoColor=white) | [Axios](https://axios-http.com/) | Requisições HTTP. |
+| 🌞 | [SunCalc](https://github.com/mourner/suncalc) | Cálculos de posição solar usados em estimativas. |
+| ![Vercel](https://img.shields.io/badge/-Vercel-000000?logo=vercel&logoColor=white) | [Vercel](https://vercel.com/) | Publicação do projeto. |
+| ![CSS](https://img.shields.io/badge/-CSS-663399?logo=css&logoColor=white) | CSS | Estilos e adaptação da interface a diferentes telas. |
 
 ## Arquitetura
 
