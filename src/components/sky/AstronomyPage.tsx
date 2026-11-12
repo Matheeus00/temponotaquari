@@ -1,6 +1,5 @@
 import { Moon } from '../moon/Moon';
 import { EclipseCalendar } from './EclipseCalendar';
-import { MeteorShowerCatalog } from './MeteorShowerCatalog';
 import { RainbowAlert } from './RainbowAlert';
 import { SkyAlerts } from './SkyAlerts';
 import './AstronomyPage.css';
@@ -32,7 +31,7 @@ export const AstronomyPage = ({
       date={date}
     />
     <SkyAlerts />
-    <MeteorShowerCatalog />
+    {/* <MeteorShowerCatalog /> */}
     <EclipseCalendar date={date} />
   </section>
 );

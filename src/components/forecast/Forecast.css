@@ -128,16 +128,16 @@
 }
 
 .forecast-temperatures {
-  display: flex;
+display: flex;
   align-items: center;
-  gap: 18px;
-  margin: 22px 0 17px;
+  gap: 10px;
+  margin: 15px 0 17px;
+  justify-content: space-between;
 }
 
 .forecast-temperature {
   display: flex;
   align-items: center;
-  gap: 6px;
   color: #b67a29;
   font-size: 21px;
   font-weight: 650;

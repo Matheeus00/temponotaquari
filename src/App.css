@@ -231,15 +231,6 @@
   stroke-width: 2;
 }
 
-.live-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #36a88c;
-  box-shadow: 0 0 10px rgb(54 168 140 / 40%);
-}
-
 .dashboard-heading,
 .forecast-section {
   width: min(1120px, 100%);

@@ -542,7 +542,6 @@ function App() {
               <option key={city.id} value={city.id}>{city.name}, RS</option>
             ))}
           </select>
-          <span className="live-dot" aria-label="Dados atuais" />
         </label>
       </header>
 
